@@ -1,0 +1,10 @@
+{
+    "include": [
+        "src/ts/**/*.ts",
+        "src/ts/*.ts"        
+    ],
+    "compilerOptions": {
+        "noImplicitAny": true,
+        "target": "es6"
+    }
+}
