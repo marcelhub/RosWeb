@@ -2,6 +2,7 @@ var gulp = require('gulp');
 var browserify = require('browserify');
 var source = require('vinyl-source-stream');
 var tsify = require('tsify');
+var ts = require("gulp-typescript");
 var sourcemaps = require('gulp-sourcemaps');
 var buffer = require('vinyl-buffer');
 var paths = {
@@ -21,7 +22,7 @@ gulp.task('browserify', function() {
 
 });
 
-gulp.task('default', ['copyHtml'], function () {
+gulp.task('default', ['copyHtml', 'transpileTS'], function () {
     return browserify({
         basedir: '.',
         debug: true,

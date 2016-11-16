@@ -1,17 +1,15 @@
 /// <reference path="../typings/tsd.d.ts" />
-
 export class ROSEvent {
 
-    public ros: ROSLIB.Ros;
-    public connected: boolean=false;
+    private static _ros: ROSLIB.Ros;
+    private static _connected: boolean=false;
     
     constructor(ros: ROSLIB.Ros) {
-        this.ros = ros;
-        this.ros.on("connection", this.onRosConnection);
-        this.ros.on("close", this.onRosClose);
-        this.ros.on("error", this.onRosError);
-        console.log("TEST");
-        this.DelegateEvent("jsRosConnect", "click", this.establishConnection);
+        ROSEvent._ros = ros;
+        ROSEvent._ros.on("connection", this.onRosConnection);
+        ROSEvent._ros.on("close", this.onRosClose);  
+        ROSEvent._ros.on("error", this.onRosError);
+        this.DelegateEvent(".jsRosConnect", "click", this.establishConnection);
     }
 
     public DelegateEvent(selector: string | Document | Window, event: string, method: () => void) {
@@ -19,32 +17,33 @@ export class ROSEvent {
     }
 
     public establishConnection() {
-        console.log("url: "+$("#rosMasterAdress").val());
-        this.ros.connect("url: "+$("#rosMasterAdress").val());
-        console.log(this.ros);
+        if(ROSEvent._connected) {
+            return;
+        }
+        ROSEvent._ros.connect("ws://"+$("#rosMasterAdress").val());
+        console.log(ROSEvent._ros);
+        
+    }
+
+    public static getInstance() {
+        return ROSEvent._ros;
+    }
+
+    public static getStatus() {
+        return ROSEvent._connected;
     }
 
     private onRosConnection = () => {
-        this.connected = true;
-        $(".jsRosConnect").addClass("active");
-        $(".jsRosConnect").removeClass("loading");
-
-        $(".jsRosConnect, #jsRosUrl, .jsConfiguration").removeClass("alert");
+        ROSEvent._connected = true;
     }
 
     private onRosClose = () => {
-        this.connected = false;
-        $(".jsRosConnect").removeClass("active");
-        $(".jsRosConnect").removeClass("loading");
+        ROSEvent._connected = false;
     }
 
     private onRosError = (error: any) => {
-        this.ros.close();
-        this.connected = false;
-        $(".jsRosConnect").removeClass("active");
-        $(".jsRosConnect").removeClass("loading");
-
-        $(".jsRosConnect, #jsRosUrl, .jsConfiguration").addClass("alert");
+        ROSEvent._ros.close();
+        ROSEvent._connected = false;
         console.log(error);
     }
 

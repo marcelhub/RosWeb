@@ -4,7 +4,7 @@ import { ROSEvent } from "./events/rosEvent";
 
 function init() {
   $(document).ready(function () {
-    var ros: ROSLIB.Ros = new ROSLIB.Ros("");
+    let ros: ROSLIB.Ros = new ROSLIB.Ros("");
     //window["ros"] = ros;
     let rosEvents: ROSEvent = new ROSEvent(ros);
   });
