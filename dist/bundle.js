@@ -36,9 +36,6 @@ var ROSEvent = function () {
     }, {
         key: "establishConnection",
         value: function establishConnection() {
-            if (ROSEvent._connected) {
-                return;
-            }
             ROSEvent._ros.connect("ws://" + $("#rosMasterAdress").val());
             console.log(ROSEvent._ros);
         }

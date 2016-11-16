@@ -14,15 +14,7 @@ gulp.task('copyHtml', function () {
         .pipe(gulp.dest('src/html'));
 });
 
-gulp.task('transpileTS', function() {
-
-});
-
-gulp.task('browserify', function() {
-
-});
-
-gulp.task('default', ['copyHtml', 'transpileTS'], function () {
+gulp.task('default', ['copyHtml'], function () {
     return browserify({
         basedir: '.',
         debug: true,

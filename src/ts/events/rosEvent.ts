@@ -17,12 +17,8 @@ export class ROSEvent {
     }
 
     public establishConnection() {
-        if(ROSEvent._connected) {
-            return;
-        }
         ROSEvent._ros.connect("ws://"+$("#rosMasterAdress").val());
         console.log(ROSEvent._ros);
-        
     }
 
     public static getInstance() {
