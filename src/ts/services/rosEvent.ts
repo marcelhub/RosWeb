@@ -21,6 +21,13 @@ export class ROSEvent {
             $('.jsRosConnect').removeClass('error');
             $('.jsRosConnect').removeClass('connected');
             ROSEvent._ros.connect("ws://"+$("#rosMasterAdress").val());
+            console.log("Test");
+            ROSEvent._ros.getTopics(function(topics) {
+                console.log(topics);
+            });
+            ROSEvent._ros.getTopicsForType('geometry_msgs/Twist',function(topics) {
+                console.log(topics);
+            });
         } catch(e) {
             $('.jsRosConnect').addClass('error');
             console.log(e);

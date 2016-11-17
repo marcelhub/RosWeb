@@ -1,4 +1,18 @@
 (function e(t,n,r){function s(o,u){if(!n[o]){if(!t[o]){var a=typeof require=="function"&&require;if(!u&&a)return a(o,!0);if(i)return i(o,!0);var f=new Error("Cannot find module '"+o+"'");throw f.code="MODULE_NOT_FOUND",f}var l=n[o]={exports:{}};t[o][0].call(l.exports,function(e){var n=t[o][1][e];return s(n?n:e)},l,l.exports,e,t,n,r)}return n[o].exports}var i=typeof require=="function"&&require;for(var o=0;o<r.length;o++)s(r[o]);return s})({1:[function(require,module,exports){
+/// <reference path="./typings/tsd.d.ts" />
+"use strict";
+
+var rosEvent_1 = require("./services/rosEvent");
+function init() {
+    $(document).ready(function () {
+        var ros = new ROSLIB.Ros("");
+        //window["ros"] = ros;
+        var rosEvents = new rosEvent_1.ROSEvent(ros);
+    });
+}
+init();
+
+},{"./services/rosEvent":2}],2:[function(require,module,exports){
 "use strict";
 /// <reference path="../typings/tsd.d.ts" />
 
@@ -46,6 +60,13 @@ var ROSEvent = function () {
                 $('.jsRosConnect').removeClass('error');
                 $('.jsRosConnect').removeClass('connected');
                 ROSEvent._ros.connect("ws://" + $("#rosMasterAdress").val());
+                console.log("Test");
+                ROSEvent._ros.getTopics(function (topics) {
+                    console.log(topics);
+                });
+                ROSEvent._ros.getTopicsForType('geometry_msgs/Twist', function (topics) {
+                    console.log(topics);
+                });
             } catch (e) {
                 $('.jsRosConnect').addClass('error');
                 console.log(e);
@@ -69,21 +90,7 @@ var ROSEvent = function () {
 ROSEvent._connected = false;
 exports.ROSEvent = ROSEvent;
 
-},{}],2:[function(require,module,exports){
-/// <reference path="./typings/tsd.d.ts" />
-"use strict";
-
-var rosEvent_1 = require("./events/rosEvent");
-function init() {
-    $(document).ready(function () {
-        var ros = new ROSLIB.Ros("");
-        //window["ros"] = ros;
-        var rosEvents = new rosEvent_1.ROSEvent(ros);
-    });
-}
-init();
-
-},{"./events/rosEvent":1}]},{},[2])
+},{}]},{},[1])
 
 
 //# sourceMappingURL=bundle.js.map

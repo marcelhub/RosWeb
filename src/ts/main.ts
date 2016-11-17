@@ -1,6 +1,6 @@
 /// <reference path="./typings/tsd.d.ts" />
 
-import { ROSEvent } from "./events/rosEvent";
+import { ROSEvent } from "./services/rosEvent";
 
 function init() {
   $(document).ready(function () {
