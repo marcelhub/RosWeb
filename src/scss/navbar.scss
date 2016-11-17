@@ -1,0 +1,30 @@
+@import 'variable';
+
+.navbar-custom {
+	background-color: $navbar_color;
+    color:#fff;
+}
+
+.navbar-custom li>a:hover,.navbar-custom li>a:focus {
+	background-color:#49bfff;
+}
+
+.navbar-custom a{
+    color:#fefefe;
+}
+
+.navbar-custom .form-control:focus {
+	border-color: #49bfff;
+	outline: 0;
+	-webkit-box-shadow: inset 0 0 0;
+	box-shadow: inset 0 0 0;
+}
+
+.cssRosConnect {
+    &.connected {
+        background-color: $green;
+    }
+    &.error {
+        background-color: $red;
+    }
+}

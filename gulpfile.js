@@ -5,16 +5,28 @@ var tsify = require('tsify');
 var ts = require("gulp-typescript");
 var sourcemaps = require('gulp-sourcemaps');
 var buffer = require('vinyl-buffer');
-var paths = {
+var sass = require('gulp-sass');
+var htmlPaths = {
     pages: ['src/html/*.html']
+};
+var sassOptions = {
+  errLogToConsole: true,
+  outputStyle: 'expanded'
 };
 
 gulp.task('copyHtml', function () {
-    return gulp.src(paths.pages)
+    return gulp.src(htmlPaths.pages)
         .pipe(gulp.dest('src/html'));
 });
 
-gulp.task('default', ['copyHtml'], function () {
+gulp.task('sass', function () {
+  return gulp
+    .src('src/scss/*.scss')
+    .pipe(sass(sassOptions).on('error', sass.logError))
+    .pipe(gulp.dest('src/css/'));
+});
+
+gulp.task('default', ['copyHtml', 'sass'], function () {
     return browserify({
         basedir: '.',
         debug: true,

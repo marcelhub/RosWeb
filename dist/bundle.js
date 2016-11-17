@@ -11,12 +11,18 @@ var ROSEvent = function () {
         _classCallCheck(this, ROSEvent);
 
         this.onRosConnection = function () {
+            $('.jsRosConnect').removeClass('error');
+            $('.jsRosConnect').addClass('connected');
             ROSEvent._connected = true;
         };
         this.onRosClose = function () {
+            $('.jsRosConnect').removeClass('connected');
+            $('.jsRosConnect').addClass('error');
             ROSEvent._connected = false;
         };
         this.onRosError = function (error) {
+            $('.jsRosConnect').removeClass('connected');
+            $('.jsRosConnect').addClass('error');
             ROSEvent._ros.close();
             ROSEvent._connected = false;
             console.log(error);
@@ -29,23 +35,29 @@ var ROSEvent = function () {
     }
 
     _createClass(ROSEvent, [{
-        key: "DelegateEvent",
+        key: 'DelegateEvent',
         value: function DelegateEvent(selector, event, method) {
             $(document).delegate(selector, event, method);
         }
     }, {
-        key: "establishConnection",
+        key: 'establishConnection',
         value: function establishConnection() {
-            ROSEvent._ros.connect("ws://" + $("#rosMasterAdress").val());
-            console.log(ROSEvent._ros);
+            try {
+                $('.jsRosConnect').removeClass('error');
+                $('.jsRosConnect').removeClass('connected');
+                ROSEvent._ros.connect("ws://" + $("#rosMasterAdress").val());
+            } catch (e) {
+                $('.jsRosConnect').addClass('error');
+                console.log(e);
+            }
         }
     }], [{
-        key: "getInstance",
+        key: 'getInstance',
         value: function getInstance() {
             return ROSEvent._ros;
         }
     }, {
-        key: "getStatus",
+        key: 'getStatus',
         value: function getStatus() {
             return ROSEvent._connected;
         }

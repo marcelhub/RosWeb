@@ -17,8 +17,14 @@ export class ROSEvent {
     }
 
     public establishConnection() {
-        ROSEvent._ros.connect("ws://"+$("#rosMasterAdress").val());
-        console.log(ROSEvent._ros);
+        try {
+            $('.jsRosConnect').removeClass('error');
+            $('.jsRosConnect').removeClass('connected');
+            ROSEvent._ros.connect("ws://"+$("#rosMasterAdress").val());
+        } catch(e) {
+            $('.jsRosConnect').addClass('error');
+            console.log(e);
+        }
     }
 
     public static getInstance() {
@@ -30,14 +36,20 @@ export class ROSEvent {
     }
 
     private onRosConnection = () => {
+        $('.jsRosConnect').removeClass('error');
+        $('.jsRosConnect').addClass('connected');
         ROSEvent._connected = true;
     }
 
     private onRosClose = () => {
+        $('.jsRosConnect').removeClass('connected');
+        $('.jsRosConnect').addClass('error');
         ROSEvent._connected = false;
     }
 
     private onRosError = (error: any) => {
+        $('.jsRosConnect').removeClass('connected');
+        $('.jsRosConnect').addClass('error');
         ROSEvent._ros.close();
         ROSEvent._connected = false;
         console.log(error);
