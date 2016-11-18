@@ -28,3 +28,12 @@
         background-color: $red;
     }
 }
+
+.cssRosMenu {
+    &.connected {
+        display: unset
+    }
+    &.disconnected {
+        display: none
+    }
+}

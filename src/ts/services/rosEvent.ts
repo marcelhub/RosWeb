@@ -20,6 +20,8 @@ export class ROSEvent {
         try {
             $('.jsRosConnect').removeClass('error');
             $('.jsRosConnect').removeClass('connected');
+            $('.jsRosMenu').removeClass('disconnected');
+            $('.jsRosMenu').removeClass('connected');
             ROSEvent._ros.connect("ws://"+$("#rosMasterAdress").val());
             console.log("Test");
             ROSEvent._ros.getTopics(function(topics) {
@@ -29,7 +31,10 @@ export class ROSEvent {
                 console.log(topics);
             });
         } catch(e) {
+            $('.jsRosConnect').removeClass('connected');
             $('.jsRosConnect').addClass('error');
+            $('.jsRosMenu').removeClass('connected');
+            $('.jsRosMenu').addClass('disconnected');
             console.log(e);
         }
     }
@@ -45,18 +50,24 @@ export class ROSEvent {
     private onRosConnection = () => {
         $('.jsRosConnect').removeClass('error');
         $('.jsRosConnect').addClass('connected');
+        $('.jsRosMenu').removeClass('disconnected');
+        $('.jsRosMenu').addClass('connected');
         ROSEvent._connected = true;
     }
 
     private onRosClose = () => {
         $('.jsRosConnect').removeClass('connected');
         $('.jsRosConnect').addClass('error');
+        $('.jsRosMenu').removeClass('connected');
+        $('.jsRosMenu').addClass('disconnected');
         ROSEvent._connected = false;
     }
 
     private onRosError = (error: any) => {
         $('.jsRosConnect').removeClass('connected');
         $('.jsRosConnect').addClass('error');
+        $('.jsRosMenu').removeClass('connected');
+        $('.jsRosMenu').addClass('disconnected');
         ROSEvent._ros.close();
         ROSEvent._connected = false;
         console.log(error);

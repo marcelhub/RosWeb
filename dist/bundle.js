@@ -27,16 +27,22 @@ var ROSEvent = function () {
         this.onRosConnection = function () {
             $('.jsRosConnect').removeClass('error');
             $('.jsRosConnect').addClass('connected');
+            $('.jsRosMenu').removeClass('disconnected');
+            $('.jsRosMenu').addClass('connected');
             ROSEvent._connected = true;
         };
         this.onRosClose = function () {
             $('.jsRosConnect').removeClass('connected');
             $('.jsRosConnect').addClass('error');
+            $('.jsRosMenu').removeClass('connected');
+            $('.jsRosMenu').addClass('disconnected');
             ROSEvent._connected = false;
         };
         this.onRosError = function (error) {
             $('.jsRosConnect').removeClass('connected');
             $('.jsRosConnect').addClass('error');
+            $('.jsRosMenu').removeClass('connected');
+            $('.jsRosMenu').addClass('disconnected');
             ROSEvent._ros.close();
             ROSEvent._connected = false;
             console.log(error);
@@ -59,6 +65,8 @@ var ROSEvent = function () {
             try {
                 $('.jsRosConnect').removeClass('error');
                 $('.jsRosConnect').removeClass('connected');
+                $('.jsRosMenu').removeClass('disconnected');
+                $('.jsRosMenu').removeClass('connected');
                 ROSEvent._ros.connect("ws://" + $("#rosMasterAdress").val());
                 console.log("Test");
                 ROSEvent._ros.getTopics(function (topics) {
@@ -68,7 +76,10 @@ var ROSEvent = function () {
                     console.log(topics);
                 });
             } catch (e) {
+                $('.jsRosConnect').removeClass('connected');
                 $('.jsRosConnect').addClass('error');
+                $('.jsRosMenu').removeClass('connected');
+                $('.jsRosMenu').addClass('disconnected');
                 console.log(e);
             }
         }

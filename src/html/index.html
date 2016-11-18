@@ -5,7 +5,6 @@
         <title>ROS generic Web</title>
         <link rel="stylesheet" href="../css/bootstrap.min.css"/>
         <link rel="stylesheet" href="../css/index.css" />
-        <link rel="stylesheet" href="../css/index.css" />
         <link rel="stylesheet" href="../css/navbar.css" />
         <link rel="stylesheet" href="../map/css/leaflet.css"/>
         <link rel="stylesheet" href="../map/css/leaflet.draw.css"/>
@@ -22,13 +21,23 @@
         <script src="../../dist/bundle.js"></script>
     </head>
     <body>
-        <div class="navbar navbar-custom navbar-fixed-top">
-            <form class="form-inline">
-                <label>ROS Master:</label>
+        <div div class="navbar navbar-custom navbar-fixed-top" role="navigation">
+            <div class="form-inline">
+                <a class="navbar-brand">ROS Master</a>
                 <input type="text" class="form-control" id="rosMasterAdress" placeholder="127.0.0.1:9090" value="192.168.1.97:9090">
-                <!--a href="#" role="button" class="btn btn-primary jsRosConnect cssRosConnect"><i class="fa fa-wifi fa-lg" ></i></a-->
                 <button type="button" class="btn btn-default jsRosConnect cssRosConnect"><i class="fa fa-wifi fa-lg" ></i></button>
-            </form>
+                <button class="btn btn-default dropdown-toggle cssRosMenu jsRosMenu disconnected" type="button" id="dropdownMenu1" data-toggle="dropdown" aria-haspopup="true" aria-expanded="true" arai-hidden="true">
+                    <i class="fa fa-bars fa-lg" ></i>
+                    <span class="caret"></span>
+                </button>
+                <ul class="dropdown-menu" aria-labelledby="dropdownMenu1">
+                    <li><a href="#">Action</a></li>
+                    <li><a href="#">Another action</a></li>
+                    <li><a href="#">Something else here</a></li>
+                    <li role="separator" class="divider"></li>
+                    <li><a href="#">Separated link</a></li>
+                </ul>
+            </div>
         </div>
     </body>
 </html>

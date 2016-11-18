@@ -25,3 +25,11 @@
 .cssRosConnect.error {
   background-color: #ff0000;
 }
+
+.cssRosMenu.connected {
+  display: unset;
+}
+
+.cssRosMenu.disconnected {
+  display: none;
+}
