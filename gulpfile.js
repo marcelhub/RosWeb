@@ -6,19 +6,30 @@ var ts = require("gulp-typescript");
 var sourcemaps = require('gulp-sourcemaps');
 var buffer = require('vinyl-buffer');
 var sass = require('gulp-sass');
-var htmlPaths = {
-    pages: ['src/html/*.html']
-};
+var handlebars = require('gulp-handlebars');
+var wrap = require('gulp-wrap');
+var declare = require('gulp-declare');
+var concat = require('gulp-concat');
+
 var sassOptions = {
   errLogToConsole: true,
   outputStyle: 'expanded'
 };
 
-gulp.task('copyHtml', function () {
-    return gulp.src(htmlPaths.pages)
-        .pipe(gulp.dest('src/html'));
+//handlebars
+gulp.task('handlebars', function () {
+    gulp.src('src/templates/*.hbs')
+      .pipe(handlebars())
+      .pipe(wrap('Handlebars.template(<%= contents %>)'))
+      .pipe(declare({
+          namespace: 'MyApp.templates',
+          noRedeclare: true, // Avoid duplicate declarations
+      }))
+      .pipe(concat('templates.js'))
+      .pipe(gulp.dest('dist'));
 });
 
+//sass
 gulp.task('sass', function () {
   return gulp
     .src('src/scss/*.scss')
@@ -26,7 +37,8 @@ gulp.task('sass', function () {
     .pipe(gulp.dest('src/css/'));
 });
 
-gulp.task('default', ['copyHtml', 'sass'], function () {
+//---DEFAULT TASK---
+gulp.task('default', ['sass', 'handlebars'], function () {
     return browserify({
         basedir: '.',
         debug: true,
