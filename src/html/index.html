@@ -10,16 +10,7 @@
         <link rel="stylesheet" href="../map/css/leaflet.draw.css"/>
         <link rel="stylesheet" href="../css/font-awesome-4.7.0/css/font-awesome.min.css">
 
-        <script src="../js/jquery.min.js"></script>
-        <script src="../js/bootstrap.min.js"></script>
-        <script src="../js/eventemitter2.min.js"></script>
-        <script src="../js/roslib.min.js"></script>
-        <script src="../js/keyboardteleop.min.js"></script>
-        <script src="../map/js/leaflet.js"></script>
-        <script src="../map/js/leaflet.draw.js"></script>
-        <script src="../map/js/leaflet.polylineDecorator.js"></script>
-        <script src="../../dist/bundle.js"></script>
-        <script src="../../dist/templates.js"></script>
+
     </head>
     <body>
         <div div class="navbar navbar-custom navbar-fixed-top" role="navigation">
@@ -31,21 +22,35 @@
                     <i class="fa fa-bars fa-lg" ></i>
                     <span class="caret"></span>
                 </button>
-                <ul class="dropdown-menu" aria-labelledby="dropdownMenu1" id="ros-menu">
+                <ul class="dropdown-menu" aria-labelledby="dropdownMenu1">
                     <!--li><a href="#">Action</a></li>
                     <li><a href="#">Another action</a></li>
                     <li><a href="#">Something else here</a></li>
                     <li role="separator" class="divider"></li>
                     <li><a href="#">Separated link</a></li-->
-                    {{#each alias}}
-                        <li role="separator" class="divider"></li>
-                        <li class="dropdown-header">{{alias}}</li>
-                        {{#each topic}}
-                            <li><a href="#">{{topic}}</a></li>
+                    <script class="jsRosDropdown" type="text/x-handlebars-template">
+                        {{#each type}}
+                            <li role="separator" class="divider"></li>
+                            <li class="dropdown-header">{{type}}</li>
+                            {{#each topic}}
+                                <li><a href="#">{{name}}</a></li>
+                            {{/each}}
                         {{/each}}
-                    {{/each}}
+                    </script>
                 </ul>
             </div>
         </div>
+                <script src="../js/jquery.min.js"></script>
+        <script src="../js/bootstrap.min.js"></script>
+        <script src="../js/eventemitter2.min.js"></script>
+        <script src="../js/roslib.min.js"></script>
+        <script src="../js/keyboardteleop.min.js"></script>
+        <script src="../js/handlebars.js"></script>
+        <script src="../map/js/leaflet.js"></script>
+        <script src="../map/js/leaflet.draw.js"></script>
+        <script src="../map/js/leaflet.polylineDecorator.js"></script>
+        <script src="../../dist/bundle.js"></script>
+        <script src="../../dist/templates.js"></script>
     </body>
+
 </html>

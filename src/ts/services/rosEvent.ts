@@ -23,13 +23,6 @@ export class ROSEvent {
             $('.jsRosMenu').removeClass('disconnected');
             $('.jsRosMenu').removeClass('connected');
             ROSEvent._ros.connect("ws://"+$("#rosMasterAdress").val());
-            console.log("Test");
-            ROSEvent._ros.getTopics(function(topics) {
-                console.log(topics);
-            });
-            ROSEvent._ros.getTopicsForType('geometry_msgs/Twist',function(topics) {
-                console.log(topics);
-            });
         } catch(e) {
             $('.jsRosConnect').removeClass('connected');
             $('.jsRosConnect').addClass('error');
@@ -50,6 +43,8 @@ export class ROSEvent {
     private onRosConnection = () => {
         $('.jsRosConnect').removeClass('error');
         $('.jsRosConnect').addClass('connected');
+        //generate menu
+        this.buildMenu();
         $('.jsRosMenu').removeClass('disconnected');
         $('.jsRosMenu').addClass('connected');
         ROSEvent._connected = true;
@@ -73,5 +68,41 @@ export class ROSEvent {
         console.log(error);
     }
 
+    private buildMenu() {   
+        let topicTypes: string[] = ['geometry_msgs/Twist', 'sensor_msgs/Image', 'sensor_msgs/NavSatFix'];
+        let callbacksRemaining: number = topicTypes.length;
+        let dict: Map<string, string[]> = new Map<string, string[]>();
+
+        for (var i = 0; i < topicTypes.length; i++) {
+            ROSEvent._ros.getTopicsForType(topicTypes[i],function(topicsResult) {
+                ROSEvent._ros.getTopicType(topicsResult[0], function(typeResult) {
+                    dict.set(typeResult, topicsResult);
+                    --callbacksRemaining;
+                    if(callbacksRemaining == 0) {
+                        console.log(dict);
+                        console.log(JSON.stringify([...dict]));
+                        let source = $('jsRosDropdown').html;
+                        let template = Handlebars.compile(source);
+                        let data = [ {
+                                'type': '1',
+                                'topic': [ {
+                                        'name':'aa'
+                                    }
+                                ]
+                            }
+                        ]
+                        let result = template({Chapters: data});
+                        console.log(result);
+                        $(document.body).append(template(data));                    }
+                });
+            });
+        }
+    }
+
+    private buildJSON(dict: Map<string, string[]>) {
+        let jsonArr: string;
+    }
+
 
 }
+
