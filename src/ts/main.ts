@@ -2,10 +2,10 @@
 
 import { ROSEvent } from "./services/rosEvent";
 
+
 function init() {
   $(document).ready(function () {
     let ros: ROSLIB.Ros = new ROSLIB.Ros("");
-    //window["ros"] = ros;
     let rosEvents: ROSEvent = new ROSEvent(ros);
   });
 }

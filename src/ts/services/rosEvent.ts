@@ -1,4 +1,6 @@
 /// <reference path="../typings/tsd.d.ts" />
+declare var MyApp: any;
+
 export class ROSEvent {
 
     private static _ros: ROSLIB.Ros;
@@ -16,7 +18,7 @@ export class ROSEvent {
         $(document).delegate(selector, event, method);
     }
 
-    public establishConnection() {
+    public establishConnection = () => {
         try {
             $('.jsRosConnect').removeClass('error');
             $('.jsRosConnect').removeClass('connected');
@@ -68,7 +70,7 @@ export class ROSEvent {
         console.log(error);
     }
 
-    private buildMenu() {   
+    private buildMenu = ()  => {   
         let topicTypes: string[] = ['geometry_msgs/Twist', 'sensor_msgs/Image', 'sensor_msgs/NavSatFix'];
         let callbacksRemaining: number = topicTypes.length;
         let dict: Map<string, string[]> = new Map<string, string[]>();
@@ -81,19 +83,34 @@ export class ROSEvent {
                     if(callbacksRemaining == 0) {
                         console.log(dict);
                         console.log(JSON.stringify([...dict]));
-                        let source = $('jsRosDropdown').html;
+                        console.log(JSON.stringify(dict));
+                        let source = $('.jsRosDropdown').html();
+                        console.log(source);
                         let template = Handlebars.compile(source);
-                        let data = [ {
-                                'type': '1',
-                                'topic': [ {
-                                        'name':'aa'
+                        console.log(template);
+                        let data = [ 
+                             { 
+                                type: 'geometry_msgs/Twist',
+                                topics: [
+                                    {
+                                        topic: '1',
+                                    }
+                                ]
+                            },  
+                            {
+                                type: 'sensor_msgs/Image',
+                                topics: [
+                                    {
+                                        topic: '2',
                                     }
                                 ]
                             }
-                        ]
-                        let result = template({Chapters: data});
+                        ];
+
+                        let result = template({types: data});
                         console.log(result);
-                        $(document.body).append(template(data));                    }
+                        $('.dropdown-menu').html(result);                   
+                    }
                 });
             });
         }

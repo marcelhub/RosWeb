@@ -6,7 +6,6 @@ var rosEvent_1 = require("./services/rosEvent");
 function init() {
     $(document).ready(function () {
         var ros = new ROSLIB.Ros("");
-        //window["ros"] = ros;
         var rosEvents = new rosEvent_1.ROSEvent(ros);
     });
 }
@@ -28,6 +27,21 @@ var ROSEvent = function () {
 
         _classCallCheck(this, ROSEvent);
 
+        this.establishConnection = function () {
+            try {
+                $('.jsRosConnect').removeClass('error');
+                $('.jsRosConnect').removeClass('connected');
+                $('.jsRosMenu').removeClass('disconnected');
+                $('.jsRosMenu').removeClass('connected');
+                ROSEvent._ros.connect("ws://" + $("#rosMasterAdress").val());
+            } catch (e) {
+                $('.jsRosConnect').removeClass('connected');
+                $('.jsRosConnect').addClass('error');
+                $('.jsRosMenu').removeClass('connected');
+                $('.jsRosMenu').addClass('disconnected');
+                console.log(e);
+            }
+        };
         this.onRosConnection = function () {
             $('.jsRosConnect').removeClass('error');
             $('.jsRosConnect').addClass('connected');
@@ -53,38 +67,7 @@ var ROSEvent = function () {
             ROSEvent._connected = false;
             console.log(error);
         };
-        ROSEvent._ros = ros;
-        ROSEvent._ros.on("connection", this.onRosConnection);
-        ROSEvent._ros.on("close", this.onRosClose);
-        ROSEvent._ros.on("error", this.onRosError);
-        this.DelegateEvent(".jsRosConnect", "click", this.establishConnection);
-    }
-
-    _createClass(ROSEvent, [{
-        key: 'DelegateEvent',
-        value: function DelegateEvent(selector, event, method) {
-            $(document).delegate(selector, event, method);
-        }
-    }, {
-        key: 'establishConnection',
-        value: function establishConnection() {
-            try {
-                $('.jsRosConnect').removeClass('error');
-                $('.jsRosConnect').removeClass('connected');
-                $('.jsRosMenu').removeClass('disconnected');
-                $('.jsRosMenu').removeClass('connected');
-                ROSEvent._ros.connect("ws://" + $("#rosMasterAdress").val());
-            } catch (e) {
-                $('.jsRosConnect').removeClass('connected');
-                $('.jsRosConnect').addClass('error');
-                $('.jsRosMenu').removeClass('connected');
-                $('.jsRosMenu').addClass('disconnected');
-                console.log(e);
-            }
-        }
-    }, {
-        key: 'buildMenu',
-        value: function buildMenu() {
+        this.buildMenu = function () {
             var topicTypes = ['geometry_msgs/Twist', 'sensor_msgs/Image', 'sensor_msgs/NavSatFix'];
             var callbacksRemaining = topicTypes.length;
             var dict = new Map();
@@ -96,21 +79,41 @@ var ROSEvent = function () {
                         if (callbacksRemaining == 0) {
                             console.log(dict);
                             console.log(JSON.stringify([].concat(_toConsumableArray(dict))));
-                            var source = $('jsRosDropdown').html;
+                            console.log(JSON.stringify(dict));
+                            var source = $('.jsRosDropdown').html();
+                            console.log(source);
                             var template = Handlebars.compile(source);
+                            console.log(template);
                             var data = [{
-                                'type': '1',
-                                'topic': [{
-                                    'name': 'aa'
+                                type: 'geometry_msgs/Twist',
+                                topics: [{
+                                    topic: '1'
+                                }]
+                            }, {
+                                type: 'sensor_msgs/Image',
+                                topics: [{
+                                    topic: '2'
                                 }]
                             }];
-                            var result = template({ Chapters: data });
+                            var result = template({ types: data });
                             console.log(result);
-                            $(document.body).append(template(data));
+                            $('.dropdown-menu').html(result);
                         }
                     });
                 });
             }
+        };
+        ROSEvent._ros = ros;
+        ROSEvent._ros.on("connection", this.onRosConnection);
+        ROSEvent._ros.on("close", this.onRosClose);
+        ROSEvent._ros.on("error", this.onRosError);
+        this.DelegateEvent(".jsRosConnect", "click", this.establishConnection);
+    }
+
+    _createClass(ROSEvent, [{
+        key: 'DelegateEvent',
+        value: function DelegateEvent(selector, event, method) {
+            $(document).delegate(selector, event, method);
         }
     }, {
         key: 'buildJSON',

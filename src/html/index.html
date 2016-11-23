@@ -23,24 +23,19 @@
                     <span class="caret"></span>
                 </button>
                 <ul class="dropdown-menu" aria-labelledby="dropdownMenu1">
-                    <!--li><a href="#">Action</a></li>
-                    <li><a href="#">Another action</a></li>
-                    <li><a href="#">Something else here</a></li>
-                    <li role="separator" class="divider"></li>
-                    <li><a href="#">Separated link</a></li-->
                     <script class="jsRosDropdown" type="text/x-handlebars-template">
-                        {{#each type}}
+                        {{#types}}
                             <li role="separator" class="divider"></li>
                             <li class="dropdown-header">{{type}}</li>
-                            {{#each topic}}
-                                <li><a href="#">{{name}}</a></li>
-                            {{/each}}
-                        {{/each}}
+                            {{#topics}}
+                                <li><a href="#">{{topic}}</a></li>
+                            {{/topics}}
+                        {{/types}}
                     </script>
                 </ul>
             </div>
         </div>
-                <script src="../js/jquery.min.js"></script>
+        <script src="../js/jquery.min.js"></script>
         <script src="../js/bootstrap.min.js"></script>
         <script src="../js/eventemitter2.min.js"></script>
         <script src="../js/roslib.min.js"></script>
