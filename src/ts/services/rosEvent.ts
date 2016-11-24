@@ -71,7 +71,7 @@ export class ROSEvent {
     }
 
     private buildMenu = ()  => {   
-        let topicTypes: string[] = ['geometry_msgs/Twist', 'sensor_msgs/Image', 'sensor_msgs/NavSatFix','test'];
+        let topicTypes: string[] = ['geometry_msgs/Twist', 'sensor_msgs/Image', 'sensor_msgs/NavSatFix','sensor_msgs/Imu'];
         let callbacksRemaining: number = topicTypes.length;
         let dict: Map<string, string[]> = new Map<string, string[]>();
 

@@ -66,7 +66,7 @@ var ROSEvent = function () {
             console.log(error);
         };
         this.buildMenu = function () {
-            var topicTypes = ['geometry_msgs/Twist', 'sensor_msgs/Image', 'sensor_msgs/NavSatFix', 'test'];
+            var topicTypes = ['geometry_msgs/Twist', 'sensor_msgs/Image', 'sensor_msgs/NavSatFix', 'sensor_msgs/Imu'];
             var callbacksRemaining = topicTypes.length;
             var dict = new Map();
             for (var i = 0; i < topicTypes.length; i++) {
