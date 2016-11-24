@@ -71,7 +71,7 @@ export class ROSEvent {
     }
 
     private buildMenu = ()  => {   
-        let topicTypes: string[] = ['geometry_msgs/Twist', 'sensor_msgs/Image', 'sensor_msgs/NavSatFix'];
+        let topicTypes: string[] = ['geometry_msgs/Twist', 'sensor_msgs/Image', 'sensor_msgs/NavSatFix','test'];
         let callbacksRemaining: number = topicTypes.length;
         let dict: Map<string, string[]> = new Map<string, string[]>();
 
@@ -81,33 +81,9 @@ export class ROSEvent {
                     dict.set(typeResult, topicsResult);
                     --callbacksRemaining;
                     if(callbacksRemaining == 0) {
-                        console.log(dict);
-                        console.log(JSON.stringify([...dict]));
-                        console.log(JSON.stringify(dict));
                         let source = $('.jsRosDropdown').html();
-                        console.log(source);
                         let template = Handlebars.compile(source);
-                        console.log(template);
-                        let data = [ 
-                             { 
-                                type: 'geometry_msgs/Twist',
-                                topics: [
-                                    {
-                                        topic: '1',
-                                    }
-                                ]
-                            },  
-                            {
-                                type: 'sensor_msgs/Image',
-                                topics: [
-                                    {
-                                        topic: '2',
-                                    }
-                                ]
-                            }
-                        ];
-
-                        let result = template({types: data});
+                        let result = template({types: buildJSON(dict)});
                         console.log(result);
                         $('.dropdown-menu').html(result);                   
                     }
@@ -115,11 +91,27 @@ export class ROSEvent {
             });
         }
     }
-
-    private buildJSON(dict: Map<string, string[]>) {
-        let jsonArr: string;
-    }
-
-
 }
 
+//build JSON to get rendered with handlebars
+function buildJSON(dict: Map<string, string[]>) {
+    let topicResult: Object[] = [];    
+    for(let key of dict.keys()) {
+        if(dict.get(key).length > 0) {
+        let topicsArr: Object[] = [];
+        for(let t of dict.get(key)) {
+            let topicItem = {
+                topic: t
+            }
+            topicsArr.push(topicItem);
+        }
+
+        let item = {
+            type: key,
+            topics: topicsArr
+        }
+        topicResult.push(item);
+        }
+    }
+    return topicResult;
+}
