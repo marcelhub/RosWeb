@@ -1,4 +1,9 @@
 /// <reference path="../typings/tsd.d.ts" />
+
+/*Handling connection and events that are ROS related,
+like connecting, disconnecting or building the topic menu dynamically.
+To add supported ROS message types, add the type to the topicTypes Array.*/
+
 declare var MyApp: any;
 
 export class ROSEvent {
@@ -17,7 +22,7 @@ export class ROSEvent {
     public DelegateEvent(selector: string | Document | Window, event: string, method: () => void) {
         $(document).delegate(selector, event, method);
     }
-
+    
     public establishConnection = () => {
         try {
             $('.jsRosConnect').removeClass('error');
@@ -81,11 +86,8 @@ export class ROSEvent {
                     dict.set(typeResult, topicsResult);
                     --callbacksRemaining;
                     if(callbacksRemaining == 0) {
-                        let source = $('.jsRosDropdown').html();
-                        let template = Handlebars.compile(source);
-                        let result = template({types: buildJSON(dict)});
-                        console.log(result);
-                        $('.dropdown-menu').html(result);                   
+                        let result = MyApp.templates.menu({types: buildJSON(dict)});
+                         $('.dropdown-menu').html(result);
                     }
                 });
             });

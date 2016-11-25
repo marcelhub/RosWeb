@@ -12,8 +12,8 @@ function init() {
 init();
 
 },{"./services/rosEvent":2}],2:[function(require,module,exports){
-"use strict";
 /// <reference path="../typings/tsd.d.ts" />
+"use strict";
 
 var _createClass = function () { function defineProperties(target, props) { for (var i = 0; i < props.length; i++) { var descriptor = props[i]; descriptor.enumerable = descriptor.enumerable || false; descriptor.configurable = true; if ("value" in descriptor) descriptor.writable = true; Object.defineProperty(target, descriptor.key, descriptor); } } return function (Constructor, protoProps, staticProps) { if (protoProps) defineProperties(Constructor.prototype, protoProps); if (staticProps) defineProperties(Constructor, staticProps); return Constructor; }; }();
 
@@ -75,10 +75,7 @@ var ROSEvent = function () {
                         dict.set(typeResult, topicsResult);
                         --callbacksRemaining;
                         if (callbacksRemaining == 0) {
-                            var source = $('.jsRosDropdown').html();
-                            var template = Handlebars.compile(source);
-                            var result = template({ types: buildJSON(dict) });
-                            console.log(result);
+                            var result = MyApp.templates.menu({ types: buildJSON(dict) });
                             $('.dropdown-menu').html(result);
                         }
                     });
