@@ -75,6 +75,7 @@ export class ROSEvent {
         console.log(error);
     }
 
+    //build menu dynamically, containing supported ROS topics
     private buildMenu = ()  => {   
         let topicTypes: string[] = ['geometry_msgs/Twist', 'sensor_msgs/Image', 'sensor_msgs/NavSatFix','sensor_msgs/Imu'];
         let callbacksRemaining: number = topicTypes.length;

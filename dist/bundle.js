@@ -3,15 +3,54 @@
 "use strict";
 
 var rosEvent_1 = require("./services/rosEvent");
+var workspace_1 = require("./models/workspace");
 function init() {
     $(document).ready(function () {
         var ros = new ROSLIB.Ros("");
         var rosEvents = new rosEvent_1.ROSEvent(ros);
+        console.log(workspace_1.actualWorkspace);
     });
 }
 init();
 
-},{"./services/rosEvent":2}],2:[function(require,module,exports){
+},{"./models/workspace":2,"./services/rosEvent":3}],2:[function(require,module,exports){
+"use strict";
+
+var _createClass = function () { function defineProperties(target, props) { for (var i = 0; i < props.length; i++) { var descriptor = props[i]; descriptor.enumerable = descriptor.enumerable || false; descriptor.configurable = true; if ("value" in descriptor) descriptor.writable = true; Object.defineProperty(target, descriptor.key, descriptor); } } return function (Constructor, protoProps, staticProps) { if (protoProps) defineProperties(Constructor.prototype, protoProps); if (staticProps) defineProperties(Constructor, staticProps); return Constructor; }; }();
+
+function _classCallCheck(instance, Constructor) { if (!(instance instanceof Constructor)) { throw new TypeError("Cannot call a class as a function"); } }
+
+var Workspace = function () {
+    function Workspace() {
+        _classCallCheck(this, Workspace);
+
+        this.createWidget = function (topicUrl, topicType, viewImplType) {
+            console.log(topicUrl + " --- " + topicType);
+        };
+        this.widgets = new Array();
+    }
+
+    _createClass(Workspace, [{
+        key: "DelegateEvent",
+        value: function DelegateEvent(selector, event, method) {
+            if (event == "resize") {
+                $(selector).resize(method);
+            }
+            $(document).delegate(selector, event, method);
+        }
+    }]);
+
+    return Workspace;
+}();
+
+exports.Workspace = Workspace;
+function fnctCreateWidget(topicUrl, topicType) {
+    exports.actualWorkspace.createWidget(topicUrl, topicType);
+}
+exports.fnctCreateWidget = fnctCreateWidget;
+exports.actualWorkspace = new Workspace();
+
+},{}],3:[function(require,module,exports){
 /// <reference path="../typings/tsd.d.ts" />
 "use strict";
 
@@ -65,6 +104,7 @@ var ROSEvent = function () {
             ROSEvent._connected = false;
             console.log(error);
         };
+        //build menu dynamically, containing supported ROS topics
         this.buildMenu = function () {
             var topicTypes = ['geometry_msgs/Twist', 'sensor_msgs/Image', 'sensor_msgs/NavSatFix', 'sensor_msgs/Imu'];
             var callbacksRemaining = topicTypes.length;
