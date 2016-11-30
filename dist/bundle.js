@@ -13,44 +13,72 @@ function init() {
 }
 init();
 
-},{"./models/workspace":2,"./services/rosEvent":3}],2:[function(require,module,exports){
+},{"./models/workspace":3,"./services/rosEvent":4}],2:[function(require,module,exports){
 "use strict";
-
-var _createClass = function () { function defineProperties(target, props) { for (var i = 0; i < props.length; i++) { var descriptor = props[i]; descriptor.enumerable = descriptor.enumerable || false; descriptor.configurable = true; if ("value" in descriptor) descriptor.writable = true; Object.defineProperty(target, descriptor.key, descriptor); } } return function (Constructor, protoProps, staticProps) { if (protoProps) defineProperties(Constructor.prototype, protoProps); if (staticProps) defineProperties(Constructor, staticProps); return Constructor; }; }();
 
 function _classCallCheck(instance, Constructor) { if (!(instance instanceof Constructor)) { throw new TypeError("Cannot call a class as a function"); } }
 
-var Workspace = function () {
-    function Workspace() {
-        _classCallCheck(this, Workspace);
+var Widget = function Widget(id, topicUrl, topicType, sizeX, sizeY, posX, posY, viewImplType, parameter) {
+    _classCallCheck(this, Widget);
 
-        this.createWidget = function (topicUrl, topicType, viewImplType) {
-            console.log(topicUrl + " --- " + topicType);
-        };
-        this.widgets = new Array();
+    this.id = id;
+    this.topicUrl = topicUrl;
+    this.topicType = topicType;
+    this.sizeX = sizeX;
+    this.sizeY = sizeY;
+    this.posX = posX;
+    this.posY = posY;
+    this.viewImplType = viewImplType;
+    if (parameter) {
+        this.parameter = parameter;
+    } else {
+        this.parameter = null;
     }
+};
 
-    _createClass(Workspace, [{
-        key: "DelegateEvent",
-        value: function DelegateEvent(selector, event, method) {
-            if (event == "resize") {
-                $(selector).resize(method);
+exports.Widget = Widget;
+
+},{}],3:[function(require,module,exports){
+/// <reference path="../typings/tsd.d.ts" />
+"use strict";
+
+function _classCallCheck(instance, Constructor) { if (!(instance instanceof Constructor)) { throw new TypeError("Cannot call a class as a function"); } }
+
+var widget_1 = require("./widget");
+
+var Workspace = function Workspace() {
+    var _this = this;
+
+    _classCallCheck(this, Workspace);
+
+    this.reader = new FileReader();
+    this.createWidget = function (topicUrl, topicType, viewImplType) {
+        $.ajax({
+            url: "widgets/" + topicType + "/index.hbs",
+            beforeSend: function beforeSend() {},
+            success: function success(data) {
+                // MyApp.templates._widgetsTemplates[widget.alias] = Handlebars.compile(data);
+                console.log(data);
+            },
+            error: function error(e1, e2) {
+                console.log(e1);
+                console.log(e2);
             }
-            $(document).delegate(selector, event, method);
-        }
-    }]);
-
-    return Workspace;
-}();
+        });
+        var widget = new widget_1.Widget(_this.widgets.length, topicUrl, topicType, 100, 100, 100, 100, '');
+        _this.widgets.push();
+    };
+    this.widgets = new Array();
+};
 
 exports.Workspace = Workspace;
+window['fnctCreateWidget'] = fnctCreateWidget;
 function fnctCreateWidget(topicUrl, topicType) {
     exports.actualWorkspace.createWidget(topicUrl, topicType);
 }
-exports.fnctCreateWidget = fnctCreateWidget;
 exports.actualWorkspace = new Workspace();
 
-},{}],3:[function(require,module,exports){
+},{"./widget":2}],4:[function(require,module,exports){
 /// <reference path="../typings/tsd.d.ts" />
 "use strict";
 

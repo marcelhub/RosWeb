@@ -11,7 +11,6 @@ function init() {
   $(document).ready(function () {
     let ros: ROSLIB.Ros = new ROSLIB.Ros("");
     let rosEvents: ROSEvent = new ROSEvent(ros);
-    console.log(actualWorkspace);
   });
 }
 

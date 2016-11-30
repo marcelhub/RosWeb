@@ -10,14 +10,14 @@ this["MyApp"]["templates"]["menu"] = Handlebars.template({"1":function(container
   if (stack1 != null) { buffer += stack1; }
   return buffer + "    <li role=\"separator\" class=\"divider\"></li>\n";
 },"2":function(container,depth0,helpers,partials,data,blockParams,depths) {
-    var helper, alias1=container.escapeExpression, alias2=depth0 != null ? depth0 : {}, alias3=helpers.helperMissing, alias4="function";
+    var helper, alias1=depth0 != null ? depth0 : {}, alias2=helpers.helperMissing, alias3="function", alias4=container.escapeExpression;
 
   return "        <li><a href=\"javascript:void(0);\" class=\"jsTopicToWidget\" onclick=\"fnctCreateWidget('"
-    + alias1(container.lambda((depths[1] != null ? depths[1].type : depths[1]), depth0))
+    + alias4(((helper = (helper = helpers.topic || (depth0 != null ? depth0.topic : depth0)) != null ? helper : alias2),(typeof helper === alias3 ? helper.call(alias1,{"name":"topic","hash":{},"data":data}) : helper)))
     + "','"
-    + alias1(((helper = (helper = helpers.topic || (depth0 != null ? depth0.topic : depth0)) != null ? helper : alias3),(typeof helper === alias4 ? helper.call(alias2,{"name":"topic","hash":{},"data":data}) : helper)))
+    + alias4(container.lambda((depths[1] != null ? depths[1].type : depths[1]), depth0))
     + "')\">"
-    + alias1(((helper = (helper = helpers.topic || (depth0 != null ? depth0.topic : depth0)) != null ? helper : alias3),(typeof helper === alias4 ? helper.call(alias2,{"name":"topic","hash":{},"data":data}) : helper)))
+    + alias4(((helper = (helper = helpers.topic || (depth0 != null ? depth0.topic : depth0)) != null ? helper : alias2),(typeof helper === alias3 ? helper.call(alias1,{"name":"topic","hash":{},"data":data}) : helper)))
     + "</a></li>\n";
 },"compiler":[7,">= 4.0.0"],"main":function(container,depth0,helpers,partials,data,blockParams,depths) {
     var stack1, helper, options, buffer = "";

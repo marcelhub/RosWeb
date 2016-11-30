@@ -1,4 +1,5 @@
 var gulp = require('gulp');
+var fs = require('fs');
 var browserify = require('browserify');
 var source = require('vinyl-source-stream');
 var tsify = require('tsify');

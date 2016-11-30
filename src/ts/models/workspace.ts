@@ -1,6 +1,9 @@
+/// <reference path="../typings/tsd.d.ts" />
+
 import {WebView} from "./webView"
 import {Widget} from "./widget"
 
+declare var MyApp: any;
 
 export class Workspace {
     public rosMasterAdress: string;
@@ -12,20 +15,28 @@ export class Workspace {
         this.widgets = new Array();
     }
 
-    public DelegateEvent(selector: string | Document | Window, event: string, method: () => void) {
-        if (event == "resize") {
-            $(selector).resize(method);
-        }
-            $(document).delegate(selector, event, method);
-    }
-
     public createWidget = (topicUrl:string, topicType: string, viewImplType?: string) => {
-        console.log(topicUrl +" --- "+topicType);
-        
+        $.ajax({
+            url: "widgets/" + topicType + "/index.hbs",
+            beforeSend: function () {
+
+            },
+            success: function (data: string) {
+                // MyApp.templates._widgetsTemplates[widget.alias] = Handlebars.compile(data);
+                console.log(data);
+            },
+            error: function (e1: any, e2: any) {
+                console.log(e1);
+                console.log(e2);
+            }
+        });
+        let widget = new Widget(this.widgets.length, topicUrl, topicType, 100,100,100,100, '');
+        this.widgets.push()        
     }
 }
 
-export function fnctCreateWidget(topicUrl: string, topicType: string) {
+window['fnctCreateWidget'] = fnctCreateWidget;
+function fnctCreateWidget(topicUrl: string, topicType: string) {
     actualWorkspace.createWidget(topicUrl, topicType);
 }
 
