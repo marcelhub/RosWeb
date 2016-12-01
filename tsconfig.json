@@ -4,7 +4,6 @@
         "src/ts/*.ts"        
     ],
     "compilerOptions": {
-        "noImplicitAny": true,
         "target": "es6",
         "noImplicitAny": false
     }

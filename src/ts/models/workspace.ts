@@ -31,7 +31,6 @@ export class Workspace {
             }
         });
         let widget = new Widget(this.widgets.length, topicUrl, topicType, 100,100,100,100, '');
-        this.widgets.push()        
     }
 }
 

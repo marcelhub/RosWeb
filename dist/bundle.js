@@ -8,7 +8,7 @@ function init() {
     $(document).ready(function () {
         var ros = new ROSLIB.Ros("");
         var rosEvents = new rosEvent_1.ROSEvent(ros);
-        console.log(workspace_1.actualWorkspace);
+        workspace_1.actualWorkspace;
     });
 }
 init();
@@ -51,7 +51,6 @@ var Workspace = function Workspace() {
 
     _classCallCheck(this, Workspace);
 
-    this.reader = new FileReader();
     this.createWidget = function (topicUrl, topicType, viewImplType) {
         $.ajax({
             url: "widgets/" + topicType + "/index.hbs",
@@ -66,7 +65,6 @@ var Workspace = function Workspace() {
             }
         });
         var widget = new widget_1.Widget(_this.widgets.length, topicUrl, topicType, 100, 100, 100, 100, '');
-        _this.widgets.push();
     };
     this.widgets = new Array();
 };
