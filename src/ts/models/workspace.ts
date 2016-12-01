@@ -9,32 +9,45 @@ export class Workspace {
     public rosMasterAdress: string;
     public name: string;
     public id: number;
-    public widgets: Array<Widget>;
+    public widgets: Widget[];
 
     constructor() {
-        this.widgets = new Array();
+        this.widgets = [];
     }
 
-    public createWidget = (topicUrl:string, topicType: string, viewImplType?: string) => {
+    public createWidget(topicUrl:string, topicType: string, viewImplType?: string){
         $.ajax({
             url: "widgets/" + topicType + "/index.hbs",
             beforeSend: function () {
 
             },
             success: function (data: string) {
-                // MyApp.templates._widgetsTemplates[widget.alias] = Handlebars.compile(data);
                 console.log(data);
+                let posX = parseInt($(data).attr("data-pos-x"));
+                let posY = parseInt($(data).attr("data-pos-y"));
+                let width = parseInt($(data).attr("data-min-width"));
+                let height = parseInt($(data).attr("data-min-height"));
+                let crtWidget = new Widget(actualWorkspace.widgets.length, topicUrl, topicType,
+                                            width, height, posX, posY, '');
+                actualWorkspace.widgets.push(crtWidget);
+                actualWorkspace.insertWidget(crtWidget, data);
+
             },
             error: function (e1: any, e2: any) {
                 console.log(e1);
                 console.log(e2);
-            }
+            },
+            cache: false
         });
-        let widget = new Widget(this.widgets.length, topicUrl, topicType, 100,100,100,100, '');
+    }
+
+    public insertWidget = (widget: Widget, data: string) => {
+        $("#frontend-container").append(data);
+        $(".test").draggable();
     }
 }
 
-window['fnctCreateWidget'] = fnctCreateWidget;
+window["fnctCreateWidget"] = fnctCreateWidget;
 function fnctCreateWidget(topicUrl: string, topicType: string) {
     actualWorkspace.createWidget(topicUrl, topicType);
 }

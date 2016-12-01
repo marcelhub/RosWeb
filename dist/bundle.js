@@ -18,59 +18,92 @@ init();
 
 function _classCallCheck(instance, Constructor) { if (!(instance instanceof Constructor)) { throw new TypeError("Cannot call a class as a function"); } }
 
-var Widget = function Widget(id, topicUrl, topicType, sizeX, sizeY, posX, posY, viewImplType, parameter) {
-    _classCallCheck(this, Widget);
+function _possibleConstructorReturn(self, call) { if (!self) { throw new ReferenceError("this hasn't been initialised - super() hasn't been called"); } return call && (typeof call === "object" || typeof call === "function") ? call : self; }
 
-    this.id = id;
-    this.topicUrl = topicUrl;
-    this.topicType = topicType;
-    this.sizeX = sizeX;
-    this.sizeY = sizeY;
-    this.posX = posX;
-    this.posY = posY;
-    this.viewImplType = viewImplType;
-    if (parameter) {
-        this.parameter = parameter;
-    } else {
-        this.parameter = null;
+function _inherits(subClass, superClass) { if (typeof superClass !== "function" && superClass !== null) { throw new TypeError("Super expression must either be null or a function, not " + typeof superClass); } subClass.prototype = Object.create(superClass && superClass.prototype, { constructor: { value: subClass, enumerable: false, writable: true, configurable: true } }); if (superClass) Object.setPrototypeOf ? Object.setPrototypeOf(subClass, superClass) : subClass.__proto__ = superClass; }
+
+var widgetEvents_1 = require("../services/widgetEvents");
+
+var Widget = function (_widgetEvents_1$Widge) {
+    _inherits(Widget, _widgetEvents_1$Widge);
+
+    function Widget(id, topicUrl, topicType, width, height, posX, posY, viewImplType, parameter) {
+        _classCallCheck(this, Widget);
+
+        var _this = _possibleConstructorReturn(this, (Widget.__proto__ || Object.getPrototypeOf(Widget)).call(this));
+
+        _this.id = id;
+        _this.topicUrl = topicUrl;
+        _this.topicType = topicType;
+        _this.width = width;
+        _this.height = height;
+        _this.posX = posX;
+        _this.posY = posY;
+        _this.viewImplType = viewImplType;
+        if (parameter) {
+            _this.parameter = parameter;
+        } else {
+            _this.parameter = null;
+        }
+        return _this;
     }
-};
+
+    return Widget;
+}(widgetEvents_1.WidgetEvents);
 
 exports.Widget = Widget;
 
-},{}],3:[function(require,module,exports){
+},{"../services/widgetEvents":5}],3:[function(require,module,exports){
 /// <reference path="../typings/tsd.d.ts" />
 "use strict";
+
+var _createClass = function () { function defineProperties(target, props) { for (var i = 0; i < props.length; i++) { var descriptor = props[i]; descriptor.enumerable = descriptor.enumerable || false; descriptor.configurable = true; if ("value" in descriptor) descriptor.writable = true; Object.defineProperty(target, descriptor.key, descriptor); } } return function (Constructor, protoProps, staticProps) { if (protoProps) defineProperties(Constructor.prototype, protoProps); if (staticProps) defineProperties(Constructor, staticProps); return Constructor; }; }();
 
 function _classCallCheck(instance, Constructor) { if (!(instance instanceof Constructor)) { throw new TypeError("Cannot call a class as a function"); } }
 
 var widget_1 = require("./widget");
 
-var Workspace = function Workspace() {
-    var _this = this;
+var Workspace = function () {
+    function Workspace() {
+        _classCallCheck(this, Workspace);
 
-    _classCallCheck(this, Workspace);
+        this.insertWidget = function (widget, data) {
+            $("#frontend-container").append(data);
+            $(".test").draggable();
+        };
+        this.widgets = [];
+    }
 
-    this.createWidget = function (topicUrl, topicType, viewImplType) {
-        $.ajax({
-            url: "widgets/" + topicType + "/index.hbs",
-            beforeSend: function beforeSend() {},
-            success: function success(data) {
-                // MyApp.templates._widgetsTemplates[widget.alias] = Handlebars.compile(data);
-                console.log(data);
-            },
-            error: function error(e1, e2) {
-                console.log(e1);
-                console.log(e2);
-            }
-        });
-        var widget = new widget_1.Widget(_this.widgets.length, topicUrl, topicType, 100, 100, 100, 100, '');
-    };
-    this.widgets = new Array();
-};
+    _createClass(Workspace, [{
+        key: "createWidget",
+        value: function createWidget(topicUrl, topicType, viewImplType) {
+            $.ajax({
+                url: "widgets/" + topicType + "/index.hbs",
+                beforeSend: function beforeSend() {},
+                success: function success(data) {
+                    console.log(data);
+                    var posX = parseInt($(data).attr("data-pos-x"));
+                    var posY = parseInt($(data).attr("data-pos-y"));
+                    var width = parseInt($(data).attr("data-min-width"));
+                    var height = parseInt($(data).attr("data-min-height"));
+                    var crtWidget = new widget_1.Widget(exports.actualWorkspace.widgets.length, topicUrl, topicType, width, height, posX, posY, '');
+                    exports.actualWorkspace.widgets.push(crtWidget);
+                    exports.actualWorkspace.insertWidget(crtWidget, data);
+                },
+                error: function error(e1, e2) {
+                    console.log(e1);
+                    console.log(e2);
+                },
+                cache: false
+            });
+        }
+    }]);
+
+    return Workspace;
+}();
 
 exports.Workspace = Workspace;
-window['fnctCreateWidget'] = fnctCreateWidget;
+window["fnctCreateWidget"] = fnctCreateWidget;
 function fnctCreateWidget(topicUrl, topicType) {
     exports.actualWorkspace.createWidget(topicUrl, topicType);
 }
@@ -243,7 +276,40 @@ function buildJSON(dict) {
     return topicResult;
 }
 
-},{}]},{},[1])
+},{}],5:[function(require,module,exports){
+/// <reference path="../typings/tsd.d.ts" />
+"use strict";
+
+var _createClass = function () { function defineProperties(target, props) { for (var i = 0; i < props.length; i++) { var descriptor = props[i]; descriptor.enumerable = descriptor.enumerable || false; descriptor.configurable = true; if ("value" in descriptor) descriptor.writable = true; Object.defineProperty(target, descriptor.key, descriptor); } } return function (Constructor, protoProps, staticProps) { if (protoProps) defineProperties(Constructor.prototype, protoProps); if (staticProps) defineProperties(Constructor, staticProps); return Constructor; }; }();
+
+function _classCallCheck(instance, Constructor) { if (!(instance instanceof Constructor)) { throw new TypeError("Cannot call a class as a function"); } }
+
+var rosEvent_1 = require("./rosEvent");
+
+var WidgetEvents = function () {
+    function WidgetEvents() {
+        _classCallCheck(this, WidgetEvents);
+
+        this.ros = rosEvent_1.ROSEvent.getInstance();
+        // this.DelegateEvent("jsWidgetInsert");
+    }
+
+    _createClass(WidgetEvents, [{
+        key: "DelegateEvent",
+        value: function DelegateEvent(selector, event, method) {
+            if (event == "resize") {
+                $(selector).resize(method);
+            }
+            $(document).delegate(selector, event, method);
+        }
+    }]);
+
+    return WidgetEvents;
+}();
+
+exports.WidgetEvents = WidgetEvents;
+
+},{"./rosEvent":4}]},{},[1])
 
 
 //# sourceMappingURL=bundle.js.map
