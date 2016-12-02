@@ -10,15 +10,26 @@ this["MyApp"]["templates"]["menu"] = Handlebars.template({"1":function(container
   if (stack1 != null) { buffer += stack1; }
   return buffer + "    <li role=\"separator\" class=\"divider\"></li>\n";
 },"2":function(container,depth0,helpers,partials,data,blockParams,depths) {
-    var helper, alias1=depth0 != null ? depth0 : {}, alias2=helpers.helperMissing, alias3="function", alias4=container.escapeExpression;
+    var stack1, helper, options, alias1=depth0 != null ? depth0 : {}, alias2=helpers.helperMissing, alias3="function", buffer = 
+  "        <!--<li></li>-->\n        <li class=\"dropdown-submenu\">\n            <a class=\"jsTopicImplementation\" tabindex=\"-1\" href=\"#\">"
+    + container.escapeExpression(((helper = (helper = helpers.topic || (depth0 != null ? depth0.topic : depth0)) != null ? helper : alias2),(typeof helper === alias3 ? helper.call(alias1,{"name":"topic","hash":{},"data":data}) : helper)))
+    + "<span class=\"caret\"></span></a>\n            <ul class=\"dropdown-menu\">\n";
+  stack1 = ((helper = (helper = helpers.implementations || (depth0 != null ? depth0.implementations : depth0)) != null ? helper : alias2),(options={"name":"implementations","hash":{},"fn":container.program(3, data, 0, blockParams, depths),"inverse":container.noop,"data":data}),(typeof helper === alias3 ? helper.call(alias1,options) : helper));
+  if (!helpers.implementations) { stack1 = helpers.blockHelperMissing.call(depth0,stack1,options)}
+  if (stack1 != null) { buffer += stack1; }
+  return buffer + "            </ul>\n        </li>\n";
+},"3":function(container,depth0,helpers,partials,data,blockParams,depths) {
+    var helper, alias1=container.lambda, alias2=container.escapeExpression, alias3=depth0 != null ? depth0 : {}, alias4=helpers.helperMissing, alias5="function";
 
-  return "        <li><a href=\"javascript:void(0);\" class=\"jsTopicToWidget\" onclick=\"fnctCreateWidget('"
-    + alias4(((helper = (helper = helpers.topic || (depth0 != null ? depth0.topic : depth0)) != null ? helper : alias2),(typeof helper === alias3 ? helper.call(alias1,{"name":"topic","hash":{},"data":data}) : helper)))
+  return "                    <li style=\"color: black\">\n                        <a href=\"javascript:void(0);\" class=\"jsTopicToWidget\" onclick=\"fnctCreateWidget('"
+    + alias2(alias1((depths[1] != null ? depths[1].topic : depths[1]), depth0))
     + "','"
-    + alias4(container.lambda((depths[1] != null ? depths[1].type : depths[1]), depth0))
+    + alias2(alias1((depths[2] != null ? depths[2].type : depths[2]), depth0))
+    + "','"
+    + alias2(((helper = (helper = helpers.implementation || (depth0 != null ? depth0.implementation : depth0)) != null ? helper : alias4),(typeof helper === alias5 ? helper.call(alias3,{"name":"implementation","hash":{},"data":data}) : helper)))
     + "')\">"
-    + alias4(((helper = (helper = helpers.topic || (depth0 != null ? depth0.topic : depth0)) != null ? helper : alias2),(typeof helper === alias3 ? helper.call(alias1,{"name":"topic","hash":{},"data":data}) : helper)))
-    + "</a></li>\n";
+    + alias2(((helper = (helper = helpers.implementation || (depth0 != null ? depth0.implementation : depth0)) != null ? helper : alias4),(typeof helper === alias5 ? helper.call(alias3,{"name":"implementation","hash":{},"data":data}) : helper)))
+    + "</a>\n                    </li>\n";
 },"compiler":[7,">= 4.0.0"],"main":function(container,depth0,helpers,partials,data,blockParams,depths) {
     var stack1, helper, options, buffer = "";
 

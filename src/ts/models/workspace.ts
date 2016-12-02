@@ -19,9 +19,9 @@ export class Workspace {
         this.webView = new WebView();
     }
 
-    public createWidget(topicUrl:string, topicType: string, viewImplType?: string){
+    public createWidget(topicUrl:string, topicType: string, topicImplementation: string){
         $.ajax({
-            url: "widgets/" + topicType + "/index.hbs",
+            url: "widgets/" + topicType + "/" + topicImplementation + "/index.hbs",
             beforeSend: function () {
 
             },
@@ -48,8 +48,8 @@ export class Workspace {
 }
 
 window["fnctCreateWidget"] = fnctCreateWidget;
-function fnctCreateWidget(topicUrl: string, topicType: string) {
-    actualWorkspace.createWidget(topicUrl, topicType);
+function fnctCreateWidget(topicUrl: string, topicType: string, topicImplementation: string) {
+    actualWorkspace.createWidget(topicUrl, topicType, topicImplementation);
 }
 
 

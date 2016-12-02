@@ -106,9 +106,9 @@ var Workspace = function () {
 
     _createClass(Workspace, [{
         key: "createWidget",
-        value: function createWidget(topicUrl, topicType, viewImplType) {
+        value: function createWidget(topicUrl, topicType, topicImplementation) {
             $.ajax({
-                url: "widgets/" + topicType + "/index.hbs",
+                url: "widgets/" + topicType + "/" + topicImplementation + "/index.hbs",
                 beforeSend: function beforeSend() {},
                 success: function success(data) {
                     console.log(data);
@@ -135,8 +135,8 @@ var Workspace = function () {
 
 exports.Workspace = Workspace;
 window["fnctCreateWidget"] = fnctCreateWidget;
-function fnctCreateWidget(topicUrl, topicType) {
-    exports.actualWorkspace.createWidget(topicUrl, topicType);
+function fnctCreateWidget(topicUrl, topicType, topicImplementation) {
+    exports.actualWorkspace.createWidget(topicUrl, topicType, topicImplementation);
 }
 exports.actualWorkspace = new Workspace();
 
@@ -198,15 +198,25 @@ var ROSEvent = function () {
         this.buildMenu = function () {
             var topicTypes = ['geometry_msgs/Twist', 'sensor_msgs/Image', 'sensor_msgs/NavSatFix', 'sensor_msgs/Imu'];
             var callbacksRemaining = topicTypes.length;
-            var dict = new Map();
+            var typesWithTopics = new Map();
+            var typesWithViews = new Map();
+            typesWithViews.set('geometry_msgs/Twist', ['A']);
+            typesWithViews.set('sensor_msgs/Image', ['Videostream']);
+            typesWithViews.set('sensor_msgs/NavSatFix', ['B']);
+            typesWithViews.set('sensor_msgs/Imu', ['C']);
             for (var i = 0; i < topicTypes.length; i++) {
                 ROSEvent._ros.getTopicsForType(topicTypes[i], function (topicsResult) {
                     ROSEvent._ros.getTopicType(topicsResult[0], function (typeResult) {
-                        dict.set(typeResult, topicsResult);
+                        typesWithTopics.set(typeResult, topicsResult);
                         --callbacksRemaining;
                         if (callbacksRemaining == 0) {
-                            var result = MyApp.templates.menu({ types: buildJSON(dict) });
+                            var result = MyApp.templates.menu({ types: buildJSON(typesWithTopics, typesWithViews) });
                             $('.dropdown-menu').html(result);
+                            $('.dropdown-submenu a.jsTopicImplementation').on("click", function (e) {
+                                $(this).next('ul').toggle();
+                                e.stopPropagation();
+                                e.preventDefault();
+                            });
                         }
                     });
                 });
@@ -242,31 +252,34 @@ var ROSEvent = function () {
 ROSEvent._connected = false;
 exports.ROSEvent = ROSEvent;
 //build JSON to get rendered with handlebars
-function buildJSON(dict) {
+function buildJSON(typesWithTopics, typesWithViews) {
     var topicResult = [];
     var _iteratorNormalCompletion = true;
     var _didIteratorError = false;
     var _iteratorError = undefined;
 
     try {
-        for (var _iterator = dict.keys()[Symbol.iterator](), _step; !(_iteratorNormalCompletion = (_step = _iterator.next()).done); _iteratorNormalCompletion = true) {
+        for (var _iterator = typesWithTopics.keys()[Symbol.iterator](), _step; !(_iteratorNormalCompletion = (_step = _iterator.next()).done); _iteratorNormalCompletion = true) {
             var key = _step.value;
 
-            if (dict.get(key).length > 0) {
+            if (typesWithTopics.get(key).length > 0) {
                 var topicsArr = [];
+                var implArr = [];
+                //build implementation array
                 var _iteratorNormalCompletion2 = true;
                 var _didIteratorError2 = false;
                 var _iteratorError2 = undefined;
 
                 try {
-                    for (var _iterator2 = dict.get(key)[Symbol.iterator](), _step2; !(_iteratorNormalCompletion2 = (_step2 = _iterator2.next()).done); _iteratorNormalCompletion2 = true) {
-                        var t = _step2.value;
+                    for (var _iterator2 = typesWithViews.get(key)[Symbol.iterator](), _step2; !(_iteratorNormalCompletion2 = (_step2 = _iterator2.next()).done); _iteratorNormalCompletion2 = true) {
+                        var impl = _step2.value;
 
-                        var topicItem = {
-                            topic: t
+                        var implItem = {
+                            implementation: impl
                         };
-                        topicsArr.push(topicItem);
+                        implArr.push(implItem);
                     }
+                    //build topics array
                 } catch (err) {
                     _didIteratorError2 = true;
                     _iteratorError2 = err;
@@ -278,6 +291,35 @@ function buildJSON(dict) {
                     } finally {
                         if (_didIteratorError2) {
                             throw _iteratorError2;
+                        }
+                    }
+                }
+
+                var _iteratorNormalCompletion3 = true;
+                var _didIteratorError3 = false;
+                var _iteratorError3 = undefined;
+
+                try {
+                    for (var _iterator3 = typesWithTopics.get(key)[Symbol.iterator](), _step3; !(_iteratorNormalCompletion3 = (_step3 = _iterator3.next()).done); _iteratorNormalCompletion3 = true) {
+                        var t = _step3.value;
+
+                        var topicItem = {
+                            topic: t,
+                            implementations: implArr
+                        };
+                        topicsArr.push(topicItem);
+                    }
+                } catch (err) {
+                    _didIteratorError3 = true;
+                    _iteratorError3 = err;
+                } finally {
+                    try {
+                        if (!_iteratorNormalCompletion3 && _iterator3.return) {
+                            _iterator3.return();
+                        }
+                    } finally {
+                        if (_didIteratorError3) {
+                            throw _iteratorError3;
                         }
                     }
                 }
@@ -304,6 +346,7 @@ function buildJSON(dict) {
         }
     }
 
+    console.log(topicResult);
     return topicResult;
 }
 

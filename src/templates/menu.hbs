@@ -1,7 +1,17 @@
 {{#types}}
     <li class="dropdown-header">{{type}}</li>
     {{#topics}}
-        <li><a href="javascript:void(0);" class="jsTopicToWidget" onclick="fnctCreateWidget('{{topic}}','{{../type}}')">{{topic}}</a></li>
+        <!--<li></li>-->
+        <li class="dropdown-submenu">
+            <a class="jsTopicImplementation" tabindex="-1" href="#">{{topic}}<span class="caret"></span></a>
+            <ul class="dropdown-menu">
+                {{#implementations}}
+                    <li style="color: black">
+                        <a href="javascript:void(0);" class="jsTopicToWidget" onclick="fnctCreateWidget('{{../topic}}','{{../../type}}','{{implementation}}')">{{implementation}}</a>
+                    </li>
+                {{/implementations}}
+            </ul>
+        </li>
     {{/topics}}
     <li role="separator" class="divider"></li>
 {{/types}}

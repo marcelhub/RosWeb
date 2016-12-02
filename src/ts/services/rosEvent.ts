@@ -79,16 +79,27 @@ export class ROSEvent {
     private buildMenu = ()  => {   
         let topicTypes: string[] = ['geometry_msgs/Twist', 'sensor_msgs/Image', 'sensor_msgs/NavSatFix','sensor_msgs/Imu'];
         let callbacksRemaining: number = topicTypes.length;
-        let dict: Map<string, string[]> = new Map<string, string[]>();
+        let typesWithTopics: Map<string, string[]> = new Map<string, string[]>();
+        let typesWithViews: Map<string, string[]> = new Map<string, string[]>();
+        typesWithViews.set('geometry_msgs/Twist',['A']);
+        typesWithViews.set('sensor_msgs/Image',['Videostream']);
+        typesWithViews.set('sensor_msgs/NavSatFix',['B']);
+        typesWithViews.set('sensor_msgs/Imu',['C']);
+
 
         for (var i = 0; i < topicTypes.length; i++) {
             ROSEvent._ros.getTopicsForType(topicTypes[i],function(topicsResult) {
                 ROSEvent._ros.getTopicType(topicsResult[0], function(typeResult) {
-                    dict.set(typeResult, topicsResult);
+                    typesWithTopics.set(typeResult, topicsResult);
                     --callbacksRemaining;
                     if(callbacksRemaining == 0) {
-                        let result = MyApp.templates.menu({types: buildJSON(dict)});
-                         $('.dropdown-menu').html(result);
+                        let result = MyApp.templates.menu({types: buildJSON(typesWithTopics, typesWithViews)});
+                        $('.dropdown-menu').html(result);
+                        $('.dropdown-submenu a.jsTopicImplementation').on("click", function(e){
+                            $(this).next('ul').toggle();
+                            e.stopPropagation();
+                            e.preventDefault();
+                        });
                     }
                 });
             });
@@ -97,14 +108,26 @@ export class ROSEvent {
 }
 
 //build JSON to get rendered with handlebars
-function buildJSON(dict: Map<string, string[]>) {
+function buildJSON(typesWithTopics: Map<string, string[]>, typesWithViews: Map<string, string[]>) {
     let topicResult: Object[] = [];    
-    for(let key of dict.keys()) {
-        if(dict.get(key).length > 0) {
+    for(let key of typesWithTopics.keys()) {
+        if(typesWithTopics.get(key).length > 0) {
         let topicsArr: Object[] = [];
-        for(let t of dict.get(key)) {
+        let implArr: Object[] = [];
+
+        //build implementation array
+        for(let impl of typesWithViews.get(key)) {
+            let implItem = {
+                implementation: impl
+            }
+            implArr.push(implItem);
+        }
+
+        //build topics array
+        for(let t of typesWithTopics.get(key)) {
             let topicItem = {
-                topic: t
+                topic: t,
+                implementations: implArr
             }
             topicsArr.push(topicItem);
         }
@@ -116,5 +139,6 @@ function buildJSON(dict: Map<string, string[]>) {
         topicResult.push(item);
         }
     }
+    console.log(topicResult);
     return topicResult;
 }
