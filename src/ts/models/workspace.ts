@@ -10,9 +10,13 @@ export class Workspace {
     public name: string;
     public id: number;
     public widgets: Widget[];
+    public webView: WebView;
+    public idCounter: number;
 
     constructor() {
         this.widgets = [];
+        this.idCounter = 0;
+        this.webView = new WebView();
     }
 
     public createWidget(topicUrl:string, topicType: string, viewImplType?: string){
@@ -27,10 +31,11 @@ export class Workspace {
                 let posY = parseInt($(data).attr("data-pos-y"));
                 let width = parseInt($(data).attr("data-min-width"));
                 let height = parseInt($(data).attr("data-min-height"));
-                let crtWidget = new Widget(actualWorkspace.widgets.length, topicUrl, topicType,
-                                            width, height, posX, posY, '');
+                let crtWidget = new Widget(actualWorkspace.idCounter, topicUrl, topicType,
+                                            width, height, posX, posY, data, '');
+                actualWorkspace.webView.insertWidget(crtWidget);
                 actualWorkspace.widgets.push(crtWidget);
-                actualWorkspace.insertWidget(crtWidget, data);
+                actualWorkspace.idCounter++;
 
             },
             error: function (e1: any, e2: any) {
@@ -39,11 +44,6 @@ export class Workspace {
             },
             cache: false
         });
-    }
-
-    public insertWidget = (widget: Widget, data: string) => {
-        $("#frontend-container").append(data);
-        $(".test").draggable();
     }
 }
 

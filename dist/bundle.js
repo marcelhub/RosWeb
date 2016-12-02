@@ -13,7 +13,37 @@ function init() {
 }
 init();
 
-},{"./models/workspace":3,"./services/rosEvent":4}],2:[function(require,module,exports){
+},{"./models/workspace":4,"./services/rosEvent":5}],2:[function(require,module,exports){
+"use strict";
+
+function _classCallCheck(instance, Constructor) { if (!(instance instanceof Constructor)) { throw new TypeError("Cannot call a class as a function"); } }
+
+var WebView = function WebView() {
+    _classCallCheck(this, WebView);
+
+    this.insertWidget = function (widget) {
+        var widgetWrapperData = {
+            id: widget.id,
+            posX: widget.posX,
+            posY: widget.posY,
+            width: widget.width,
+            height: widget.height
+        };
+        console.log(widgetWrapperData);
+        var wrapperHtml = MyApp.templates.widgetWrapper(widgetWrapperData);
+        var widgetHtml = MyApp.templates.index();
+        console.log(widgetHtml);
+        // $("#frontend-container").appendTo(wrapperHtml);
+        // $("div[data-widget-id="+widget.id+"]").appendTo(widgetHtml);
+        $(wrapperHtml).appendTo("#frontend-container");
+        $(widgetHtml).appendTo("div[data-widget-id=" + widget.id + "]");
+        $("div[data-widget-id=" + widget.id + "]").draggable();
+    };
+};
+
+exports.WebView = WebView;
+
+},{}],3:[function(require,module,exports){
 "use strict";
 
 function _classCallCheck(instance, Constructor) { if (!(instance instanceof Constructor)) { throw new TypeError("Cannot call a class as a function"); } }
@@ -27,7 +57,7 @@ var widgetEvents_1 = require("../services/widgetEvents");
 var Widget = function (_widgetEvents_1$Widge) {
     _inherits(Widget, _widgetEvents_1$Widge);
 
-    function Widget(id, topicUrl, topicType, width, height, posX, posY, viewImplType, parameter) {
+    function Widget(id, topicUrl, topicType, width, height, posX, posY, html, viewImplType, parameter) {
         _classCallCheck(this, Widget);
 
         var _this = _possibleConstructorReturn(this, (Widget.__proto__ || Object.getPrototypeOf(Widget)).call(this));
@@ -39,6 +69,7 @@ var Widget = function (_widgetEvents_1$Widge) {
         _this.height = height;
         _this.posX = posX;
         _this.posY = posY;
+        _this.html = html;
         _this.viewImplType = viewImplType;
         if (parameter) {
             _this.parameter = parameter;
@@ -53,7 +84,7 @@ var Widget = function (_widgetEvents_1$Widge) {
 
 exports.Widget = Widget;
 
-},{"../services/widgetEvents":5}],3:[function(require,module,exports){
+},{"../services/widgetEvents":6}],4:[function(require,module,exports){
 /// <reference path="../typings/tsd.d.ts" />
 "use strict";
 
@@ -61,17 +92,16 @@ var _createClass = function () { function defineProperties(target, props) { for 
 
 function _classCallCheck(instance, Constructor) { if (!(instance instanceof Constructor)) { throw new TypeError("Cannot call a class as a function"); } }
 
+var webView_1 = require("./webView");
 var widget_1 = require("./widget");
 
 var Workspace = function () {
     function Workspace() {
         _classCallCheck(this, Workspace);
 
-        this.insertWidget = function (widget, data) {
-            $("#frontend-container").append(data);
-            $(".test").draggable();
-        };
         this.widgets = [];
+        this.idCounter = 0;
+        this.webView = new webView_1.WebView();
     }
 
     _createClass(Workspace, [{
@@ -86,9 +116,10 @@ var Workspace = function () {
                     var posY = parseInt($(data).attr("data-pos-y"));
                     var width = parseInt($(data).attr("data-min-width"));
                     var height = parseInt($(data).attr("data-min-height"));
-                    var crtWidget = new widget_1.Widget(exports.actualWorkspace.widgets.length, topicUrl, topicType, width, height, posX, posY, '');
+                    var crtWidget = new widget_1.Widget(exports.actualWorkspace.idCounter, topicUrl, topicType, width, height, posX, posY, data, '');
+                    exports.actualWorkspace.webView.insertWidget(crtWidget);
                     exports.actualWorkspace.widgets.push(crtWidget);
-                    exports.actualWorkspace.insertWidget(crtWidget, data);
+                    exports.actualWorkspace.idCounter++;
                 },
                 error: function error(e1, e2) {
                     console.log(e1);
@@ -109,7 +140,7 @@ function fnctCreateWidget(topicUrl, topicType) {
 }
 exports.actualWorkspace = new Workspace();
 
-},{"./widget":2}],4:[function(require,module,exports){
+},{"./webView":2,"./widget":3}],5:[function(require,module,exports){
 /// <reference path="../typings/tsd.d.ts" />
 "use strict";
 
@@ -276,7 +307,7 @@ function buildJSON(dict) {
     return topicResult;
 }
 
-},{}],5:[function(require,module,exports){
+},{}],6:[function(require,module,exports){
 /// <reference path="../typings/tsd.d.ts" />
 "use strict";
 
@@ -309,7 +340,7 @@ var WidgetEvents = function () {
 
 exports.WidgetEvents = WidgetEvents;
 
-},{"./rosEvent":4}]},{},[1])
+},{"./rosEvent":5}]},{},[1])
 
 
 //# sourceMappingURL=bundle.js.map

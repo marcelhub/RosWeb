@@ -27,3 +27,21 @@ this["MyApp"]["templates"]["menu"] = Handlebars.template({"1":function(container
   if (stack1 != null) { buffer += stack1; }
   return buffer;
 },"useData":true,"useDepths":true});
+this["MyApp"]["templates"]["widgetWrapper"] = Handlebars.template({"compiler":[7,">= 4.0.0"],"main":function(container,depth0,helpers,partials,data) {
+    var helper, alias1=depth0 != null ? depth0 : {}, alias2=helpers.helperMissing, alias3="function", alias4=container.escapeExpression;
+
+  return "<div class=\"jsWidgetWrapper\" data-widget-id=\""
+    + alias4(((helper = (helper = helpers.id || (depth0 != null ? depth0.id : depth0)) != null ? helper : alias2),(typeof helper === alias3 ? helper.call(alias1,{"name":"id","hash":{},"data":data}) : helper)))
+    + "\" style=\"left:"
+    + alias4(((helper = (helper = helpers.posX || (depth0 != null ? depth0.posX : depth0)) != null ? helper : alias2),(typeof helper === alias3 ? helper.call(alias1,{"name":"posX","hash":{},"data":data}) : helper)))
+    + "px;top:"
+    + alias4(((helper = (helper = helpers.posY || (depth0 != null ? depth0.posY : depth0)) != null ? helper : alias2),(typeof helper === alias3 ? helper.call(alias1,{"name":"posY","hash":{},"data":data}) : helper)))
+    + "px;width:"
+    + alias4(((helper = (helper = helpers.width || (depth0 != null ? depth0.width : depth0)) != null ? helper : alias2),(typeof helper === alias3 ? helper.call(alias1,{"name":"width","hash":{},"data":data}) : helper)))
+    + "px;height:"
+    + alias4(((helper = (helper = helpers.height || (depth0 != null ? depth0.height : depth0)) != null ? helper : alias2),(typeof helper === alias3 ? helper.call(alias1,{"name":"height","hash":{},"data":data}) : helper)))
+    + "px;position:absolute;\">\n\n</div>";
+},"useData":true});
+this["MyApp"]["templates"]["index"] = Handlebars.template({"compiler":[7,">= 4.0.0"],"main":function(container,depth0,helpers,partials,data) {
+    return "<meta  data-min-height=\"480\" data-min-width=\"640\" data-pos-x=\"300\" data-pos-y=\"300\">\n<img id=\"tests\" class=\"test\" src=\"http://192.168.1.97:8080/stream?topic=/axis/image_raw\"></img>\n";
+},"useData":true});
