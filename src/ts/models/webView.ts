@@ -4,7 +4,7 @@ import {Widget} from "./widget"
 declare var MyApp: any;
 
 export class WebView{
-    
+    private _widgetHeaderOffset = 50;
     constructor() {
 
     }
@@ -15,17 +15,17 @@ export class WebView{
             posX: widget.posX,
             posY: widget.posY,
             width: widget.width,
-            height: widget.height
+            height: widget.height + this._widgetHeaderOffset,
+            topic: widget.topicUrl,
+            topicImplementation: widget.topicImplementation,
+            btnSettings: $(widget.html).attr("data-btn-widget-settings")!="1"? false : true,
+            btnRemove: $(widget.html).attr("data-btn-widget-remove")!="1"? false : true
         };
-        console.log(widgetWrapperData);
         let wrapperHtml = MyApp.templates.widgetWrapper(widgetWrapperData);
-        let widgetHtml = MyApp.templates.index();
-        console.log(widgetHtml);
-        // $("#frontend-container").appendTo(wrapperHtml);
-        // $("div[data-widget-id="+widget.id+"]").appendTo(widgetHtml);
+        let widgetTemplateCompiled  = Handlebars.compile(widget.html);
+        let widgetHtml = widgetTemplateCompiled({});
         $(wrapperHtml).appendTo("#frontend-container");
         $(widgetHtml).appendTo("div[data-widget-id="+widget.id+"]");
-        
         $("div[data-widget-id="+widget.id+"]").draggable();
     }
 }

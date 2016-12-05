@@ -19,8 +19,7 @@ var sassOptions = {
 
 //handlebars
 gulp.task('handlebars', function () {
-    gulp.src(['src/templates/*.hbs',
-            'src/widgets/**/**/*.hbs'])
+    gulp.src(['src/templates/*.hbs'])
       .pipe(handlebars())
       .pipe(wrap('Handlebars.template(<%= contents %>)'))
       .pipe(declare({

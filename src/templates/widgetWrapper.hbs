@@ -1,3 +1,16 @@
 <div class="jsWidgetWrapper" data-widget-id="{{id}}" style="left:{{posX}}px;top:{{posY}}px;width:{{width}}px;height:{{height}}px;position:absolute;">
-
+    <div class="jsWidgetWrapperHeader cssWidgetWrapperHeader">
+        <h4>{{topicImplementation}}: {{topic}}
+            {{#if btnRemove}}
+                <a type="button" class="btn btn-primary pull-right jsWidgetRemove cssWidgetRemove" href="#">
+                    <i class="fa fa-window-close fa-2x" aria-hidden="true"></i>
+                </a>
+            {{/if}}
+            {{#if btnSettings}}
+                <a type="button" class="btn btn-primary pull-right jsWidgetSettings cssWidgetSettings" href="#">
+                    <i class="fa fa-cog fa-2x" aria-hidden="true"></i>
+                </a>
+            {{/if}}
+        </h4>
+    </div>
 </div>

@@ -1,17 +1,23 @@
 {{#types}}
     <li class="dropdown-header">{{type}}</li>
     {{#topics}}
-        <!--<li></li>-->
-        <li class="dropdown-submenu">
-            <a class="jsTopicImplementation" tabindex="-1" href="#">{{topic}}<span class="caret"></span></a>
-            <ul class="dropdown-menu">
-                {{#implementations}}
-                    <li style="color: black">
-                        <a href="javascript:void(0);" class="jsTopicToWidget" onclick="fnctCreateWidget('{{../topic}}','{{../../type}}','{{implementation}}')">{{implementation}}</a>
-                    </li>
-                {{/implementations}}
-            </ul>
-        </li>
+        {{#if implementations}}
+            <li class="dropdown-submenu">
+                <a class="jsTopicImplementation" tabindex="-1" href="#">{{topic}}<span class="caret"></span></a>
+                <ul class="dropdown-menu">
+                    {{#implementations}}
+                        <li style="color: black">
+                            <a href="javascript:void(0);" class="jsTopicToWidget" onclick="fnctCreateWidget('{{../topic}}','{{../../type}}','{{implementation}}')">{{implementation}}</a>
+                        </li>
+                    {{/implementations}}
+                </ul>
+            </li>
+        {{else}}
+            <li><a class="jsTopicImplementation" tabindex="-1" href="#">{{topic}}</a></li>
+        {{/if}}
     {{/topics}}
-    <li role="separator" class="divider"></li>
+    {{#if @last}}
+    {{else}}
+        <li role="separator" class="divider"></li>
+    {{/if}}
 {{/types}}

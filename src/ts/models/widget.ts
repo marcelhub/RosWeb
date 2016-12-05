@@ -9,12 +9,12 @@ export class Widget extends WidgetEvents{
     public posX: number;
     public posY: number;
     public html: string;
-    public viewImplType: string;
+    public topicImplementation: string;
     public parameter: any;
 
 
     constructor(id: number, topicUrl: string, topicType: string, width: number, height: number,
-                posX: number, posY: number, html: string, viewImplType: string, parameter?: any) {
+                posX: number, posY: number, html: string, topicImplementation: string, parameter?: any) {
         super();
         this.id = id;
         this.topicUrl = topicUrl;
@@ -24,7 +24,7 @@ export class Widget extends WidgetEvents{
         this.posX = posX;
         this.posY = posY;
         this.html = html;
-        this.viewImplType = viewImplType;
+        this.topicImplementation = topicImplementation;
         if(parameter) {
             this.parameter = parameter;
         } else {

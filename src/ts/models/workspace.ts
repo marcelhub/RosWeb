@@ -32,7 +32,7 @@ export class Workspace {
                 let width = parseInt($(data).attr("data-min-width"));
                 let height = parseInt($(data).attr("data-min-height"));
                 let crtWidget = new Widget(actualWorkspace.idCounter, topicUrl, topicType,
-                                            width, height, posX, posY, data, '');
+                                            width, height, posX, posY, data, topicImplementation);
                 actualWorkspace.webView.insertWidget(crtWidget);
                 actualWorkspace.widgets.push(crtWidget);
                 actualWorkspace.idCounter++;

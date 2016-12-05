@@ -81,10 +81,10 @@ export class ROSEvent {
         let callbacksRemaining: number = topicTypes.length;
         let typesWithTopics: Map<string, string[]> = new Map<string, string[]>();
         let typesWithViews: Map<string, string[]> = new Map<string, string[]>();
-        typesWithViews.set('geometry_msgs/Twist',['A']);
+        typesWithViews.set('geometry_msgs/Twist',[]);
         typesWithViews.set('sensor_msgs/Image',['Videostream']);
-        typesWithViews.set('sensor_msgs/NavSatFix',['B']);
-        typesWithViews.set('sensor_msgs/Imu',['C']);
+        typesWithViews.set('sensor_msgs/NavSatFix',[]);
+        typesWithViews.set('sensor_msgs/Imu',[]);
 
 
         for (var i = 0; i < topicTypes.length; i++) {
@@ -115,7 +115,7 @@ function buildJSON(typesWithTopics: Map<string, string[]>, typesWithViews: Map<s
         let topicsArr: Object[] = [];
         let implArr: Object[] = [];
 
-        //build implementation array
+        //build implementations array
         for(let impl of typesWithViews.get(key)) {
             let implItem = {
                 implementation: impl
@@ -132,6 +132,7 @@ function buildJSON(typesWithTopics: Map<string, string[]>, typesWithViews: Map<s
             topicsArr.push(topicItem);
         }
 
+        //build types array
         let item = {
             type: key,
             topics: topicsArr

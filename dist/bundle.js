@@ -19,22 +19,26 @@ init();
 function _classCallCheck(instance, Constructor) { if (!(instance instanceof Constructor)) { throw new TypeError("Cannot call a class as a function"); } }
 
 var WebView = function WebView() {
+    var _this = this;
+
     _classCallCheck(this, WebView);
 
+    this._widgetHeaderOffset = 50;
     this.insertWidget = function (widget) {
         var widgetWrapperData = {
             id: widget.id,
             posX: widget.posX,
             posY: widget.posY,
             width: widget.width,
-            height: widget.height
+            height: widget.height + _this._widgetHeaderOffset,
+            topic: widget.topicUrl,
+            topicImplementation: widget.topicImplementation,
+            btnSettings: $(widget.html).attr("data-btn-widget-settings") != "1" ? false : true,
+            btnRemove: $(widget.html).attr("data-btn-widget-remove") != "1" ? false : true
         };
-        console.log(widgetWrapperData);
         var wrapperHtml = MyApp.templates.widgetWrapper(widgetWrapperData);
-        var widgetHtml = MyApp.templates.index();
-        console.log(widgetHtml);
-        // $("#frontend-container").appendTo(wrapperHtml);
-        // $("div[data-widget-id="+widget.id+"]").appendTo(widgetHtml);
+        var widgetTemplateCompiled = Handlebars.compile(widget.html);
+        var widgetHtml = widgetTemplateCompiled({});
         $(wrapperHtml).appendTo("#frontend-container");
         $(widgetHtml).appendTo("div[data-widget-id=" + widget.id + "]");
         $("div[data-widget-id=" + widget.id + "]").draggable();
@@ -57,7 +61,7 @@ var widgetEvents_1 = require("../services/widgetEvents");
 var Widget = function (_widgetEvents_1$Widge) {
     _inherits(Widget, _widgetEvents_1$Widge);
 
-    function Widget(id, topicUrl, topicType, width, height, posX, posY, html, viewImplType, parameter) {
+    function Widget(id, topicUrl, topicType, width, height, posX, posY, html, topicImplementation, parameter) {
         _classCallCheck(this, Widget);
 
         var _this = _possibleConstructorReturn(this, (Widget.__proto__ || Object.getPrototypeOf(Widget)).call(this));
@@ -70,7 +74,7 @@ var Widget = function (_widgetEvents_1$Widge) {
         _this.posX = posX;
         _this.posY = posY;
         _this.html = html;
-        _this.viewImplType = viewImplType;
+        _this.topicImplementation = topicImplementation;
         if (parameter) {
             _this.parameter = parameter;
         } else {
@@ -116,7 +120,7 @@ var Workspace = function () {
                     var posY = parseInt($(data).attr("data-pos-y"));
                     var width = parseInt($(data).attr("data-min-width"));
                     var height = parseInt($(data).attr("data-min-height"));
-                    var crtWidget = new widget_1.Widget(exports.actualWorkspace.idCounter, topicUrl, topicType, width, height, posX, posY, data, '');
+                    var crtWidget = new widget_1.Widget(exports.actualWorkspace.idCounter, topicUrl, topicType, width, height, posX, posY, data, topicImplementation);
                     exports.actualWorkspace.webView.insertWidget(crtWidget);
                     exports.actualWorkspace.widgets.push(crtWidget);
                     exports.actualWorkspace.idCounter++;
@@ -200,10 +204,10 @@ var ROSEvent = function () {
             var callbacksRemaining = topicTypes.length;
             var typesWithTopics = new Map();
             var typesWithViews = new Map();
-            typesWithViews.set('geometry_msgs/Twist', ['A']);
+            typesWithViews.set('geometry_msgs/Twist', []);
             typesWithViews.set('sensor_msgs/Image', ['Videostream']);
-            typesWithViews.set('sensor_msgs/NavSatFix', ['B']);
-            typesWithViews.set('sensor_msgs/Imu', ['C']);
+            typesWithViews.set('sensor_msgs/NavSatFix', []);
+            typesWithViews.set('sensor_msgs/Imu', []);
             for (var i = 0; i < topicTypes.length; i++) {
                 ROSEvent._ros.getTopicsForType(topicTypes[i], function (topicsResult) {
                     ROSEvent._ros.getTopicType(topicsResult[0], function (typeResult) {
@@ -265,7 +269,7 @@ function buildJSON(typesWithTopics, typesWithViews) {
             if (typesWithTopics.get(key).length > 0) {
                 var topicsArr = [];
                 var implArr = [];
-                //build implementation array
+                //build implementations array
                 var _iteratorNormalCompletion2 = true;
                 var _didIteratorError2 = false;
                 var _iteratorError2 = undefined;
@@ -309,6 +313,7 @@ function buildJSON(typesWithTopics, typesWithViews) {
                         };
                         topicsArr.push(topicItem);
                     }
+                    //build types array
                 } catch (err) {
                     _didIteratorError3 = true;
                     _iteratorError3 = err;
