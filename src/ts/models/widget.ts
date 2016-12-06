@@ -1,6 +1,9 @@
 import {WidgetEvents} from "../services/widgetEvents"
+import {ROSEvent} from "../services/rosEvent"
+import {WidgetInstance} from "./widgetInstance"
 
 export class Widget extends WidgetEvents{
+    public ros: ROSLIB.Ros;
     public id: number;
     public topicUrl: string;
     public topicType: string;
@@ -10,12 +13,14 @@ export class Widget extends WidgetEvents{
     public posY: number;
     public html: string;
     public topicImplementation: string;
+    public widgetInstance: any;
     public parameter: any;
 
 
     constructor(id: number, topicUrl: string, topicType: string, width: number, height: number,
                 posX: number, posY: number, html: string, topicImplementation: string, parameter?: any) {
         super();
+        this.ros = ROSEvent.getInstance();
         this.id = id;
         this.topicUrl = topicUrl;
         this.topicType = topicType;

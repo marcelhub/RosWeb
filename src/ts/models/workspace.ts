@@ -22,6 +22,7 @@ export class Workspace {
     public createWidget(topicUrl:string, topicType: string, topicImplementation: string){
         $.ajax({
             url: "widgets/" + topicType + "/" + topicImplementation + "/index.hbs",
+            method: "POST",
             beforeSend: function () {
 
             },

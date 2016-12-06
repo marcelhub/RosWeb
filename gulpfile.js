@@ -17,15 +17,17 @@ var sassOptions = {
   outputStyle: 'expanded'
 };
 
+var handlebarsOptions = {
+    namespace: 'MyApp.templates',
+    noRedeclare: true,
+};
+
 //handlebars
 gulp.task('handlebars', function () {
     gulp.src(['src/templates/*.hbs'])
       .pipe(handlebars())
       .pipe(wrap('Handlebars.template(<%= contents %>)'))
-      .pipe(declare({
-          namespace: 'MyApp.templates',
-          noRedeclare: true, // Avoid duplicate declarations
-      }))
+      .pipe(declare(handlebarsOptions))
       .pipe(concat('templates.js'))
       .pipe(gulp.dest('dist'));
 });

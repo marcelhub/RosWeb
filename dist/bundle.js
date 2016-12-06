@@ -25,6 +25,7 @@ var WebView = function WebView() {
 
     this._widgetHeaderOffset = 50;
     this.insertWidget = function (widget) {
+        //JSON object needed for widgetWrapper context
         var widgetWrapperData = {
             id: widget.id,
             posX: widget.posX,
@@ -36,8 +37,14 @@ var WebView = function WebView() {
             btnSettings: $(widget.html).attr("data-btn-widget-settings") != "1" ? false : true,
             btnRemove: $(widget.html).attr("data-btn-widget-remove") != "1" ? false : true
         };
+        //generate html from wrapper to insert later
         var wrapperHtml = MyApp.templates.widgetWrapper(widgetWrapperData);
+        //compile html to javascript
         var widgetTemplateCompiled = Handlebars.compile(widget.html);
+        //load main.js to the document if it's not already loaded
+        loadScript(widget);
+        //execute the function from correlated main.js
+        widget.widgetInstance = executeFunctionByName(widget.topicImplementation, window);
         var widgetHtml = widgetTemplateCompiled({});
         $(wrapperHtml).appendTo("#frontend-container");
         $(widgetHtml).appendTo("div[data-widget-id=" + widget.id + "]");
@@ -46,6 +53,22 @@ var WebView = function WebView() {
 };
 
 exports.WebView = WebView;
+function loadScript(widget) {
+    var alreadyLoaded = $('script[src=\"widgets/' + widget.topicType + '/' + widget.topicImplementation + '/main.js\"]');
+    if (alreadyLoaded.length > 0) {} else {
+        var jsString = "widgets/" + widget.topicType + "/" + widget.topicImplementation + "/main.js";
+        $(document.body).append('<script type="text/javascript" src=' + jsString + '></script>');
+    }
+}
+function executeFunctionByName(functionName, context /*, args */) {
+    var args = [].slice.call(arguments).splice(2);
+    var namespaces = functionName.split(".");
+    var func = namespaces.pop();
+    for (var i = 0; i < namespaces.length; i++) {
+        context = context[namespaces[i]];
+    }
+    return context[func].apply(context /*, args */);
+}
 
 },{}],3:[function(require,module,exports){
 "use strict";
@@ -57,6 +80,7 @@ function _possibleConstructorReturn(self, call) { if (!self) { throw new Referen
 function _inherits(subClass, superClass) { if (typeof superClass !== "function" && superClass !== null) { throw new TypeError("Super expression must either be null or a function, not " + typeof superClass); } subClass.prototype = Object.create(superClass && superClass.prototype, { constructor: { value: subClass, enumerable: false, writable: true, configurable: true } }); if (superClass) Object.setPrototypeOf ? Object.setPrototypeOf(subClass, superClass) : subClass.__proto__ = superClass; }
 
 var widgetEvents_1 = require("../services/widgetEvents");
+var rosEvent_1 = require("../services/rosEvent");
 
 var Widget = function (_widgetEvents_1$Widge) {
     _inherits(Widget, _widgetEvents_1$Widge);
@@ -66,6 +90,7 @@ var Widget = function (_widgetEvents_1$Widge) {
 
         var _this = _possibleConstructorReturn(this, (Widget.__proto__ || Object.getPrototypeOf(Widget)).call(this));
 
+        _this.ros = rosEvent_1.ROSEvent.getInstance();
         _this.id = id;
         _this.topicUrl = topicUrl;
         _this.topicType = topicType;
@@ -88,7 +113,7 @@ var Widget = function (_widgetEvents_1$Widge) {
 
 exports.Widget = Widget;
 
-},{"../services/widgetEvents":6}],4:[function(require,module,exports){
+},{"../services/rosEvent":5,"../services/widgetEvents":6}],4:[function(require,module,exports){
 /// <reference path="../typings/tsd.d.ts" />
 "use strict";
 
@@ -113,6 +138,7 @@ var Workspace = function () {
         value: function createWidget(topicUrl, topicType, topicImplementation) {
             $.ajax({
                 url: "widgets/" + topicType + "/" + topicImplementation + "/index.hbs",
+                method: "POST",
                 beforeSend: function beforeSend() {},
                 success: function success(data) {
                     console.log(data);
