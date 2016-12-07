@@ -16,58 +16,82 @@ init();
 },{"./models/workspace":4,"./services/rosEvent":5}],2:[function(require,module,exports){
 "use strict";
 
+var _createClass = function () { function defineProperties(target, props) { for (var i = 0; i < props.length; i++) { var descriptor = props[i]; descriptor.enumerable = descriptor.enumerable || false; descriptor.configurable = true; if ("value" in descriptor) descriptor.writable = true; Object.defineProperty(target, descriptor.key, descriptor); } } return function (Constructor, protoProps, staticProps) { if (protoProps) defineProperties(Constructor.prototype, protoProps); if (staticProps) defineProperties(Constructor, staticProps); return Constructor; }; }();
+
 function _classCallCheck(instance, Constructor) { if (!(instance instanceof Constructor)) { throw new TypeError("Cannot call a class as a function"); } }
 
-var WebView = function WebView() {
-    var _this = this;
+var WebView = function () {
+    function WebView() {
+        var _this = this;
 
-    _classCallCheck(this, WebView);
+        _classCallCheck(this, WebView);
 
-    this._widgetHeaderOffset = 50;
-    this.insertWidget = function (widget) {
-        //JSON object needed for widgetWrapper context
-        var widgetWrapperData = {
-            id: widget.id,
-            posX: widget.posX,
-            posY: widget.posY,
-            width: widget.width,
-            height: widget.height + _this._widgetHeaderOffset,
-            topic: widget.topicUrl,
-            topicImplementation: widget.topicImplementation,
-            btnSettings: $(widget.html).attr("data-btn-widget-settings") != "1" ? false : true,
-            btnRemove: $(widget.html).attr("data-btn-widget-remove") != "1" ? false : true
+        this._widgetHeaderOffset = 50;
+        this.insertWidget = function (widget) {
+            //JSON object needed for widgetWrapper context
+            var widgetWrapperData = {
+                id: widget.id,
+                posX: widget.posX,
+                posY: widget.posY,
+                width: widget.width,
+                height: widget.height + _this._widgetHeaderOffset,
+                topic: widget.topicUrl,
+                topicImplementation: widget.topicImplementation,
+                btnSettings: $(widget.html).attr("data-btn-widget-settings") != "1" ? false : true,
+                btnRemove: $(widget.html).attr("data-btn-widget-remove") != "1" ? false : true
+            };
+            //load main.js to the document if it's not already loaded
+            loadScript(widget);
+            //generate html from wrapper to insert it later
+            var wrapperHtml = MyApp.templates.widgetWrapper(widgetWrapperData);
+            //compile html to javascript
+            var widgetTemplateCompiled = Handlebars.compile(widget.html);
+            setTimeout(function () {
+                widget.widgetInstance = new this[widget.topicImplementation](widget.id, widget.ros, widget.topicUrl, widget.topicType, widget.topicImplementation).init();
+                console.log(widget.widgetInstance);
+                var widgetHtml = widgetTemplateCompiled(widget.widgetInstance);
+                $(wrapperHtml).appendTo("#frontend-container");
+                $(widgetHtml).appendTo("div[data-widget-id=" + widget.id + "]");
+                $("div[data-widget-id=" + widget.id + "]").draggable();
+            }, 500);
         };
-        //generate html from wrapper to insert later
-        var wrapperHtml = MyApp.templates.widgetWrapper(widgetWrapperData);
-        //compile html to javascript
-        var widgetTemplateCompiled = Handlebars.compile(widget.html);
-        //load main.js to the document if it's not already loaded
-        loadScript(widget);
-        //execute the function from correlated main.js
-        widget.widgetInstance = executeFunctionByName(widget.topicImplementation, window);
-        var widgetHtml = widgetTemplateCompiled({});
-        $(wrapperHtml).appendTo("#frontend-container");
-        $(widgetHtml).appendTo("div[data-widget-id=" + widget.id + "]");
-        $("div[data-widget-id=" + widget.id + "]").draggable();
-    };
-};
+    }
+
+    _createClass(WebView, [{
+        key: "_getInstance",
+        value: function _getInstance(context, name) {
+            var instance = Object.create(context[name].prototype);
+
+            for (var _len = arguments.length, args = Array(_len > 2 ? _len - 2 : 0), _key = 2; _key < _len; _key++) {
+                args[_key - 2] = arguments[_key];
+            }
+
+            instance.constructor.apply(instance, args);
+            return instance;
+        }
+    }]);
+
+    return WebView;
+}();
 
 exports.WebView = WebView;
 function loadScript(widget) {
     var alreadyLoaded = $('script[src=\"widgets/' + widget.topicType + '/' + widget.topicImplementation + '/main.js\"]');
     if (alreadyLoaded.length > 0) {} else {
-        var jsString = "widgets/" + widget.topicType + "/" + widget.topicImplementation + "/main.js";
-        $(document.body).append('<script type="text/javascript" src=' + jsString + '></script>');
+        (function () {
+            var jsString = "widgets/" + widget.topicType + "/" + widget.topicImplementation + "/main.js";
+            $.ajax({
+                type: "GET",
+                url: jsString,
+                success: function success(data) {
+                    $(document.body).append('<script type="text/javascript" src=' + jsString + '></script>');
+                    console.log("Loading performed.");
+                },
+                dataType: "script",
+                cache: false
+            });
+        })();
     }
-}
-function executeFunctionByName(functionName, context /*, args */) {
-    var args = [].slice.call(arguments).splice(2);
-    var namespaces = functionName.split(".");
-    var func = namespaces.pop();
-    for (var i = 0; i < namespaces.length; i++) {
-        context = context[namespaces[i]];
-    }
-    return context[func].apply(context /*, args */);
 }
 
 },{}],3:[function(require,module,exports){
@@ -85,7 +109,7 @@ var rosEvent_1 = require("../services/rosEvent");
 var Widget = function (_widgetEvents_1$Widge) {
     _inherits(Widget, _widgetEvents_1$Widge);
 
-    function Widget(id, topicUrl, topicType, width, height, posX, posY, html, topicImplementation, parameter) {
+    function Widget(id, topicUrl, topicType, width, height, posX, posY, html, topicImplementation, settings) {
         _classCallCheck(this, Widget);
 
         var _this = _possibleConstructorReturn(this, (Widget.__proto__ || Object.getPrototypeOf(Widget)).call(this));
@@ -100,10 +124,10 @@ var Widget = function (_widgetEvents_1$Widge) {
         _this.posY = posY;
         _this.html = html;
         _this.topicImplementation = topicImplementation;
-        if (parameter) {
-            _this.parameter = parameter;
+        if (settings) {
+            _this.settings = settings;
         } else {
-            _this.parameter = null;
+            _this.settings = null;
         }
         return _this;
     }

@@ -1,12 +1,18 @@
 import {actualWorkspace} from "./workspace"
 import {Widget} from "./widget"
 
-declare var MyApp: any, testfnct: any;
+declare var MyApp: any;
 
-export class WebView{
+export class WebView {
     private _widgetHeaderOffset = 50;
     constructor() {
 
+    }
+
+    private _getInstance(context: Object, name: string, ...args: any[]): any {
+        var instance = Object.create(context[name].prototype);
+        instance.constructor.apply(instance, args);
+        return instance;
     }
 
     public insertWidget = (widget: Widget) => {
@@ -23,24 +29,25 @@ export class WebView{
             btnRemove: $(widget.html).attr("data-btn-widget-remove")!="1"? false : true
         };
 
-        //generate html from wrapper to insert later
+        //load main.js to the document if it's not already loaded
+        loadScript(widget);
+
+        //generate html from wrapper to insert it later
         let wrapperHtml = MyApp.templates.widgetWrapper(widgetWrapperData);
 
         //compile html to javascript
         let widgetTemplateCompiled  = Handlebars.compile(widget.html);
-
-        //load main.js to the document if it's not already loaded
-        loadScript(widget);
-
-        //execute the function from correlated main.js
-        //widget.widgetInstance = Object.create
-
-        executeFunctionByName(widget.topicImplementation, window);
-
-        let widgetHtml = widgetTemplateCompiled({});
-        $(wrapperHtml).appendTo("#frontend-container");
-        $(widgetHtml).appendTo("div[data-widget-id="+widget.id+"]");
-        $("div[data-widget-id="+widget.id+"]").draggable();
+        setTimeout(function() {
+            widget.widgetInstance = new this[widget.topicImplementation](widget.id, widget.ros, widget.topicUrl, widget.topicType,
+                                                                        widget.topicImplementation).init();
+            console.log(widget.widgetInstance);
+            let widgetHtml = widgetTemplateCompiled(widget.widgetInstance);
+            $(wrapperHtml).appendTo("#frontend-container");
+            $(widgetHtml).appendTo("div[data-widget-id="+widget.id+"]");
+            //widget event handling
+            $("div[data-widget-id="+widget.id+"]").draggable();
+        }
+        , 500);
     }
 }
 
@@ -49,16 +56,15 @@ function loadScript(widget: Widget) {
     if(alreadyLoaded.length > 0) {
     } else {
         let jsString = "widgets/" + widget.topicType + "/" + widget.topicImplementation + "/main.js";
-        $(document.body).append('<script type="text/javascript" src='+jsString+'></script>');
+        $.ajax({
+            type: "GET",
+            url: jsString,
+            success: function(data) {
+                $(document.body).append('<script type="text/javascript" src='+jsString+'></script>');
+                console.log( "Loading performed.");
+            },
+            dataType: "script",
+            cache: false
+        });
     }
-}
-
-function executeFunctionByName(functionName, context /*, args */) {
-  var args = [].slice.call(arguments).splice(2);
-  var namespaces = functionName.split("."); 
-  var func = namespaces.pop();
-  for(var i = 0; i < namespaces.length; i++) {
-    context = context[namespaces[i]];
-  }
-  return context[func].apply(context /*, args */);
 }

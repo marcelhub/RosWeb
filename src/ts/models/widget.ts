@@ -14,11 +14,11 @@ export class Widget extends WidgetEvents{
     public html: string;
     public topicImplementation: string;
     public widgetInstance: any;
-    public parameter: any;
+    public settings: any;
 
 
     constructor(id: number, topicUrl: string, topicType: string, width: number, height: number,
-                posX: number, posY: number, html: string, topicImplementation: string, parameter?: any) {
+                posX: number, posY: number, html: string, topicImplementation: string, settings?: any) {
         super();
         this.ros = ROSEvent.getInstance();
         this.id = id;
@@ -30,10 +30,10 @@ export class Widget extends WidgetEvents{
         this.posY = posY;
         this.html = html;
         this.topicImplementation = topicImplementation;
-        if(parameter) {
-            this.parameter = parameter;
+        if(settings) {
+            this.settings = settings;
         } else {
-            this.parameter = null;
+            this.settings = null;
         }
 
     }
