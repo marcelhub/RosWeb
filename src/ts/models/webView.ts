@@ -9,12 +9,7 @@ export class WebView {
 
     }
 
-    private _getInstance(context: Object, name: string, ...args: any[]): any {
-        var instance = Object.create(context[name].prototype);
-        instance.constructor.apply(instance, args);
-        return instance;
-    }
-
+    //insert widget into WebView
     public insertWidget = (widget: Widget) => {
         //JSON object needed for widgetWrapper context
         let widgetWrapperData = {
@@ -38,17 +33,55 @@ export class WebView {
         //compile html to javascript
         let widgetTemplateCompiled  = Handlebars.compile(widget.html);
         setTimeout(function() {
+            //create object of widgetinstance and initialize it
             widget.widgetInstance = new this[widget.topicImplementation](widget.id, widget.ros, widget.topicUrl, widget.topicType,
                                                                         widget.topicImplementation).init();
             console.log(widget.widgetInstance);
+            //compile javascript with the data from the widgetinstance to html
             let widgetHtml = widgetTemplateCompiled(widget.widgetInstance);
+
+            //insert wrapper into document, afterwards the widget itself
             $(wrapperHtml).appendTo("#frontend-container");
             $(widgetHtml).appendTo("div[data-widget-id="+widget.id+"]");
-            //widget event handling
+
+
+
+            //add default event handling to widget (if not existing, nothing happens)
+            $("div[data-widget-id="+widget.id+"] .jsWidgetSettings").on( "click", event, widget.widgetInstance.btnSettings);
+            $("div[data-widget-id="+widget.id+"] .jsWidgetRemove").on( "click", event, widget.widgetInstance.btnRemove);
             $("div[data-widget-id="+widget.id+"]").draggable();
+
+            //insert settings for this widget
+            insertSettings(widget);
         }
-        , 500);
+        , 1000);
     }
+
+    //insert setting for widget
+
+}
+
+function insertSettings(widget: Widget) {
+    //load settings file
+    $.ajax({
+        url: "widgets/" + widget.topicType + "/" + widget.topicImplementation + "/settings.hbs",
+        method: "POST",
+        beforeSend: function () {
+
+        },
+        success: function (data: string) {
+            
+            let settingsCompiled  = Handlebars.compile(data);
+            let settingsHtml = settingsCompiled(widget.widgetInstance);
+            $("div[data-widget-id="+widget.id+"]").append(settingsHtml);
+            console.log(settingsHtml);
+        },
+        error: function (e1: any, e2: any) {
+            console.log(e1);
+            console.log(e2);
+        },
+        cache: false
+    });
 }
 
 function loadScript(widget: Widget) {

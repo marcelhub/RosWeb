@@ -16,65 +16,73 @@ init();
 },{"./models/workspace":4,"./services/rosEvent":5}],2:[function(require,module,exports){
 "use strict";
 
-var _createClass = function () { function defineProperties(target, props) { for (var i = 0; i < props.length; i++) { var descriptor = props[i]; descriptor.enumerable = descriptor.enumerable || false; descriptor.configurable = true; if ("value" in descriptor) descriptor.writable = true; Object.defineProperty(target, descriptor.key, descriptor); } } return function (Constructor, protoProps, staticProps) { if (protoProps) defineProperties(Constructor.prototype, protoProps); if (staticProps) defineProperties(Constructor, staticProps); return Constructor; }; }();
-
 function _classCallCheck(instance, Constructor) { if (!(instance instanceof Constructor)) { throw new TypeError("Cannot call a class as a function"); } }
 
-var WebView = function () {
-    function WebView() {
-        var _this = this;
+var WebView = function WebView() {
+    var _this = this;
 
-        _classCallCheck(this, WebView);
+    _classCallCheck(this, WebView);
 
-        this._widgetHeaderOffset = 50;
-        this.insertWidget = function (widget) {
-            //JSON object needed for widgetWrapper context
-            var widgetWrapperData = {
-                id: widget.id,
-                posX: widget.posX,
-                posY: widget.posY,
-                width: widget.width,
-                height: widget.height + _this._widgetHeaderOffset,
-                topic: widget.topicUrl,
-                topicImplementation: widget.topicImplementation,
-                btnSettings: $(widget.html).attr("data-btn-widget-settings") != "1" ? false : true,
-                btnRemove: $(widget.html).attr("data-btn-widget-remove") != "1" ? false : true
-            };
-            //load main.js to the document if it's not already loaded
-            loadScript(widget);
-            //generate html from wrapper to insert it later
-            var wrapperHtml = MyApp.templates.widgetWrapper(widgetWrapperData);
-            //compile html to javascript
-            var widgetTemplateCompiled = Handlebars.compile(widget.html);
-            setTimeout(function () {
-                widget.widgetInstance = new this[widget.topicImplementation](widget.id, widget.ros, widget.topicUrl, widget.topicType, widget.topicImplementation).init();
-                console.log(widget.widgetInstance);
-                var widgetHtml = widgetTemplateCompiled(widget.widgetInstance);
-                $(wrapperHtml).appendTo("#frontend-container");
-                $(widgetHtml).appendTo("div[data-widget-id=" + widget.id + "]");
-                $("div[data-widget-id=" + widget.id + "]").draggable();
-            }, 500);
+    this._widgetHeaderOffset = 50;
+    //insert widget into WebView
+    this.insertWidget = function (widget) {
+        //JSON object needed for widgetWrapper context
+        var widgetWrapperData = {
+            id: widget.id,
+            posX: widget.posX,
+            posY: widget.posY,
+            width: widget.width,
+            height: widget.height + _this._widgetHeaderOffset,
+            topic: widget.topicUrl,
+            topicImplementation: widget.topicImplementation,
+            btnSettings: $(widget.html).attr("data-btn-widget-settings") != "1" ? false : true,
+            btnRemove: $(widget.html).attr("data-btn-widget-remove") != "1" ? false : true
         };
-    }
-
-    _createClass(WebView, [{
-        key: "_getInstance",
-        value: function _getInstance(context, name) {
-            var instance = Object.create(context[name].prototype);
-
-            for (var _len = arguments.length, args = Array(_len > 2 ? _len - 2 : 0), _key = 2; _key < _len; _key++) {
-                args[_key - 2] = arguments[_key];
-            }
-
-            instance.constructor.apply(instance, args);
-            return instance;
-        }
-    }]);
-
-    return WebView;
-}();
+        //load main.js to the document if it's not already loaded
+        loadScript(widget);
+        //generate html from wrapper to insert it later
+        var wrapperHtml = MyApp.templates.widgetWrapper(widgetWrapperData);
+        //compile html to javascript
+        var widgetTemplateCompiled = Handlebars.compile(widget.html);
+        setTimeout(function () {
+            //create object of widgetinstance and initialize it
+            widget.widgetInstance = new this[widget.topicImplementation](widget.id, widget.ros, widget.topicUrl, widget.topicType, widget.topicImplementation).init();
+            console.log(widget.widgetInstance);
+            //compile javascript with the data from the widgetinstance to html
+            var widgetHtml = widgetTemplateCompiled(widget.widgetInstance);
+            //insert wrapper into document, afterwards the widget itself
+            $(wrapperHtml).appendTo("#frontend-container");
+            $(widgetHtml).appendTo("div[data-widget-id=" + widget.id + "]");
+            //add default event handling to widget (if not existing, nothing happens)
+            $("div[data-widget-id=" + widget.id + "] .jsWidgetSettings").on("click", event, widget.widgetInstance.btnSettings);
+            $("div[data-widget-id=" + widget.id + "] .jsWidgetRemove").on("click", event, widget.widgetInstance.btnRemove);
+            $("div[data-widget-id=" + widget.id + "]").draggable();
+            //insert settings for this widget
+            insertSettings(widget);
+        }, 1000);
+    };
+};
 
 exports.WebView = WebView;
+function insertSettings(widget) {
+    //load settings file
+    $.ajax({
+        url: "widgets/" + widget.topicType + "/" + widget.topicImplementation + "/settings.hbs",
+        method: "POST",
+        beforeSend: function beforeSend() {},
+        success: function success(data) {
+            var settingsCompiled = Handlebars.compile(data);
+            var settingsHtml = settingsCompiled(widget.widgetInstance);
+            $("div[data-widget-id=" + widget.id + "]").append(settingsHtml);
+            console.log(settingsHtml);
+        },
+        error: function error(e1, e2) {
+            console.log(e1);
+            console.log(e2);
+        },
+        cache: false
+    });
+}
 function loadScript(widget) {
     var alreadyLoaded = $('script[src=\"widgets/' + widget.topicType + '/' + widget.topicImplementation + '/main.js\"]');
     if (alreadyLoaded.length > 0) {} else {
@@ -99,45 +107,31 @@ function loadScript(widget) {
 
 function _classCallCheck(instance, Constructor) { if (!(instance instanceof Constructor)) { throw new TypeError("Cannot call a class as a function"); } }
 
-function _possibleConstructorReturn(self, call) { if (!self) { throw new ReferenceError("this hasn't been initialised - super() hasn't been called"); } return call && (typeof call === "object" || typeof call === "function") ? call : self; }
-
-function _inherits(subClass, superClass) { if (typeof superClass !== "function" && superClass !== null) { throw new TypeError("Super expression must either be null or a function, not " + typeof superClass); } subClass.prototype = Object.create(superClass && superClass.prototype, { constructor: { value: subClass, enumerable: false, writable: true, configurable: true } }); if (superClass) Object.setPrototypeOf ? Object.setPrototypeOf(subClass, superClass) : subClass.__proto__ = superClass; }
-
-var widgetEvents_1 = require("../services/widgetEvents");
 var rosEvent_1 = require("../services/rosEvent");
 
-var Widget = function (_widgetEvents_1$Widge) {
-    _inherits(Widget, _widgetEvents_1$Widge);
+var Widget = function Widget(id, topicUrl, topicType, width, height, posX, posY, html, topicImplementation, settings) {
+    _classCallCheck(this, Widget);
 
-    function Widget(id, topicUrl, topicType, width, height, posX, posY, html, topicImplementation, settings) {
-        _classCallCheck(this, Widget);
-
-        var _this = _possibleConstructorReturn(this, (Widget.__proto__ || Object.getPrototypeOf(Widget)).call(this));
-
-        _this.ros = rosEvent_1.ROSEvent.getInstance();
-        _this.id = id;
-        _this.topicUrl = topicUrl;
-        _this.topicType = topicType;
-        _this.width = width;
-        _this.height = height;
-        _this.posX = posX;
-        _this.posY = posY;
-        _this.html = html;
-        _this.topicImplementation = topicImplementation;
-        if (settings) {
-            _this.settings = settings;
-        } else {
-            _this.settings = null;
-        }
-        return _this;
+    this.ros = rosEvent_1.ROSEvent.getInstance();
+    this.id = id;
+    this.topicUrl = topicUrl;
+    this.topicType = topicType;
+    this.width = width;
+    this.height = height;
+    this.posX = posX;
+    this.posY = posY;
+    this.html = html;
+    this.topicImplementation = topicImplementation;
+    if (settings) {
+        this.settings = settings;
+    } else {
+        this.settings = null;
     }
-
-    return Widget;
-}(widgetEvents_1.WidgetEvents);
+};
 
 exports.Widget = Widget;
 
-},{"../services/rosEvent":5,"../services/widgetEvents":6}],4:[function(require,module,exports){
+},{"../services/rosEvent":5}],4:[function(require,module,exports){
 /// <reference path="../typings/tsd.d.ts" />
 "use strict";
 
@@ -160,12 +154,12 @@ var Workspace = function () {
     _createClass(Workspace, [{
         key: "createWidget",
         value: function createWidget(topicUrl, topicType, topicImplementation) {
+            //load index file
             $.ajax({
                 url: "widgets/" + topicType + "/" + topicImplementation + "/index.hbs",
                 method: "POST",
                 beforeSend: function beforeSend() {},
                 success: function success(data) {
-                    console.log(data);
                     var posX = parseInt($(data).attr("data-pos-x"));
                     var posY = parseInt($(data).attr("data-pos-y"));
                     var width = parseInt($(data).attr("data-min-width"));
@@ -175,10 +169,7 @@ var Workspace = function () {
                     exports.actualWorkspace.widgets.push(crtWidget);
                     exports.actualWorkspace.idCounter++;
                 },
-                error: function error(e1, e2) {
-                    console.log(e1);
-                    console.log(e2);
-                },
+                error: function error(e1, e2) {},
                 cache: false
             });
         }
@@ -405,40 +396,7 @@ function buildJSON(typesWithTopics, typesWithViews) {
     return topicResult;
 }
 
-},{}],6:[function(require,module,exports){
-/// <reference path="../typings/tsd.d.ts" />
-"use strict";
-
-var _createClass = function () { function defineProperties(target, props) { for (var i = 0; i < props.length; i++) { var descriptor = props[i]; descriptor.enumerable = descriptor.enumerable || false; descriptor.configurable = true; if ("value" in descriptor) descriptor.writable = true; Object.defineProperty(target, descriptor.key, descriptor); } } return function (Constructor, protoProps, staticProps) { if (protoProps) defineProperties(Constructor.prototype, protoProps); if (staticProps) defineProperties(Constructor, staticProps); return Constructor; }; }();
-
-function _classCallCheck(instance, Constructor) { if (!(instance instanceof Constructor)) { throw new TypeError("Cannot call a class as a function"); } }
-
-var rosEvent_1 = require("./rosEvent");
-
-var WidgetEvents = function () {
-    function WidgetEvents() {
-        _classCallCheck(this, WidgetEvents);
-
-        this.ros = rosEvent_1.ROSEvent.getInstance();
-        // this.DelegateEvent("jsWidgetInsert");
-    }
-
-    _createClass(WidgetEvents, [{
-        key: "DelegateEvent",
-        value: function DelegateEvent(selector, event, method) {
-            if (event == "resize") {
-                $(selector).resize(method);
-            }
-            $(document).delegate(selector, event, method);
-        }
-    }]);
-
-    return WidgetEvents;
-}();
-
-exports.WidgetEvents = WidgetEvents;
-
-},{"./rosEvent":5}]},{},[1])
+},{}]},{},[1])
 
 
 //# sourceMappingURL=bundle.js.map

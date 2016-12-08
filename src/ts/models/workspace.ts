@@ -20,6 +20,7 @@ export class Workspace {
     }
 
     public createWidget(topicUrl:string, topicType: string, topicImplementation: string){
+        //load index file
         $.ajax({
             url: "widgets/" + topicType + "/" + topicImplementation + "/index.hbs",
             method: "POST",
@@ -27,7 +28,6 @@ export class Workspace {
 
             },
             success: function (data: string) {
-                console.log(data);
                 let posX = parseInt($(data).attr("data-pos-x"));
                 let posY = parseInt($(data).attr("data-pos-y"));
                 let width = parseInt($(data).attr("data-min-width"));
@@ -40,8 +40,7 @@ export class Workspace {
 
             },
             error: function (e1: any, e2: any) {
-                console.log(e1);
-                console.log(e2);
+
             },
             cache: false
         });

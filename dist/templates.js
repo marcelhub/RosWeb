@@ -55,7 +55,11 @@ this["MyApp"]["templates"]["menu"] = Handlebars.template({"1":function(container
 this["MyApp"]["templates"]["widgetWrapper"] = Handlebars.template({"1":function(container,depth0,helpers,partials,data) {
     return "                <a type=\"button\" class=\"btn btn-primary pull-right jsWidgetRemove cssWidgetRemove\" href=\"#\">\n                    <i class=\"fa fa-window-close fa-2x\" aria-hidden=\"true\"></i>\n                </a>\n";
 },"3":function(container,depth0,helpers,partials,data) {
-    return "                <a type=\"button\" class=\"btn btn-primary pull-right jsWidgetSettings cssWidgetSettings\" href=\"#\">\n                    <i class=\"fa fa-cog fa-2x\" aria-hidden=\"true\"></i>\n                </a>\n";
+    var helper;
+
+  return "                <a type=\"button\" class=\"btn btn-primary pull-right jsWidgetSettings cssWidgetSettings\" href=\"#\"  data-toggle=\"modal\" data-target=\"#modal"
+    + container.escapeExpression(((helper = (helper = helpers.id || (depth0 != null ? depth0.id : depth0)) != null ? helper : helpers.helperMissing),(typeof helper === "function" ? helper.call(depth0 != null ? depth0 : {},{"name":"id","hash":{},"data":data}) : helper)))
+    + "\">\n                    <i class=\"fa fa-cog fa-2x\" aria-hidden=\"true\"></i>\n                </a>\n";
 },"compiler":[7,">= 4.0.0"],"main":function(container,depth0,helpers,partials,data) {
     var stack1, helper, alias1=depth0 != null ? depth0 : {}, alias2=helpers.helperMissing, alias3="function", alias4=container.escapeExpression;
 
