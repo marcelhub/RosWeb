@@ -18,6 +18,8 @@ init();
 
 function _classCallCheck(instance, Constructor) { if (!(instance instanceof Constructor)) { throw new TypeError("Cannot call a class as a function"); } }
 
+var workspace_1 = require("./workspace");
+
 var WebView = function WebView() {
     var _this = this;
 
@@ -47,15 +49,21 @@ var WebView = function WebView() {
         setTimeout(function () {
             //create object of widgetinstance and initialize it
             widget.widgetInstance = new this[widget.topicImplementation](widget.id, widget.ros, widget.topicUrl, widget.topicType, widget.topicImplementation).init();
-            console.log(widget.widgetInstance);
             //compile javascript with the data from the widgetinstance to html
             var widgetHtml = widgetTemplateCompiled(widget.widgetInstance);
             //insert wrapper into document, afterwards the widget itself
             $(wrapperHtml).appendTo("#frontend-container");
             $(widgetHtml).appendTo("div[data-widget-id=" + widget.id + "]");
             //add default event handling to widget (if not existing, nothing happens)
-            $("div[data-widget-id=" + widget.id + "] .jsWidgetSettings").on("click", event, widget.widgetInstance.btnSettings);
-            $("div[data-widget-id=" + widget.id + "] .jsWidgetRemove").on("click", event, widget.widgetInstance.btnRemove);
+            $("div[data-widget-id=" + widget.id + "] .jsWidgetSettings").on("click", widget.widgetInstance, widget.widgetInstance.btnSettings);
+            //use remove of widgetInstance, then clean up workspace
+            $("div[data-widget-id=" + widget.id + "] .jsWidgetRemove").on("click", widget.widgetInstance, function () {
+                if (widget.widgetInstance.btnRemo == null) {} else {
+                    widget.widgetInstance.btnRemove();
+                }
+                workspace_1.actualWorkspace.removeWidget(widget);
+                $("div[data-widget-id=" + widget.id + "]").remove();
+            });
             $("div[data-widget-id=" + widget.id + "]").draggable();
             //insert settings for this widget
             insertSettings(widget);
@@ -64,8 +72,8 @@ var WebView = function WebView() {
 };
 
 exports.WebView = WebView;
+//load settings file
 function insertSettings(widget) {
-    //load settings file
     $.ajax({
         url: "widgets/" + widget.topicType + "/" + widget.topicImplementation + "/settings.hbs",
         method: "POST",
@@ -74,7 +82,7 @@ function insertSettings(widget) {
             var settingsCompiled = Handlebars.compile(data);
             var settingsHtml = settingsCompiled(widget.widgetInstance);
             $("div[data-widget-id=" + widget.id + "]").append(settingsHtml);
-            console.log(settingsHtml);
+            $("div[data-widget-id=" + widget.id + "] .jsWidgetSettingsSave").on("click", widget.widgetInstance, widget.widgetInstance.btnSettingsSave);
         },
         error: function error(e1, e2) {
             console.log(e1);
@@ -83,6 +91,7 @@ function insertSettings(widget) {
         cache: false
     });
 }
+//load script file
 function loadScript(widget) {
     var alreadyLoaded = $('script[src=\"widgets/' + widget.topicType + '/' + widget.topicImplementation + '/main.js\"]');
     if (alreadyLoaded.length > 0) {} else {
@@ -93,7 +102,6 @@ function loadScript(widget) {
                 url: jsString,
                 success: function success(data) {
                     $(document.body).append('<script type="text/javascript" src=' + jsString + '></script>');
-                    console.log("Loading performed.");
                 },
                 dataType: "script",
                 cache: false
@@ -102,7 +110,7 @@ function loadScript(widget) {
     }
 }
 
-},{}],3:[function(require,module,exports){
+},{"./workspace":4}],3:[function(require,module,exports){
 "use strict";
 
 function _classCallCheck(instance, Constructor) { if (!(instance instanceof Constructor)) { throw new TypeError("Cannot call a class as a function"); } }
@@ -173,6 +181,30 @@ var Workspace = function () {
                 cache: false
             });
         }
+        //remove Widget from workspace
+
+    }, {
+        key: "removeWidget",
+        value: function removeWidget(widget) {
+            exports.actualWorkspace.widgets = $.grep(exports.actualWorkspace.widgets, function (e) {
+                return e.id != widget.id;
+            });
+        }
+        //save workspace with php-script
+
+    }, {
+        key: "saveWorkspace",
+        value: function saveWorkspace() {
+            console.log(exports.actualWorkspace);
+            $.ajax({
+                type: 'POST',
+                url: 'php/saveWorkspace.php',
+                data: { workspace: JSON.stringify(exports.actualWorkspace) },
+                success: function success(msg) {
+                    console.log(msg);
+                }
+            });
+        }
     }]);
 
     return Workspace;
@@ -182,6 +214,10 @@ exports.Workspace = Workspace;
 window["fnctCreateWidget"] = fnctCreateWidget;
 function fnctCreateWidget(topicUrl, topicType, topicImplementation) {
     exports.actualWorkspace.createWidget(topicUrl, topicType, topicImplementation);
+}
+window["fnctSaveWorkspace"] = fnctSaveWorkspace;
+function fnctSaveWorkspace() {
+    exports.actualWorkspace.saveWorkspace();
 }
 exports.actualWorkspace = new Workspace();
 

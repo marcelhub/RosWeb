@@ -36,7 +36,6 @@ export class WebView {
             //create object of widgetinstance and initialize it
             widget.widgetInstance = new this[widget.topicImplementation](widget.id, widget.ros, widget.topicUrl, widget.topicType,
                                                                         widget.topicImplementation).init();
-            console.log(widget.widgetInstance);
             //compile javascript with the data from the widgetinstance to html
             let widgetHtml = widgetTemplateCompiled(widget.widgetInstance);
 
@@ -44,11 +43,19 @@ export class WebView {
             $(wrapperHtml).appendTo("#frontend-container");
             $(widgetHtml).appendTo("div[data-widget-id="+widget.id+"]");
 
-
-
             //add default event handling to widget (if not existing, nothing happens)
-            $("div[data-widget-id="+widget.id+"] .jsWidgetSettings").on( "click", event, widget.widgetInstance.btnSettings);
-            $("div[data-widget-id="+widget.id+"] .jsWidgetRemove").on( "click", event, widget.widgetInstance.btnRemove);
+            $("div[data-widget-id="+widget.id+"] .jsWidgetSettings").on( "click", widget.widgetInstance ,widget.widgetInstance.btnSettings);
+            
+            //use remove of widgetInstance, then clean up workspace
+            $("div[data-widget-id="+widget.id+"] .jsWidgetRemove").on( "click", widget.widgetInstance, function() {
+                if( widget.widgetInstance.btnRemo == null) {
+                    //no remove method from widgetInstance
+                } else {
+                    widget.widgetInstance.btnRemove();
+                }
+                actualWorkspace.removeWidget(widget);
+                $("div[data-widget-id="+widget.id+"]").remove();
+            });
             $("div[data-widget-id="+widget.id+"]").draggable();
 
             //insert settings for this widget
@@ -57,12 +64,10 @@ export class WebView {
         , 1000);
     }
 
-    //insert setting for widget
-
 }
 
+//load settings file
 function insertSettings(widget: Widget) {
-    //load settings file
     $.ajax({
         url: "widgets/" + widget.topicType + "/" + widget.topicImplementation + "/settings.hbs",
         method: "POST",
@@ -70,12 +75,11 @@ function insertSettings(widget: Widget) {
 
         },
         success: function (data: string) {
-            
             let settingsCompiled  = Handlebars.compile(data);
             let settingsHtml = settingsCompiled(widget.widgetInstance);
             $("div[data-widget-id="+widget.id+"]").append(settingsHtml);
-            console.log(settingsHtml);
-        },
+            $("div[data-widget-id="+widget.id+"] .jsWidgetSettingsSave").on( "click", widget.widgetInstance, widget.widgetInstance.btnSettingsSave);
+            },
         error: function (e1: any, e2: any) {
             console.log(e1);
             console.log(e2);
@@ -84,6 +88,7 @@ function insertSettings(widget: Widget) {
     });
 }
 
+//load script file
 function loadScript(widget: Widget) {
     let alreadyLoaded = $('script[src=\"widgets/' + widget.topicType + '/' + widget.topicImplementation + '/main.js\"]');
     if(alreadyLoaded.length > 0) {
@@ -94,7 +99,6 @@ function loadScript(widget: Widget) {
             url: jsString,
             success: function(data) {
                 $(document.body).append('<script type="text/javascript" src='+jsString+'></script>');
-                console.log( "Loading performed.");
             },
             dataType: "script",
             cache: false

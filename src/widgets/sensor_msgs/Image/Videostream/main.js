@@ -26,19 +26,46 @@ Videostream.prototype = {
         this.settings.width = 640;
         this.settings.height = 480;
         this.settings.quality = 90;
-
         return this;
     },
-    load: function(settings) {
-        this.settings = settings;
-        return this.settings;
+    load: function(widget) {
+        this.settings.ip = widget.data.settings.ip;
+        this.settings.port = widget.data.settings.port;
+        this.settings.width = widget.data.settings.width;
+        this.settings.height = widget.data.settings.height;
+        this.settings.quality = widget.data.settings.quality;
+        return this;
     },
-    save: function() {
-        return this.settings;
+    save: function(widget) {
+        return JSON.stringify(widget.data.settings);
     },
-    btnSettings: function(event) {
-        console.log("HI");
+    btnSettings: function(widget) {
     },
-    btnRemove: function(event) {
+    btnRemove: function(widget) {
+    },
+
+    btnSettingsSave: function(widget) {
+        widget.data.settings.ip = $("#widget-"+widget.data.id+"-value-ip").val();   
+        widget.data.settings.port = $("#widget-"+widget.data.id+"-value-port").val();
+        widget.data.settings.width = $("#widget-"+widget.data.id+"-value-width").val();
+        widget.data.settings.height = $("#widget-"+widget.data.id+"-value-height").val();
+        widget.data.settings.quality = $("#widget-"+widget.data.id+"-value-quality").val();
+        //refresh videostream to apply new settings
+        $.ajax({
+            url: "widgets/" + widget.data.type + "/" + widget.data.implementation + "/index.hbs",
+            method: "POST",
+            success: function (data) {
+                var compiledHtml = Handlebars.compile(data);
+                var refreshedHtml = compiledHtml(widget.data);
+                $("#widget-"+widget.data.id+"-content").children().remove();
+                $("#widget-"+widget.data.id+"-content").append(refreshedHtml);
+                $("div[data-widget-id="+widget.data.id+"]").css("width",  widget.data.settings.width+"px");
+                $("div[data-widget-id="+widget.data.id+"]").css("height",  widget.data.settings.height+"px");
+            },
+            error: function (e1, e2) {
+
+            },
+            cache: false
+        });
     }
 };

@@ -37,7 +37,6 @@ export class Workspace {
                 actualWorkspace.webView.insertWidget(crtWidget);
                 actualWorkspace.widgets.push(crtWidget);
                 actualWorkspace.idCounter++;
-
             },
             error: function (e1: any, e2: any) {
 
@@ -45,11 +44,36 @@ export class Workspace {
             cache: false
         });
     }
+
+    //remove Widget from workspace
+    public removeWidget(widget: Widget) {
+        actualWorkspace.widgets = $.grep(actualWorkspace.widgets, function(e){ 
+            return e.id != widget.id; 
+        });
+    }
+
+    //save workspace with php-script
+    public saveWorkspace() {
+        console.log(actualWorkspace);
+        $.ajax({
+            type: 'POST',
+            url: 'php/saveWorkspace.php',
+            data: {workspace: JSON.stringify(actualWorkspace)},
+            success: function(msg) {
+                console.log(msg);
+            }
+        });
+    }
 }
 
 window["fnctCreateWidget"] = fnctCreateWidget;
 function fnctCreateWidget(topicUrl: string, topicType: string, topicImplementation: string) {
     actualWorkspace.createWidget(topicUrl, topicType, topicImplementation);
+}
+
+window["fnctSaveWorkspace"] = fnctSaveWorkspace;
+function fnctSaveWorkspace() {
+    actualWorkspace.saveWorkspace();
 }
 
 

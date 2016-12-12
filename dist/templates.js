@@ -57,7 +57,7 @@ this["MyApp"]["templates"]["widgetWrapper"] = Handlebars.template({"1":function(
 },"3":function(container,depth0,helpers,partials,data) {
     var helper;
 
-  return "                <a type=\"button\" class=\"btn btn-primary pull-right jsWidgetSettings cssWidgetSettings\" href=\"#\"  data-toggle=\"modal\" data-target=\"#modal"
+  return "                <a type=\"button\" class=\"btn btn-primary pull-right jsWidgetSettings cssWidgetSettings\" href=\"#\"  data-toggle=\"modal\" data-target=\"#modal-"
     + container.escapeExpression(((helper = (helper = helpers.id || (depth0 != null ? depth0.id : depth0)) != null ? helper : helpers.helperMissing),(typeof helper === "function" ? helper.call(depth0 != null ? depth0 : {},{"name":"id","hash":{},"data":data}) : helper)))
     + "\">\n                    <i class=\"fa fa-cog fa-2x\" aria-hidden=\"true\"></i>\n                </a>\n";
 },"compiler":[7,">= 4.0.0"],"main":function(container,depth0,helpers,partials,data) {
@@ -81,4 +81,7 @@ this["MyApp"]["templates"]["widgetWrapper"] = Handlebars.template({"1":function(
     + ((stack1 = helpers["if"].call(alias1,(depth0 != null ? depth0.btnRemove : depth0),{"name":"if","hash":{},"fn":container.program(1, data, 0),"inverse":container.noop,"data":data})) != null ? stack1 : "")
     + ((stack1 = helpers["if"].call(alias1,(depth0 != null ? depth0.btnSettings : depth0),{"name":"if","hash":{},"fn":container.program(3, data, 0),"inverse":container.noop,"data":data})) != null ? stack1 : "")
     + "        </h4>\n    </div>\n</div>";
+},"useData":true});
+this["MyApp"]["templates"]["workspaceMenu"] = Handlebars.template({"compiler":[7,">= 4.0.0"],"main":function(container,depth0,helpers,partials,data) {
+    return "";
 },"useData":true});
