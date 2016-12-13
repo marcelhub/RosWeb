@@ -140,6 +140,5 @@ function buildJSON(typesWithTopics: Map<string, string[]>, typesWithViews: Map<s
         topicResult.push(item);
         }
     }
-    console.log(topicResult);
     return topicResult;
 }

@@ -17,6 +17,8 @@ export class Workspace {
         this.widgets = [];
         this.idCounter = 0;
         this.webView = new WebView();
+        this.rosMasterAdress = $("#rosMasterAdress").val();
+        this.name = 'workspaceJson';
     }
 
     public createWidget(topicUrl:string, topicType: string, topicImplementation: string){

@@ -2,18 +2,18 @@
 /// <reference path="./typings/tsd.d.ts" />
 "use strict";
 
-var rosEvent_1 = require("./services/rosEvent");
+var rosEvents_1 = require("./services/rosEvents");
 var workspace_1 = require("./models/workspace");
 function init() {
     $(document).ready(function () {
         var ros = new ROSLIB.Ros("");
-        var rosEvents = new rosEvent_1.ROSEvent(ros);
+        var rosEvents = new rosEvents_1.ROSEvent(ros);
         workspace_1.actualWorkspace;
     });
 }
 init();
 
-},{"./models/workspace":4,"./services/rosEvent":5}],2:[function(require,module,exports){
+},{"./models/workspace":4,"./services/rosEvents":5}],2:[function(require,module,exports){
 "use strict";
 
 function _classCallCheck(instance, Constructor) { if (!(instance instanceof Constructor)) { throw new TypeError("Cannot call a class as a function"); } }
@@ -115,12 +115,12 @@ function loadScript(widget) {
 
 function _classCallCheck(instance, Constructor) { if (!(instance instanceof Constructor)) { throw new TypeError("Cannot call a class as a function"); } }
 
-var rosEvent_1 = require("../services/rosEvent");
+var rosEvents_1 = require("../services/rosEvents");
 
 var Widget = function Widget(id, topicUrl, topicType, width, height, posX, posY, html, topicImplementation, settings) {
     _classCallCheck(this, Widget);
 
-    this.ros = rosEvent_1.ROSEvent.getInstance();
+    this.ros = rosEvents_1.ROSEvent.getInstance();
     this.id = id;
     this.topicUrl = topicUrl;
     this.topicType = topicType;
@@ -139,7 +139,7 @@ var Widget = function Widget(id, topicUrl, topicType, width, height, posX, posY,
 
 exports.Widget = Widget;
 
-},{"../services/rosEvent":5}],4:[function(require,module,exports){
+},{"../services/rosEvents":5}],4:[function(require,module,exports){
 /// <reference path="../typings/tsd.d.ts" />
 "use strict";
 
@@ -157,6 +157,8 @@ var Workspace = function () {
         this.widgets = [];
         this.idCounter = 0;
         this.webView = new webView_1.WebView();
+        this.rosMasterAdress = $("#rosMasterAdress").val();
+        this.name = 'workspaceJson';
     }
 
     _createClass(Workspace, [{
@@ -428,7 +430,6 @@ function buildJSON(typesWithTopics, typesWithViews) {
         }
     }
 
-    console.log(topicResult);
     return topicResult;
 }
 

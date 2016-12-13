@@ -1,4 +1,4 @@
-import {ROSEvent} from "../services/rosEvent"
+import {ROSEvent} from "../services/rosEvents"
 
 export class Widget{
     public ros: ROSLIB.Ros;
