@@ -160,6 +160,8 @@ var Workspace = function () {
         this.rosMasterAdress = $("#rosMasterAdress").val();
         this.name = 'workspaceJson';
     }
+    //create new widget
+
 
     _createClass(Workspace, [{
         key: "createWidget",
@@ -182,6 +184,40 @@ var Workspace = function () {
                 error: function error(e1, e2) {},
                 cache: false
             });
+        }
+        //load a widget from loaded workspace
+
+    }, {
+        key: "loadWidget",
+        value: function loadWidget(widget) {
+            //load index file
+            $.ajax({
+                url: "widgets/" + widget.topicType + "/" + widget.topicImplementation + "/index.hbs",
+                method: "POST",
+                beforeSend: function beforeSend() {},
+                success: function success(data) {
+                    var posX = parseInt($(data).attr("data-pos-x"));
+                    var posY = parseInt($(data).attr("data-pos-y"));
+                    var width = parseInt($(data).attr("data-min-width"));
+                    var height = parseInt($(data).attr("data-min-height"));
+                    var crtWidget = new widget_1.Widget(exports.actualWorkspace.idCounter, widget.topicUrl, widget.topicType, widget.width, widget.height, widget.posX, widget.posY, data, widget.topicImplementation);
+                    exports.actualWorkspace.webView.insertWidget(crtWidget);
+                    exports.actualWorkspace.widgets.push(crtWidget);
+                    exports.actualWorkspace.idCounter++;
+                },
+                error: function error(e1, e2) {},
+                cache: false
+            });
+        }
+    }, {
+        key: "clear",
+        value: function clear() {
+            exports.actualWorkspace.widgets = [];
+            exports.actualWorkspace.idCounter = 0;
+            exports.actualWorkspace.webView = new webView_1.WebView();
+            exports.actualWorkspace.rosMasterAdress = $("#rosMasterAdress").val();
+            exports.actualWorkspace.name = 'workspaceJson';
+            $('#frontend-container').empty();
         }
         //remove Widget from workspace
 
@@ -207,6 +243,26 @@ var Workspace = function () {
                 }
             });
         }
+        //load workspace with php-script
+
+    }, {
+        key: "loadWorkspace",
+        value: function loadWorkspace() {
+            $.ajax({
+                type: 'POST',
+                url: 'php/loadWorkspace.php',
+                data: { workspace: 'workspaceJson' },
+                success: function success(msg) {
+                    var loadedWorkspace = JSON.parse(msg);
+                    console.log(exports.actualWorkspace);
+                    console.log(loadedWorkspace);
+                    for (var widgetString in loadedWorkspace.widgets) {
+                        var widgetJson = JSON.parse(widgetString);
+                        exports.actualWorkspace.loadWidget(widgetJson);
+                    }
+                }
+            });
+        }
     }]);
 
     return Workspace;
@@ -220,6 +276,10 @@ function fnctCreateWidget(topicUrl, topicType, topicImplementation) {
 window["fnctSaveWorkspace"] = fnctSaveWorkspace;
 function fnctSaveWorkspace() {
     exports.actualWorkspace.saveWorkspace();
+}
+window["fnctLoadWorkspace"] = fnctLoadWorkspace;
+function fnctLoadWorkspace() {
+    exports.actualWorkspace.loadWorkspace();
 }
 exports.actualWorkspace = new Workspace();
 
