@@ -196,10 +196,7 @@ var Workspace = function () {
                 method: "POST",
                 beforeSend: function beforeSend() {},
                 success: function success(data) {
-                    var posX = parseInt($(data).attr("data-pos-x"));
-                    var posY = parseInt($(data).attr("data-pos-y"));
-                    var width = parseInt($(data).attr("data-min-width"));
-                    var height = parseInt($(data).attr("data-min-height"));
+                    console.log(widget);
                     var crtWidget = new widget_1.Widget(exports.actualWorkspace.idCounter, widget.topicUrl, widget.topicType, widget.width, widget.height, widget.posX, widget.posY, data, widget.topicImplementation);
                     exports.actualWorkspace.webView.insertWidget(crtWidget);
                     exports.actualWorkspace.widgets.push(crtWidget);
@@ -210,14 +207,18 @@ var Workspace = function () {
             });
         }
     }, {
-        key: "clear",
-        value: function clear() {
+        key: "_load",
+        value: function _load(loadedWorkspace) {
             exports.actualWorkspace.widgets = [];
             exports.actualWorkspace.idCounter = 0;
             exports.actualWorkspace.webView = new webView_1.WebView();
-            exports.actualWorkspace.rosMasterAdress = $("#rosMasterAdress").val();
-            exports.actualWorkspace.name = 'workspaceJson';
+            exports.actualWorkspace.rosMasterAdress = loadedWorkspace.rosMasterAdress;
+            exports.actualWorkspace.name = loadedWorkspace.name;
+            $("#rosMasterAdress").val(exports.actualWorkspace.rosMasterAdress);
             $('#frontend-container').empty();
+            for (var i = 0; i < loadedWorkspace.widgets.length; i++) {
+                exports.actualWorkspace.loadWidget(loadedWorkspace.widgets[i]);
+            }
         }
         //remove Widget from workspace
 
@@ -233,7 +234,6 @@ var Workspace = function () {
     }, {
         key: "saveWorkspace",
         value: function saveWorkspace() {
-            console.log(exports.actualWorkspace);
             $.ajax({
                 type: 'POST',
                 url: 'php/saveWorkspace.php',
@@ -254,12 +254,8 @@ var Workspace = function () {
                 data: { workspace: 'workspaceJson' },
                 success: function success(msg) {
                     var loadedWorkspace = JSON.parse(msg);
-                    console.log(exports.actualWorkspace);
-                    console.log(loadedWorkspace);
-                    for (var widgetString in loadedWorkspace.widgets) {
-                        var widgetJson = JSON.parse(widgetString);
-                        exports.actualWorkspace.loadWidget(widgetJson);
-                    }
+                    var workspaceObj = JSON.parse(loadedWorkspace);
+                    exports.actualWorkspace._load(workspaceObj);
                 }
             });
         }

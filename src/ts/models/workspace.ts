@@ -2,6 +2,8 @@
 
 import {WebView} from "./webView"
 import {Widget} from "./widget"
+import {ROSEvent} from "../services/rosEvents"
+
 
 declare var MyApp: any;
 
@@ -58,10 +60,7 @@ export class Workspace{
 
             },
             success: function (data: string) {
-                let posX = parseInt($(data).attr("data-pos-x"));
-                let posY = parseInt($(data).attr("data-pos-y"));
-                let width = parseInt($(data).attr("data-min-width"));
-                let height = parseInt($(data).attr("data-min-height"));
+                console.log(widget);
                 let crtWidget = new Widget(actualWorkspace.idCounter, widget.topicUrl, widget.topicType,
                                             widget.width, widget.height, widget.posX, widget.posY, data, widget.topicImplementation);
                 actualWorkspace.webView.insertWidget(crtWidget);
@@ -75,13 +74,18 @@ export class Workspace{
         });
     }
 
-    public clear() {
+
+    private _load(loadedWorkspace: any) {
         actualWorkspace.widgets = [];
         actualWorkspace.idCounter = 0;
         actualWorkspace.webView = new WebView();
-        actualWorkspace.rosMasterAdress = $("#rosMasterAdress").val();
-        actualWorkspace.name = 'workspaceJson';
+        actualWorkspace.rosMasterAdress = loadedWorkspace.rosMasterAdress;
+        actualWorkspace.name = loadedWorkspace.name;
+        $("#rosMasterAdress").val(actualWorkspace.rosMasterAdress);
         $('#frontend-container').empty();
+        for(let i = 0; i < loadedWorkspace.widgets.length; i++) {
+            actualWorkspace.loadWidget(loadedWorkspace.widgets[i]);
+        }
     }
 
     //remove Widget from workspace
@@ -93,7 +97,6 @@ export class Workspace{
 
     //save workspace with php-script
     public saveWorkspace() {
-        console.log(actualWorkspace);
         $.ajax({
             type: 'POST',
             url: 'php/saveWorkspace.php',
@@ -112,13 +115,8 @@ export class Workspace{
             data: {workspace: 'workspaceJson'},
             success: function(msg) {
                 let loadedWorkspace = JSON.parse(msg);
-                console.log(actualWorkspace);
-                console.log(loadedWorkspace);
-
-                for(let widgetString in loadedWorkspace.widgets) {
-                    let widgetJson = JSON.parse(widgetString);
-                    actualWorkspace.loadWidget(widgetJson);
-                }
+                let workspaceObj = JSON.parse(loadedWorkspace);
+                actualWorkspace._load(workspaceObj);
             }
         });
     }
