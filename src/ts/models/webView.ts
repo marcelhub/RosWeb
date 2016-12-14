@@ -54,7 +54,7 @@ export class WebView {
             
             //use remove of widgetInstance, then clean up workspace
             $("div[data-widget-id="+widget.id+"] .jsWidgetRemove").on( "click", widget.widgetInstance, function() {
-                if( widget.widgetInstance.btnRemo == null) {
+                if( widget.widgetInstance.btnRemove == null) {
                     //no remove method from widgetInstance
                 } else {
                     widget.widgetInstance.btnRemove();

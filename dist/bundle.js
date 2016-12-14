@@ -9,6 +9,8 @@ function init() {
         var ros = new ROSLIB.Ros("");
         var rosEvents = new rosEvents_1.ROSEvent(ros);
         workspace_1.actualWorkspace;
+        //initialize workspace menu
+        window['fnctMenuWorkspace']();
     });
 }
 init();
@@ -62,7 +64,7 @@ var WebView = function WebView() {
             $("div[data-widget-id=" + widget.id + "] .jsWidgetSettings").on("click", widget.widgetInstance, widget.widgetInstance.btnSettings);
             //use remove of widgetInstance, then clean up workspace
             $("div[data-widget-id=" + widget.id + "] .jsWidgetRemove").on("click", widget.widgetInstance, function () {
-                if (widget.widgetInstance.btnRemo == null) {} else {
+                if (widget.widgetInstance.btnRemove == null) {} else {
                     widget.widgetInstance.btnRemove();
                 }
                 workspace_1.actualWorkspace.removeWidget(widget);
@@ -243,9 +245,7 @@ var Workspace = function () {
                 type: 'POST',
                 url: 'php/saveWorkspace.php',
                 data: { workspace: JSON.stringify(exports.actualWorkspace) },
-                success: function success(msg) {
-                    console.log(msg);
-                }
+                success: function success(msg) {}
             });
         }
         //load workspace with php-script
@@ -268,10 +268,45 @@ var Workspace = function () {
                     $("#rosMasterAdress").val(exports.actualWorkspace.rosMasterAdress);
                     $('#frontend-container').empty();
                     for (var i = 0; i < workspaceObj.widgets.length; i++) {
-                        console.log(workspaceObj.widgets[i]);
                         exports.actualWorkspace.loadWidget(workspaceObj.widgets[i]);
                     }
                 }
+            });
+        }
+        //generate menu-list of workspaces
+
+    }, {
+        key: "menuWorkspace",
+        value: function menuWorkspace() {
+            $.ajax({
+                type: 'POST',
+                url: 'php/generateWorkspaceMenu.php',
+                success: function success(data) {
+                    console.log(data);
+                    if (MyApp.templates['generateWorkspaceMenu'] == null) {
+                        exports.actualWorkspace._loadMenuWorkspaceTemplate();
+                    } else {
+                        if ($('#workspace-menu').length > 0) {
+                            $('#workspace-menu').remove();
+                        }
+                        var menuHtml = MyApp.templates.generateWorkspaceMenu({ workspaces: JSON.parse(data) });
+                        $(document.body).append(menuHtml);
+                    }
+                }
+            });
+        }
+    }, {
+        key: "_loadMenuWorkspaceTemplate",
+        value: function _loadMenuWorkspaceTemplate() {
+            $.ajax({
+                url: "templates/workspaceMenu.hbs",
+                method: "POST",
+                beforeSend: function beforeSend() {},
+                success: function success(data) {
+                    MyApp.templates['generateWorkspaceMenu'] = Handlebars.compile(data);
+                    exports.actualWorkspace.menuWorkspace();
+                },
+                cache: false
             });
         }
     }]);
@@ -291,6 +326,10 @@ function fnctSaveWorkspace() {
 window["fnctLoadWorkspace"] = fnctLoadWorkspace;
 function fnctLoadWorkspace() {
     exports.actualWorkspace.loadWorkspace();
+}
+window["fnctMenuWorkspace"] = fnctMenuWorkspace;
+function fnctMenuWorkspace() {
+    exports.actualWorkspace.menuWorkspace();
 }
 exports.actualWorkspace = new Workspace();
 

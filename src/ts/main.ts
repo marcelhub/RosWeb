@@ -12,6 +12,8 @@ function init() {
     let ros: ROSLIB.Ros = new ROSLIB.Ros("");
     let rosEvents: ROSEvent = new ROSEvent(ros);
     actualWorkspace;
+    //initialize workspace menu
+    window['fnctMenuWorkspace']();
   });
 }
 

@@ -82,6 +82,17 @@ this["MyApp"]["templates"]["widgetWrapper"] = Handlebars.template({"1":function(
     + ((stack1 = helpers["if"].call(alias1,(depth0 != null ? depth0.btnSettings : depth0),{"name":"if","hash":{},"fn":container.program(3, data, 0),"inverse":container.noop,"data":data})) != null ? stack1 : "")
     + "        </h4>\n    </div>\n</div>";
 },"useData":true});
-this["MyApp"]["templates"]["workspaceMenu"] = Handlebars.template({"compiler":[7,">= 4.0.0"],"main":function(container,depth0,helpers,partials,data) {
+this["MyApp"]["templates"]["workspaceMenu"] = Handlebars.template({"1":function(container,depth0,helpers,partials,data) {
+    return "            <div class=\"form-group\">\n                <label class=\"control-label col-xs-4\">"
+    + container.escapeExpression(container.lambda(depth0, depth0))
+    + "</label>\n                <div class=\"col-xs-8\">\n                  <button type=\"button\" class=\"btn btn-default\" ><i class=\"fa fa-floppy-o fa-lg\" ></i> Save</button>\n                  <button type=\"button\" class=\"btn btn-default\" data-dismiss=\"modal\"><i class=\"fa fa-upload fa-lg\" ></i> Load</button>\n                  <button type=\"button\" class=\"btn btn-danger\" ><i class=\"fa fa-trash fa-lg\" ></i> Delete</button>\n                </div>\n            </div>\n";
+},"compiler":[7,">= 4.0.0"],"main":function(container,depth0,helpers,partials,data) {
+    var stack1;
+
+  return "<div id=\"workspace-menu\" class=\"modal fade\" role=\"dialog\">\n  <div class=\"modal-dialog\">\n\n    <!-- Modal content-->\n    <div class=\"modal-content\">\n      <div class=\"modal-header\">\n        <h4 class=\"modal-title\">Available workspaces</h4>\n      </div>\n      <div class=\"modal-body\">\n        <form class=\"form-horizontal\">\n          \n"
+    + ((stack1 = helpers.each.call(depth0 != null ? depth0 : {},(depth0 != null ? depth0.workspaces : depth0),{"name":"each","hash":{},"fn":container.program(1, data, 0),"inverse":container.noop,"data":data})) != null ? stack1 : "")
+    + "            <div class=\"form-group\">\n                <div class=\"col-xs-4\">\n                  <input type=\"text\" class=\"form-control text-right\" placeholder=\"new workspace\"></input>\n                </div>\n                <div class=\"col-xs-3\">\n                  <button type=\"button\" class=\"btn btn-default\" ><i class=\"fa fa-floppy-o fa-lg\" ></i> Save</button>\n                </div>\n            </div>\n          </div>\n        </form>\n      </div>\n      <div class=\"modal-footer\">\n        <button type=\"button\" class=\"btn btn-primary\" data-dismiss=\"modal\">Close</button>\n      </div>\n    </div>\n  </div>\n</div>";
+},"useData":true});
+this["MyApp"]["templates"]["workspaces"] = Handlebars.template({"compiler":[7,">= 4.0.0"],"main":function(container,depth0,helpers,partials,data) {
     return "";
 },"useData":true});

@@ -24,7 +24,7 @@ export class Workspace{
     }
 
     //create new widget
-    public createWidget(topicUrl:string, topicType: string, topicImplementation: string){
+    public createWidget(topicUrl:string, topicType: string, topicImplementation: string) {
         //load index file
         $.ajax({
             url: "widgets/" + topicType + "/" + topicImplementation + "/index.hbs",
@@ -91,7 +91,6 @@ export class Workspace{
             url: 'php/saveWorkspace.php',
             data: {workspace: JSON.stringify(actualWorkspace)},
             success: function(msg) {
-                console.log(msg);
             }
         });
     }
@@ -115,10 +114,45 @@ export class Workspace{
                 $('#frontend-container').empty();
 
                 for(let i = 0; i < workspaceObj.widgets.length; i++) {
-                    console.log(workspaceObj.widgets[i]);
                     actualWorkspace.loadWidget(workspaceObj.widgets[i]);
                 }
             }
+        });
+    }
+
+    //generate menu-list of workspaces
+    public menuWorkspace() {
+        $.ajax({
+            type: 'POST',
+            url: 'php/generateWorkspaceMenu.php',
+            success: function(data) {
+                console.log(data);
+                if(MyApp.templates['generateWorkspaceMenu'] == null) {
+                    actualWorkspace._loadMenuWorkspaceTemplate();
+                } else {
+                    if($('#workspace-menu').length > 0) {
+                        $('#workspace-menu').remove();
+                    }
+                    let menuHtml = MyApp.templates.generateWorkspaceMenu({workspaces: JSON.parse(data)});
+                    $(document.body).append(menuHtml);
+            
+                }
+            }
+        });
+    }
+
+    private _loadMenuWorkspaceTemplate() {
+        $.ajax({
+            url: "templates/workspaceMenu.hbs",
+            method: "POST",
+            beforeSend: function () {
+
+            },
+            success: function (data: string) {
+                MyApp.templates['generateWorkspaceMenu'] = Handlebars.compile(data);
+                actualWorkspace.menuWorkspace();
+            },
+            cache: false
         });
     }
 }
@@ -138,5 +172,9 @@ function fnctLoadWorkspace() {
     actualWorkspace.loadWorkspace();
 }
 
+window["fnctMenuWorkspace"] = fnctMenuWorkspace;
+function fnctMenuWorkspace() {
+    actualWorkspace.menuWorkspace();
+}
 
 export let actualWorkspace: Workspace = new Workspace();
