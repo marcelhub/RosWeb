@@ -1,7 +1,5 @@
 <div id="workspace-menu" class="modal fade" role="dialog">
   <div class="modal-dialog">
-
-    <!-- Modal content-->
     <div class="modal-content">
       <div class="modal-header">
         <h4 class="modal-title">Available workspaces</h4>
@@ -12,25 +10,24 @@
           <div class="form-group">
               <label class="control-label col-xs-4">{{this}}:</label>
               <div class="col-xs-8">
-                <button type="button" class="btn btn-default" ><i class="fa fa-floppy-o fa-lg" ></i> Save</button>
-                <button type="button" class="btn btn-default" data-dismiss="modal"><i class="fa fa-upload fa-lg" ></i> Load</button>
-                <button type="button" class="btn btn-danger" ><i class="fa fa-trash fa-lg" ></i> Delete</button>
+                <button type="button" class="btn btn-default" onclick="fnctSaveWorkspace('{{this}}');" ><i class="fa fa-floppy-o fa-lg" ></i> Save</button>
+                <button type="button" class="btn btn-default" onclick="fnctLoadWorkspace('{{this}}');" data-dismiss="modal" ><i class="fa fa-upload fa-lg" ></i> Load</button>
+                <button type="button" class="btn btn-danger" onclick="fnctDeleteWorkspace('{{this}}');"><i class="fa fa-trash fa-lg" ></i> Delete</button>
               </div>
           </div>
           {{/each }}
           <div class="form-group">
               <div class="col-xs-4">
-                <input type="text" class="form-control text-right" placeholder="new workspace"></input>
+                <input id="workspace-new-save"type="text" class="form-control text-right" placeholder="new workspace"></input>
               </div>
               <div class="col-xs-3">
-                <button type="button" class="btn btn-default" ><i class="fa fa-floppy-o fa-lg" ></i> Save</button>
+                <button type="button" class="btn btn-default" onclick="fnctSaveWorkspace();"><i class="fa fa-floppy-o fa-lg" ></i> Save</button>
               </div>
-            </div>
           </div>
         </form>
-        <div class="modal-footer">
-          <button type="button" class="btn btn-primary" data-dismiss="modal">Close</button>
-        </div>
+      </div>
+      <div class="modal-footer">
+        <button type="button" class="btn btn-primary" data-dismiss="modal">Close</button>
       </div>
     </div>
   </div>

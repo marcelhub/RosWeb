@@ -176,7 +176,6 @@ var Workspace = function () {
         this.idCounter = 0;
         this.webView = new webView_1.WebView();
         this.rosMasterAdress = $("#rosMasterAdress").val();
-        this.name = 'workspaceJson';
     }
     //create new widget
 
@@ -236,10 +235,15 @@ var Workspace = function () {
 
     }, {
         key: "saveWorkspace",
-        value: function saveWorkspace() {
+        value: function saveWorkspace(name) {
             //store current widget size and position
             for (var i = 0; i < exports.actualWorkspace.widgets.length; i++) {
                 exports.actualWorkspace.widgets[i].save();
+            }
+            if (name == null) {
+                exports.actualWorkspace.name = $('#workspace-new-save').val();
+            } else {
+                exports.actualWorkspace.name = name;
             }
             $.ajax({
                 type: 'POST',
@@ -252,11 +256,11 @@ var Workspace = function () {
 
     }, {
         key: "loadWorkspace",
-        value: function loadWorkspace() {
+        value: function loadWorkspace(name) {
             $.ajax({
                 type: 'POST',
                 url: 'php/loadWorkspace.php',
-                data: { workspace: 'workspaceJson' },
+                data: { workspace: name },
                 success: function success(msg) {
                     var loadedWorkspace = JSON.parse(msg);
                     var workspaceObj = JSON.parse(loadedWorkspace);
@@ -320,12 +324,16 @@ function fnctCreateWidget(topicUrl, topicType, topicImplementation) {
     exports.actualWorkspace.createWidget(topicUrl, topicType, topicImplementation);
 }
 window["fnctSaveWorkspace"] = fnctSaveWorkspace;
-function fnctSaveWorkspace() {
-    exports.actualWorkspace.saveWorkspace();
+function fnctSaveWorkspace(name) {
+    if (name === null) {
+        exports.actualWorkspace.saveWorkspace();
+    } else {
+        exports.actualWorkspace.saveWorkspace(name);
+    }
 }
 window["fnctLoadWorkspace"] = fnctLoadWorkspace;
-function fnctLoadWorkspace() {
-    exports.actualWorkspace.loadWorkspace();
+function fnctLoadWorkspace(name) {
+    exports.actualWorkspace.loadWorkspace(name);
 }
 window["fnctMenuWorkspace"] = fnctMenuWorkspace;
 function fnctMenuWorkspace() {

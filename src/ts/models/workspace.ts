@@ -20,7 +20,6 @@ export class Workspace{
         this.idCounter = 0;
         this.webView = new WebView();
         this.rosMasterAdress = $("#rosMasterAdress").val();
-        this.name = 'workspaceJson';
     }
 
     //create new widget
@@ -81,10 +80,15 @@ export class Workspace{
     }
 
     //save workspace with php-script
-    public saveWorkspace() {
+    public saveWorkspace(name?: string) {
         //store current widget size and position
         for(let i = 0; i < actualWorkspace.widgets.length; i++) {
             actualWorkspace.widgets[i].save();
+        }
+        if(name == null) {
+            actualWorkspace.name = $('#workspace-new-save').val();
+        } else {
+            actualWorkspace.name = name;
         }
         $.ajax({
             type: 'POST',
@@ -96,11 +100,11 @@ export class Workspace{
     }
 
     //load workspace with php-script
-    public loadWorkspace() {
+    public loadWorkspace(name: string) {
         $.ajax({
             type: 'POST',
             url: 'php/loadWorkspace.php',
-            data: {workspace: 'workspaceJson'},
+            data: {workspace: name},
             success: function(msg) {
                 let loadedWorkspace = JSON.parse(msg);
                 let workspaceObj = JSON.parse(loadedWorkspace);
@@ -163,13 +167,17 @@ function fnctCreateWidget(topicUrl: string, topicType: string, topicImplementati
 }
 
 window["fnctSaveWorkspace"] = fnctSaveWorkspace;
-function fnctSaveWorkspace() {
-    actualWorkspace.saveWorkspace();
+function fnctSaveWorkspace(name?: string) {
+    if(name === null) {
+        actualWorkspace.saveWorkspace();
+    } else {
+        actualWorkspace.saveWorkspace(name);
+    }
 }
 
 window["fnctLoadWorkspace"] = fnctLoadWorkspace;
-function fnctLoadWorkspace() {
-    actualWorkspace.loadWorkspace();
+function fnctLoadWorkspace(name: string) {
+    actualWorkspace.loadWorkspace(name);
 }
 
 window["fnctMenuWorkspace"] = fnctMenuWorkspace;
