@@ -60,10 +60,9 @@ export class Workspace{
 
             },
             success: function (data: string) {
-                console.log(widget);
                 let crtWidget = new Widget(actualWorkspace.idCounter, widget.topicUrl, widget.topicType,
                                             widget.width, widget.height, widget.posX, widget.posY, data, widget.topicImplementation);
-                actualWorkspace.webView.insertWidget(crtWidget);
+                actualWorkspace.webView.insertWidget(crtWidget, widget.widgetInstance);
                 actualWorkspace.widgets.push(crtWidget);
                 actualWorkspace.idCounter++;
             },
@@ -72,20 +71,6 @@ export class Workspace{
             },
             cache: false
         });
-    }
-
-
-    private _load(loadedWorkspace: any) {
-        actualWorkspace.widgets = [];
-        actualWorkspace.idCounter = 0;
-        actualWorkspace.webView = new WebView();
-        actualWorkspace.rosMasterAdress = loadedWorkspace.rosMasterAdress;
-        actualWorkspace.name = loadedWorkspace.name;
-        $("#rosMasterAdress").val(actualWorkspace.rosMasterAdress);
-        $('#frontend-container').empty();
-        for(let i = 0; i < loadedWorkspace.widgets.length; i++) {
-            actualWorkspace.loadWidget(loadedWorkspace.widgets[i]);
-        }
     }
 
     //remove Widget from workspace
@@ -97,6 +82,10 @@ export class Workspace{
 
     //save workspace with php-script
     public saveWorkspace() {
+        //store current widget size and position
+        for(let i = 0; i < actualWorkspace.widgets.length; i++) {
+            actualWorkspace.widgets[i].save();
+        }
         $.ajax({
             type: 'POST',
             url: 'php/saveWorkspace.php',
@@ -116,7 +105,19 @@ export class Workspace{
             success: function(msg) {
                 let loadedWorkspace = JSON.parse(msg);
                 let workspaceObj = JSON.parse(loadedWorkspace);
-                actualWorkspace._load(workspaceObj);
+
+                actualWorkspace.widgets = [];
+                actualWorkspace.idCounter = 0;
+                actualWorkspace.webView = new WebView();
+                actualWorkspace.rosMasterAdress = workspaceObj.rosMasterAdress;
+                actualWorkspace.name = workspaceObj.name;
+                $("#rosMasterAdress").val(actualWorkspace.rosMasterAdress);
+                $('#frontend-container').empty();
+
+                for(let i = 0; i < workspaceObj.widgets.length; i++) {
+                    console.log(workspaceObj.widgets[i]);
+                    actualWorkspace.loadWidget(workspaceObj.widgets[i]);
+                }
             }
         });
     }

@@ -26,8 +26,7 @@ var WebView = function WebView() {
     _classCallCheck(this, WebView);
 
     this._widgetHeaderOffset = 50;
-    //insert widget into WebView
-    this.insertWidget = function (widget) {
+    this.insertWidget = function (widget, widgetInstance) {
         //JSON object needed for widgetWrapper context
         var widgetWrapperData = {
             id: widget.id,
@@ -47,8 +46,13 @@ var WebView = function WebView() {
         //compile html to javascript
         var widgetTemplateCompiled = Handlebars.compile(widget.html);
         setTimeout(function () {
-            //create object of widgetinstance and initialize it
-            widget.widgetInstance = new this[widget.topicImplementation](widget.id, widget.ros, widget.topicUrl, widget.topicType, widget.topicImplementation).init();
+            if (widgetInstance == null) {
+                //create object of widgetinstance and initialize it with default values
+                widget.widgetInstance = new this[widget.topicImplementation](widget.id, widget.ros, widget.topicUrl, widget.topicType, widget.topicImplementation).init();
+            } else {
+                //create object with loaded settings
+                widget.widgetInstance = new this[widget.topicImplementation](widget.id, widget.ros, widget.topicUrl, widget.topicType, widget.topicImplementation).load(widgetInstance.settings);
+            }
             //compile javascript with the data from the widgetinstance to html
             var widgetHtml = widgetTemplateCompiled(widget.widgetInstance);
             //insert wrapper into document, afterwards the widget itself
@@ -113,29 +117,41 @@ function loadScript(widget) {
 },{"./workspace":4}],3:[function(require,module,exports){
 "use strict";
 
+var _createClass = function () { function defineProperties(target, props) { for (var i = 0; i < props.length; i++) { var descriptor = props[i]; descriptor.enumerable = descriptor.enumerable || false; descriptor.configurable = true; if ("value" in descriptor) descriptor.writable = true; Object.defineProperty(target, descriptor.key, descriptor); } } return function (Constructor, protoProps, staticProps) { if (protoProps) defineProperties(Constructor.prototype, protoProps); if (staticProps) defineProperties(Constructor, staticProps); return Constructor; }; }();
+
 function _classCallCheck(instance, Constructor) { if (!(instance instanceof Constructor)) { throw new TypeError("Cannot call a class as a function"); } }
 
 var rosEvents_1 = require("../services/rosEvents");
 
-var Widget = function Widget(id, topicUrl, topicType, width, height, posX, posY, html, topicImplementation, settings) {
-    _classCallCheck(this, Widget);
+var Widget = function () {
+    function Widget(id, topicUrl, topicType, width, height, posX, posY, html, topicImplementation) {
+        _classCallCheck(this, Widget);
 
-    this.ros = rosEvents_1.ROSEvent.getInstance();
-    this.id = id;
-    this.topicUrl = topicUrl;
-    this.topicType = topicType;
-    this.width = width;
-    this.height = height;
-    this.posX = posX;
-    this.posY = posY;
-    this.html = html;
-    this.topicImplementation = topicImplementation;
-    if (settings) {
-        this.settings = settings;
-    } else {
-        this.settings = null;
+        this.ros = rosEvents_1.ROSEvent.getInstance();
+        this.id = id;
+        this.topicUrl = topicUrl;
+        this.topicType = topicType;
+        this.width = width;
+        this.height = height;
+        this.posX = posX;
+        this.posY = posY;
+        this.html = html;
+        this.topicImplementation = topicImplementation;
     }
-};
+
+    _createClass(Widget, [{
+        key: "save",
+        value: function save() {
+            var wrapper = $("div[data-widget-id=" + this.id + "]");
+            this.width = parseInt(wrapper.css('width').slice(0, -2));
+            this.height = parseInt(wrapper.css('height').slice(0, -2));
+            this.posX = parseInt(wrapper.css('left').slice(0, -2));
+            this.posY = parseInt(wrapper.css('top').slice(0, -2));
+        }
+    }]);
+
+    return Widget;
+}();
 
 exports.Widget = Widget;
 
@@ -196,29 +212,14 @@ var Workspace = function () {
                 method: "POST",
                 beforeSend: function beforeSend() {},
                 success: function success(data) {
-                    console.log(widget);
                     var crtWidget = new widget_1.Widget(exports.actualWorkspace.idCounter, widget.topicUrl, widget.topicType, widget.width, widget.height, widget.posX, widget.posY, data, widget.topicImplementation);
-                    exports.actualWorkspace.webView.insertWidget(crtWidget);
+                    exports.actualWorkspace.webView.insertWidget(crtWidget, widget.widgetInstance);
                     exports.actualWorkspace.widgets.push(crtWidget);
                     exports.actualWorkspace.idCounter++;
                 },
                 error: function error(e1, e2) {},
                 cache: false
             });
-        }
-    }, {
-        key: "_load",
-        value: function _load(loadedWorkspace) {
-            exports.actualWorkspace.widgets = [];
-            exports.actualWorkspace.idCounter = 0;
-            exports.actualWorkspace.webView = new webView_1.WebView();
-            exports.actualWorkspace.rosMasterAdress = loadedWorkspace.rosMasterAdress;
-            exports.actualWorkspace.name = loadedWorkspace.name;
-            $("#rosMasterAdress").val(exports.actualWorkspace.rosMasterAdress);
-            $('#frontend-container').empty();
-            for (var i = 0; i < loadedWorkspace.widgets.length; i++) {
-                exports.actualWorkspace.loadWidget(loadedWorkspace.widgets[i]);
-            }
         }
         //remove Widget from workspace
 
@@ -234,6 +235,10 @@ var Workspace = function () {
     }, {
         key: "saveWorkspace",
         value: function saveWorkspace() {
+            //store current widget size and position
+            for (var i = 0; i < exports.actualWorkspace.widgets.length; i++) {
+                exports.actualWorkspace.widgets[i].save();
+            }
             $.ajax({
                 type: 'POST',
                 url: 'php/saveWorkspace.php',
@@ -255,7 +260,17 @@ var Workspace = function () {
                 success: function success(msg) {
                     var loadedWorkspace = JSON.parse(msg);
                     var workspaceObj = JSON.parse(loadedWorkspace);
-                    exports.actualWorkspace._load(workspaceObj);
+                    exports.actualWorkspace.widgets = [];
+                    exports.actualWorkspace.idCounter = 0;
+                    exports.actualWorkspace.webView = new webView_1.WebView();
+                    exports.actualWorkspace.rosMasterAdress = workspaceObj.rosMasterAdress;
+                    exports.actualWorkspace.name = workspaceObj.name;
+                    $("#rosMasterAdress").val(exports.actualWorkspace.rosMasterAdress);
+                    $('#frontend-container').empty();
+                    for (var i = 0; i < workspaceObj.widgets.length; i++) {
+                        console.log(workspaceObj.widgets[i]);
+                        exports.actualWorkspace.loadWidget(workspaceObj.widgets[i]);
+                    }
                 }
             });
         }

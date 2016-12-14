@@ -28,12 +28,12 @@ Videostream.prototype = {
         this.settings.quality = 90;
         return this;
     },
-    load: function(widget) {
-        this.settings.ip = widget.data.settings.ip;
-        this.settings.port = widget.data.settings.port;
-        this.settings.width = widget.data.settings.width;
-        this.settings.height = widget.data.settings.height;
-        this.settings.quality = widget.data.settings.quality;
+    load: function(settings) {
+        this.settings.ip = settings.ip;
+        this.settings.port = settings.port;
+        this.settings.width = settings.width;
+        this.settings.height = settings.height;
+        this.settings.quality = settings.quality;
         return this;
     },
     save: function(widget) {

@@ -9,8 +9,7 @@ export class WebView {
 
     }
 
-    //insert widget into WebView
-    public insertWidget = (widget: Widget) => {
+    public insertWidget = (widget: Widget, widgetInstance?: any) => {
         //JSON object needed for widgetWrapper context
         let widgetWrapperData = {
             id : widget.id,
@@ -33,9 +32,16 @@ export class WebView {
         //compile html to javascript
         let widgetTemplateCompiled  = Handlebars.compile(widget.html);
         setTimeout(function() {
-            //create object of widgetinstance and initialize it
-            widget.widgetInstance = new this[widget.topicImplementation](widget.id, widget.ros, widget.topicUrl, widget.topicType,
-                                                                        widget.topicImplementation).init();
+            if(widgetInstance == null) {
+                //create object of widgetinstance and initialize it with default values
+                widget.widgetInstance = new this[widget.topicImplementation](widget.id, widget.ros, widget.topicUrl, widget.topicType,
+                                                                            widget.topicImplementation).init();
+            } else {
+                //create object with loaded settings
+                widget.widgetInstance = new this[widget.topicImplementation](widget.id, widget.ros, widget.topicUrl, widget.topicType,
+                                                                            widget.topicImplementation).load(widgetInstance.settings);
+            }
+
             //compile javascript with the data from the widgetinstance to html
             let widgetHtml = widgetTemplateCompiled(widget.widgetInstance);
 
@@ -65,6 +71,7 @@ export class WebView {
     }
 
 }
+
 
 //load settings file
 function insertSettings(widget: Widget) {
