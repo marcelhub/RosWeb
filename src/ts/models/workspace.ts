@@ -81,23 +81,27 @@ export class Workspace{
 
     //save workspace with php-script
     public saveWorkspace(name?: string) {
-        //store current widget size and position
-        for(let i = 0; i < actualWorkspace.widgets.length; i++) {
-            actualWorkspace.widgets[i].save();
-        }
         if(name == null) {
             actualWorkspace.name = $('#workspace-new-save').val();
         } else {
             actualWorkspace.name = name;
         }
-        $.ajax({
-            type: 'POST',
-            url: 'php/saveWorkspace.php',
-            data: {workspace: JSON.stringify(actualWorkspace)},
-            success: function(msg) {
-                actualWorkspace.menuWorkspace();
+        if(actualWorkspace.name.length > 0) {
+            //store current widget size and position
+            for(let i = 0; i < actualWorkspace.widgets.length; i++) {
+                actualWorkspace.widgets[i].save();
             }
-        });
+            $.ajax({
+                type: 'POST',
+                url: 'php/saveWorkspace.php',
+                data: {workspace: JSON.stringify(actualWorkspace)},
+                success: function(msg) {
+                    actualWorkspace.menuWorkspace();
+                }
+            });
+        } else {
+            console.log("unvalid");
+        }
     }
 
     //load workspace with php-script
@@ -115,6 +119,7 @@ export class Workspace{
                 actualWorkspace.webView = new WebView();
                 actualWorkspace.rosMasterAdress = workspaceObj.rosMasterAdress;
                 actualWorkspace.name = workspaceObj.name;
+                
                 $("#rosMasterAdress").val(actualWorkspace.rosMasterAdress);
                 $('#frontend-container').empty();
 
@@ -176,7 +181,7 @@ function fnctCreateWidget(topicUrl: string, topicType: string, topicImplementati
 
 window["fnctSaveWorkspace"] = fnctSaveWorkspace;
 function fnctSaveWorkspace(name?: string) {
-    if(name === null) {
+    if(name == null) {
         actualWorkspace.saveWorkspace();
     } else {
         actualWorkspace.saveWorkspace(name);

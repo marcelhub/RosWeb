@@ -4,28 +4,40 @@
         <meta charset="UTF-8" />
         <title>ROS generic Web</title>
         <link rel="stylesheet" href="css/bootstrap.min.css"/>
+        <link rel="stylesheet" href="css/bootstrap-submenu.min.css">
         <link rel="stylesheet" href="css/index.css" />
         <link rel="stylesheet" href="css/navbar.css" />
         <link rel="stylesheet" href="css/widgetWrapperHeader.css" />
+        <link rel="stylesheet" href="css/font-awesome-4.7.0/css/font-awesome.min.css">
         <link rel="stylesheet" href="map/css/leaflet.css"/>
         <link rel="stylesheet" href="map/css/leaflet.draw.css"/>
-        <link rel="stylesheet" href="css/font-awesome-4.7.0/css/font-awesome.min.css">
-
     </head>
     <body>
-        <div div class="navbar navbar-custom navbar-fixed-top" role="navigation">
-            <div class="form-inline">
-                <a class="navbar-brand">ROS Master</a>
-                <input type="text" class="form-control" id="rosMasterAdress" placeholder="127.0.0.1:9090" value="192.168.1.97:9090">
-                <button type="button" class="btn btn-default jsWorkspaceMenu cssWorkspaceMenu" data-toggle="modal" data-target="#workspace-menu"><i class="fa fa-desktop fa-lg" ></i></button>
-                <button type="button" class="btn btn-default jsRosConnect cssRosConnect"><i class="fa fa-wifi fa-lg" ></i></button>
-                <button class="btn btn-default dropdown-toggle cssRosMenu jsRosMenu disconnected" type="button" data-toggle="dropdown" aria-haspopup="true" aria-expanded="true" aria-hidden="true">
-                    <i class="fa fa-bars fa-lg" ></i>
-                    <span class="caret"></span>
-                </button>
-                <ul class="dropdown-menu">
-                    <!--menu with topics will be inserted here at runtime-->
-                </ul>
+        <div div class="navbar navbar-default cssWidgetWrapperHeader" role="navigation">
+            <div class="container-fluid">
+                <div class="navbar-header">
+                    <a class="navbar-brand cssNavbarHeader" href="#" style="color:#fff;">ROS Master:</a>
+                </div>
+                    <form class="navbar-form navbar-left">
+                        <input type="text" class="form-control" id="rosMasterAdress" placeholder="127.0.0.1:9090" value="192.168.1.97:9090">
+                    </form>
+                    <ul class="nav navbar-nav">
+                        <li><button class="btn btn-default navbar-btn jsRosConnect cssRosConnect"><i class="fa fa-wifi fa-lg" ></i> Connect</button></li>
+                        <li><button class="btn btn-default navbar-btn jsWorkspaceMenu cssWorkspaceMenu" data-toggle="modal" data-target="#workspace-menu"><i class="fa fa-desktop fa-lg" ></i> Workspaces</button></li>
+                        <li>
+                            <a class="btn btn-default dropdown-toggle cssRosMenu jsRosMenu disconnected" data-toggle="dropdown">
+                                <i class="fa fa-bars fa-lg" ></i>
+                                <span class="caret"></span>
+                            </a>
+                        </li>
+                        <li>
+                            <button class="dropdown dropdown-menu">
+                                <ul class="dropdown-menu">
+                                    <!--menu will be inserted here at runtime-->
+                                </ul>
+                            </button>
+                        </li>
+                    </ul>
             </div>
         </div>
         <div id="workspace-menu" class="modal fade" role="dialog">
@@ -58,6 +70,7 @@
         <script type="text/javascript" src="js/jquery.min.js"></script>
         <script type="text/javascript" src="js/jquery-ui.min.js"></script>
         <script type="text/javascript" src="js/bootstrap.min.js"></script>
+        <script type="text/javascript" src="js/bootstrap-submenu.min.js"></script>
         <script type="text/javascript" src="js/eventemitter2.min.js"></script>
         <script type="text/javascript" src="js/roslib.min.js"></script>
         <script type="text/javascript" src="js/keyboardteleop.min.js"></script>

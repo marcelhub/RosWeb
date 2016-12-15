@@ -236,23 +236,27 @@ var Workspace = function () {
     }, {
         key: "saveWorkspace",
         value: function saveWorkspace(name) {
-            //store current widget size and position
-            for (var i = 0; i < exports.actualWorkspace.widgets.length; i++) {
-                exports.actualWorkspace.widgets[i].save();
-            }
             if (name == null) {
                 exports.actualWorkspace.name = $('#workspace-new-save').val();
             } else {
                 exports.actualWorkspace.name = name;
             }
-            $.ajax({
-                type: 'POST',
-                url: 'php/saveWorkspace.php',
-                data: { workspace: JSON.stringify(exports.actualWorkspace) },
-                success: function success(msg) {
-                    exports.actualWorkspace.menuWorkspace();
+            if (exports.actualWorkspace.name.length > 0) {
+                //store current widget size and position
+                for (var i = 0; i < exports.actualWorkspace.widgets.length; i++) {
+                    exports.actualWorkspace.widgets[i].save();
                 }
-            });
+                $.ajax({
+                    type: 'POST',
+                    url: 'php/saveWorkspace.php',
+                    data: { workspace: JSON.stringify(exports.actualWorkspace) },
+                    success: function success(msg) {
+                        exports.actualWorkspace.menuWorkspace();
+                    }
+                });
+            } else {
+                console.log("unvalid");
+            }
         }
         //load workspace with php-script
 
@@ -335,7 +339,7 @@ function fnctCreateWidget(topicUrl, topicType, topicImplementation) {
 }
 window["fnctSaveWorkspace"] = fnctSaveWorkspace;
 function fnctSaveWorkspace(name) {
-    if (name === null) {
+    if (name == null) {
         exports.actualWorkspace.saveWorkspace();
     } else {
         exports.actualWorkspace.saveWorkspace(name);

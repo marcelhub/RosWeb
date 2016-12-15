@@ -25,7 +25,7 @@ this["MyApp"]["templates"]["menu"] = Handlebars.template({"1":function(container
 },"4":function(container,depth0,helpers,partials,data,blockParams,depths) {
     var helper, alias1=container.lambda, alias2=container.escapeExpression, alias3=depth0 != null ? depth0 : {}, alias4=helpers.helperMissing, alias5="function";
 
-  return "                        <li style=\"color: black\">\n                            <a href=\"javascript:void(0);\" class=\"jsTopicToWidget\" onclick=\"fnctCreateWidget('"
+  return "                        <li style=\"color: black;\">\n                            <a href=\"javascript:void(0);\" class=\"jsTopicToWidget\" onclick=\"fnctCreateWidget('"
     + alias2(alias1((depths[1] != null ? depths[1].topic : depths[1]), depth0))
     + "','"
     + alias2(alias1((depths[2] != null ? depths[2].type : depths[2]), depth0))
