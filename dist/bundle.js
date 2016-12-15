@@ -249,7 +249,9 @@ var Workspace = function () {
                 type: 'POST',
                 url: 'php/saveWorkspace.php',
                 data: { workspace: JSON.stringify(exports.actualWorkspace) },
-                success: function success(msg) {}
+                success: function success(msg) {
+                    exports.actualWorkspace.menuWorkspace();
+                }
             });
         }
         //load workspace with php-script
@@ -277,6 +279,18 @@ var Workspace = function () {
                 }
             });
         }
+    }, {
+        key: "deleteWorkspace",
+        value: function deleteWorkspace(name) {
+            $.ajax({
+                type: 'POST',
+                url: 'php/deleteWorkspace.php',
+                data: { workspace: name },
+                success: function success(msg) {
+                    $('#workspace-form-' + name).remove();
+                }
+            });
+        }
         //generate menu-list of workspaces
 
     }, {
@@ -286,22 +300,18 @@ var Workspace = function () {
                 type: 'POST',
                 url: 'php/generateWorkspaceMenu.php',
                 success: function success(data) {
-                    console.log(data);
                     if (MyApp.templates['generateWorkspaceMenu'] == null) {
-                        exports.actualWorkspace._loadMenuWorkspaceTemplate();
+                        exports.actualWorkspace.loadMenuWorkspaceTemplate();
                     } else {
-                        if ($('#workspace-menu').length > 0) {
-                            $('#workspace-menu').remove();
-                        }
                         var menuHtml = MyApp.templates.generateWorkspaceMenu({ workspaces: JSON.parse(data) });
-                        $(document.body).append(menuHtml);
+                        $('#workspace-menu-body-wrapper').html(menuHtml);
                     }
                 }
             });
         }
     }, {
-        key: "_loadMenuWorkspaceTemplate",
-        value: function _loadMenuWorkspaceTemplate() {
+        key: "loadMenuWorkspaceTemplate",
+        value: function loadMenuWorkspaceTemplate() {
             $.ajax({
                 url: "templates/workspaceMenu.hbs",
                 method: "POST",
@@ -334,6 +344,10 @@ function fnctSaveWorkspace(name) {
 window["fnctLoadWorkspace"] = fnctLoadWorkspace;
 function fnctLoadWorkspace(name) {
     exports.actualWorkspace.loadWorkspace(name);
+}
+window["fnctDeleteWorkspace"] = fnctDeleteWorkspace;
+function fnctDeleteWorkspace(name) {
+    exports.actualWorkspace.deleteWorkspace(name);
 }
 window["fnctMenuWorkspace"] = fnctMenuWorkspace;
 function fnctMenuWorkspace() {

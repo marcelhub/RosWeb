@@ -95,6 +95,7 @@ export class Workspace{
             url: 'php/saveWorkspace.php',
             data: {workspace: JSON.stringify(actualWorkspace)},
             success: function(msg) {
+                actualWorkspace.menuWorkspace();
             }
         });
     }
@@ -124,28 +125,35 @@ export class Workspace{
         });
     }
 
+    public deleteWorkspace(name: string) {
+        $.ajax({
+            type: 'POST',
+            url: 'php/deleteWorkspace.php',
+            data: {workspace: name},
+            success: function(msg) {
+                $('#workspace-form-'+name).remove();
+            }
+        });
+    }
+
     //generate menu-list of workspaces
     public menuWorkspace() {
         $.ajax({
             type: 'POST',
             url: 'php/generateWorkspaceMenu.php',
             success: function(data) {
-                console.log(data);
                 if(MyApp.templates['generateWorkspaceMenu'] == null) {
-                    actualWorkspace._loadMenuWorkspaceTemplate();
+                    actualWorkspace.loadMenuWorkspaceTemplate();
                 } else {
-                    if($('#workspace-menu').length > 0) {
-                        $('#workspace-menu').remove();
-                    }
                     let menuHtml = MyApp.templates.generateWorkspaceMenu({workspaces: JSON.parse(data)});
-                    $(document.body).append(menuHtml);
-            
+                    $('#workspace-menu-body-wrapper').html(menuHtml);
                 }
             }
         });
     }
+    
 
-    private _loadMenuWorkspaceTemplate() {
+    public loadMenuWorkspaceTemplate() {
         $.ajax({
             url: "templates/workspaceMenu.hbs",
             method: "POST",
@@ -178,6 +186,11 @@ function fnctSaveWorkspace(name?: string) {
 window["fnctLoadWorkspace"] = fnctLoadWorkspace;
 function fnctLoadWorkspace(name: string) {
     actualWorkspace.loadWorkspace(name);
+}
+
+window["fnctDeleteWorkspace"] = fnctDeleteWorkspace;
+function fnctDeleteWorkspace(name: string) {
+    actualWorkspace.deleteWorkspace(name);
 }
 
 window["fnctMenuWorkspace"] = fnctMenuWorkspace;
