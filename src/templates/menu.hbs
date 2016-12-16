@@ -3,10 +3,10 @@
     {{#topics}}
         {{#if implementations}}
             <li class="dropdown-submenu">
-                <a class="jsTopicImplementation" tabindex="-1" href="#">{{topic}}<span class="caret"></span></a>
+                <a class="jsTopicImplementation" tabindex="-1" href="#">{{topic}}</a>
                 <ul class="dropdown-menu">
                     {{#implementations}}
-                        <li style="color: black;">
+                        <li>
                             <a href="javascript:void(0);" class="jsTopicToWidget" onclick="fnctCreateWidget('{{../topic}}','{{../../type}}','{{implementation}}')">{{implementation}}</a>
                         </li>
                     {{/implementations}}

@@ -27,7 +27,7 @@ var WebView = function WebView() {
 
     _classCallCheck(this, WebView);
 
-    this._widgetHeaderOffset = 50;
+    this._widgetHeaderOffset = 0;
     this.insertWidget = function (widget, widgetInstance) {
         //JSON object needed for widgetWrapper context
         var widgetWrapperData = {
@@ -59,7 +59,7 @@ var WebView = function WebView() {
             var widgetHtml = widgetTemplateCompiled(widget.widgetInstance);
             //insert wrapper into document, afterwards the widget itself
             $(wrapperHtml).appendTo("#frontend-container");
-            $(widgetHtml).appendTo("div[data-widget-id=" + widget.id + "]");
+            $(widgetHtml).appendTo("div[data-widget-id=" + widget.id + "] .panel-body");
             //add default event handling to widget (if not existing, nothing happens)
             $("div[data-widget-id=" + widget.id + "] .jsWidgetSettings").on("click", widget.widgetInstance, widget.widgetInstance.btnSettings);
             //use remove of widgetInstance, then clean up workspace

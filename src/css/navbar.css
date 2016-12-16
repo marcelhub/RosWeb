@@ -25,10 +25,18 @@
   color: #fff;
 }
 
+.cssNavbarHeader {
+  background-color: #2f79b9;
+}
+
 .cssRosConnect {
   margin-left: 20px;
 }
 
 .cssWorkspaceMenu {
+  margin-left: 30px;
+}
+
+.cssRosMenu {
   margin-left: 30px;
 }

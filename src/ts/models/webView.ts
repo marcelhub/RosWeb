@@ -4,7 +4,7 @@ import {Widget} from "./widget"
 declare var MyApp: any;
 
 export class WebView {
-    private _widgetHeaderOffset = 50;
+    private _widgetHeaderOffset = 0;
     constructor() {
 
     }
@@ -47,7 +47,7 @@ export class WebView {
 
             //insert wrapper into document, afterwards the widget itself
             $(wrapperHtml).appendTo("#frontend-container");
-            $(widgetHtml).appendTo("div[data-widget-id="+widget.id+"]");
+            $(widgetHtml).appendTo("div[data-widget-id="+widget.id+"] .panel-body");
 
             //add default event handling to widget (if not existing, nothing happens)
             $("div[data-widget-id="+widget.id+"] .jsWidgetSettings").on( "click", widget.widgetInstance ,widget.widgetInstance.btnSettings);
