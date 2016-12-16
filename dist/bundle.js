@@ -254,9 +254,7 @@ var Workspace = function () {
                         exports.actualWorkspace.menuWorkspace();
                     }
                 });
-            } else {
-                console.log("unvalid");
-            }
+            } else {}
         }
         //load workspace with php-script
 

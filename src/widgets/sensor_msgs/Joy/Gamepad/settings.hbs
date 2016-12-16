@@ -1,0 +1,27 @@
+<div id="modal-{{id}}" class="modal fade" role="dialog" style="color: black;">
+  <div class="modal-dialog">
+
+    <!-- Modal content-->
+    <div class="modal-content">
+      <div class="modal-header">
+        <h4 class="modal-title">Settings: {{implementation}}</h4>
+      </div>
+      <div class="modal-body">
+        <form class="form-horizontal">
+          {{#each settings}}
+            <div class="form-group">
+              <label class="control-label col-xs-2" id="widget-{{../id}}-key-{{@key}}">{{@key}}:</label>
+                  <div class="col-xs-10">
+              <input type="text" class="form-control" value="{{this}}" id="widget-{{../id}}-value-{{@key}}">
+              </div>
+            </div>
+          {{/each}}
+        </form>
+      </div>
+      <div class="modal-footer">
+        <button type="submit" class="btn btn-success jsWidgetSettingsSave" data-dismiss="modal">Save</button>
+        <button type="button" class="btn btn-primary" data-dismiss="modal">Cancel</button>
+      </div>
+    </div>
+  </div>
+</div>
