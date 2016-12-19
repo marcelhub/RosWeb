@@ -413,14 +413,14 @@ var ROSEvent = function () {
         };
         //build menu dynamically, containing supported ROS topics
         this.buildMenu = function () {
-            var topicTypes = ['geometry_msgs/Twist', 'sensor_msgs/Image', 'sensor_msgs/NavSatFix', 'sensor_msgs/Imu'];
+            var topicTypes = ['geometry_msgs/Twist', 'sensor_msgs/Image', 'sensor_msgs/NavSatFix', 'sensor_msgs/Joy'];
             var callbacksRemaining = topicTypes.length;
             var typesWithTopics = new Map();
             var typesWithViews = new Map();
             typesWithViews.set('geometry_msgs/Twist', []);
             typesWithViews.set('sensor_msgs/Image', ['Videostream']);
             typesWithViews.set('sensor_msgs/NavSatFix', []);
-            typesWithViews.set('sensor_msgs/Imu', []);
+            typesWithViews.set('sensor_msgs/Joy', ['Gamepad']);
             for (var i = 0; i < topicTypes.length; i++) {
                 ROSEvent._ros.getTopicsForType(topicTypes[i], function (topicsResult) {
                     ROSEvent._ros.getTopicType(topicsResult[0], function (typeResult) {

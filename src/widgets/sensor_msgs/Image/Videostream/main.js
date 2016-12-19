@@ -10,7 +10,7 @@ function Videostream(id, ros, topic, type, implementation) {
 
     //settings object, this will be saved and stored.
     //contains parameters, values etc. that the implementation needs.
-    //all required values should be stored in the setting namespace!
+    //all required values should be stored in the settings object!
     this.settings = {};
 
     return this;

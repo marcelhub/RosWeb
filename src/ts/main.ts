@@ -4,7 +4,6 @@ import {ROSEvent} from "./services/rosEvents"
 import {WebView} from "./models/webView"
 import {Widget} from "./models/widget"
 import {Workspace} from "./models/workspace"
-import {WorkspaceContainer} from "./models/workspaceContainer"
 import {actualWorkspace} from "./models/workspace"
 
 function init() {
