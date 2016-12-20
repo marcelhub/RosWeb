@@ -29,6 +29,7 @@ Gamepad.prototype = {
         window.addEventListener("gamepadconnected", function(e) {
             console.log("Gamepad connected at index %d: %s", e.gamepad.index, e.gamepad.id);
             msgLoop = setInterval(function () { self.teleopLoop(e, self, seqCounter++); }, 100);
+            $('#gamepad-'+self.id+'-info').text("gamepad connected: "+e.gamepad.id);
         });
 
         window.addEventListener("gamepaddisconnected", function(e) {
@@ -37,11 +38,13 @@ Gamepad.prototype = {
                 return;
             }
             clearInterval(msgLoop);
+            $('#gamepad-'+self.id+'-info').text("no gamepad connected.");
         });
 
         return this;
     },
     load: function(widget) {
+        this.init();
         return this;
     },
     save: function(widget) {
@@ -53,7 +56,6 @@ Gamepad.prototype = {
     },
 
     btnSettingsSave: function(widget) {
-        //refresh videostream to apply new settings
         $.ajax({
             url: "widgets/" + widget.data.type + "/" + widget.data.implementation + "/index.hbs",
             method: "POST",
@@ -72,7 +74,7 @@ Gamepad.prototype = {
         });
     },
 
-    //publishes joypad messages periodically
+    //publishes gamepad messages periodically
     teleopLoop: function(e, self, seqCounter) {
         var gamepads = navigator.getGamepads ? navigator.getGamepads() : (navigator.webkitGetGamepads ? navigator.webkitGetGamepads : []);
         if (!gamepads) {
@@ -82,10 +84,10 @@ Gamepad.prototype = {
             return;
         }
 
-        self.joyPad = gamepads[0];
+        self.gamePad = gamepads[0];
         var buttonValues = new Array();
-        for(var i = 0; i < self.joyPad.buttons.length; i++) {
-            buttonValues.push(self.joyPad.buttons[i].value);
+        for(var i = 0; i < self.gamePad.buttons.length; i++) {
+            buttonValues.push(self.gamePad.buttons[i].value);
         }
 
         if(deadzoneExceeded(0.1, self)) {
@@ -95,15 +97,14 @@ Gamepad.prototype = {
                 header : {
                 seq : seqCounter,
                 stamp : {
-                    secs: Date.now()/1000,
-                    nsecs: 729812849
+                    secs: parseInt(self.gamePad.timestamp),
+                    nsecs: parseInt(self.gamePad.timestamp)
                 },
                 frame_id : ''
                 },
                 axes : axesValues,
                 buttons : buttonValues
             });
-            console.log(joyMsg);
             seqCounter++;
             self.joyTopic.publish(joyMsg);
         } else {
@@ -111,22 +112,21 @@ Gamepad.prototype = {
                 header : {
                 seq : seqCounter,
                 stamp : {
-                    secs: Date.now()/1000,
-                    nsecs: 729812849
+                    secs: parseInt(self.gamePad.timestamp),
+                    nsecs: parseInt(self.gamePad.timestamp)
                 },
                 frame_id : ''
                 },
                 axes : [0.0, 0.0, 0.0, 0.0],
                 buttons : buttonValues
             });
-            console.log(joyMsg);
             seqCounter++;
             self.joyTopic.publish(joyMsg);
         }
         //deadzoneValue has to be between 0.0 and 1.0
         function deadzoneExceeded(deadzoneValue, self) {
-            for(var i = 0; i < self.joyPad.axes.length; i++) {
-                if(Math.abs(self.joyPad.axes[i]) >= deadzoneValue) {
+            for(var i = 0; i < self.gamePad.axes.length; i++) {
+                if(Math.abs(self.gamePad.axes[i]) >= deadzoneValue) {
                     return true;
                 }
             }
@@ -135,11 +135,11 @@ Gamepad.prototype = {
 
         //Scales axes with deadzone as an offset
         function AxesValuesWithDeadzone(values, deadzoneValue, self) {
-            for(var i = 0; i < self.joyPad.axes.length; i++) {
-                if(Math.abs(self.joyPad.axes[i]) < deadzoneValue) {
+            for(var i = 0; i < self.gamePad.axes.length; i++) {
+                if(Math.abs(self.gamePad.axes[i]) < deadzoneValue) {
                     values.push(0.0);
                 } else {
-                    values.push(Math.sign(self.joyPad.axes[i]) * (Math.abs(self.joyPad.axes[i]) - deadzoneValue) / (1 - deadzoneValue));
+                    values.push(Math.sign(self.gamePad.axes[i]) * (Math.abs(self.gamePad.axes[i]) - deadzoneValue) / (1 - deadzoneValue));
                 }
             }
             values[0] *= -1;

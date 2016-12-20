@@ -85,23 +85,13 @@ this["MyApp"]["templates"]["widgetWrapper"] = Handlebars.template({"1":function(
 this["MyApp"]["templates"]["workspaceMenu"] = Handlebars.template({"1":function(container,depth0,helpers,partials,data) {
     var alias1=container.lambda, alias2=container.escapeExpression;
 
-  return "  <div id=\"workspace-form-"
+  return "  <div class=\"form-group\">\n      <label class=\"control-label col-xs-4 col-sm-4\">"
     + alias2(alias1(depth0, depth0))
-    + "\" class=\"form-group\">\n      <label id=\"workspace-label-"
+    + ":</label>\n      <div class=\"col-xs-8 col-sm-8\">\n          <button type=\"button\" class=\"btn btn-default\" onclick=\"fnctSaveWorkspace('"
     + alias2(alias1(depth0, depth0))
-    + "\" class=\"control-label col-xs-4 col-sm-4\">"
+    + "');\" data-dismiss=\"modal\"><i class=\"fa fa-floppy-o fa-lg\" ></i> Save</button>\n          <button type=\"button\" class=\"btn btn-default\" onclick=\"fnctLoadWorkspace('"
     + alias2(alias1(depth0, depth0))
-    + ":</label>\n      <div class=\"col-xs-8 col-sm-8\">\n          <button type=\"button\" id=\"workspace-save-"
-    + alias2(alias1(depth0, depth0))
-    + "\" class=\"btn btn-default\" onclick=\"fnctSaveWorkspace('"
-    + alias2(alias1(depth0, depth0))
-    + "');\" data-dismiss=\"modal\"><i class=\"fa fa-floppy-o fa-lg\" ></i> Save</button>\n          <button type=\"button\" id=\"workspace-load-"
-    + alias2(alias1(depth0, depth0))
-    + "\" class=\"btn btn-default\" onclick=\"fnctLoadWorkspace('"
-    + alias2(alias1(depth0, depth0))
-    + "');\" data-dismiss=\"modal\" ><i class=\"fa fa-upload fa-lg\" ></i> Load</button>\n          <button type=\"button\" id=\"workspace-delete-"
-    + alias2(alias1(depth0, depth0))
-    + "\" class=\"btn btn-danger\" onclick=\"fnctDeleteWorkspace('"
+    + "');\" data-dismiss=\"modal\" ><i class=\"fa fa-upload fa-lg\" ></i> Load</button>\n          <button type=\"button\" class=\"btn btn-danger\" onclick=\"fnctDeleteWorkspace('"
     + alias2(alias1(depth0, depth0))
     + "');\"><i class=\"fa fa-trash fa-lg\" ></i> Delete</button>\n      </div>\n  </div>\n";
 },"compiler":[7,">= 4.0.0"],"main":function(container,depth0,helpers,partials,data) {
