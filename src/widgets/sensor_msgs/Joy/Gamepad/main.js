@@ -22,23 +22,53 @@ Gamepad.prototype = {
             messageType : this.type,
         });
         
+        //use parameter like joy node
+        this.settings.deadzone = 0.05;
+        this.settings.autorepeat_rate = 0.0;
+        this.settings.coalesce_interval = 0.001;
+
         var self = this;
         var msgLoop = null;
         var seqCounter = 0;
-        //waits for connecting gamepads, event triggered when connected or any button pressed 1st time
+
+        //waits for connecting gamepads, event triggered when connected to host or any button pressed 1st time
         window.addEventListener("gamepadconnected", function(e) {
-            console.log("Gamepad connected at index %d: %s", e.gamepad.index, e.gamepad.id);
+            //clear "no gamepad" notification if 1 controller is connected
+            if(navigator.getGamepads().length == 1) {
+                $('#gamepad-'+self.id+'-info').text("");
+            }
+            $('#gamepad-'+self.id+'-info').append('<div id="gamepad-btn-'+e.gamepad.index+'" class="radio"><label><input type="radio" class="optradio"> '+e.gamepad.id+'</label></div>');
+            if(navigator.getGamepads().length == 1) {
+                $('#gamepad-btn-'+e.gamepad.index+' .optradio').prop('checked', true);
+            }
+            
             msgLoop = setInterval(function () { self.teleopLoop(e, self, seqCounter++); }, 100);
-            $('#gamepad-'+self.id+'-info').text("gamepad connected: "+e.gamepad.id);
         });
 
+        //event triggered when gamepad gets disconnected from host
         window.addEventListener("gamepaddisconnected", function(e) {
-            console.log("Gamepad disconnected from index %d: %s", e.gamepad.index, e.gamepad.id);
             if(!msgLoop) {
                 return;
             }
+
             clearInterval(msgLoop);
-            $('#gamepad-'+self.id+'-info').text("no gamepad connected.");
+            if(checkConnectedGamepads()) {
+                $('#gamepad-btn-'+e.gamepad.index).remove();
+            } else {
+                $('#gamepad-'+self.id+'-info').text("no gamepad connected.");
+            }
+
+            function checkConnectedGamepads() {
+                var pads = navigator.getGamepads();
+                for(var i = 0; i < pads.length; i++) {
+                    if(pads[i]) {
+                        if(pads[i].connected) {
+                            return true;
+                        }
+                    }
+                }
+                return false;
+            }
         });
 
         return this;
@@ -90,48 +120,22 @@ Gamepad.prototype = {
             buttonValues.push(self.gamePad.buttons[i].value);
         }
 
-        if(deadzoneExceeded(0.1, self)) {
-            var axesValues = new Array();
-            AxesValuesWithDeadzone(axesValues, 0.1, self);
-            var joyMsg = new ROSLIB.Message({
-                header : {
-                seq : seqCounter,
-                stamp : {
-                    secs: parseInt(self.gamePad.timestamp),
-                    nsecs: parseInt(self.gamePad.timestamp)
-                },
-                frame_id : ''
-                },
-                axes : axesValues,
-                buttons : buttonValues
-            });
-            seqCounter++;
-            self.joyTopic.publish(joyMsg);
-        } else {
-            var joyMsg = new ROSLIB.Message({
-                header : {
-                seq : seqCounter,
-                stamp : {
-                    secs: parseInt(self.gamePad.timestamp),
-                    nsecs: parseInt(self.gamePad.timestamp)
-                },
-                frame_id : ''
-                },
-                axes : [0.0, 0.0, 0.0, 0.0],
-                buttons : buttonValues
-            });
-            seqCounter++;
-            self.joyTopic.publish(joyMsg);
-        }
-        //deadzoneValue has to be between 0.0 and 1.0
-        function deadzoneExceeded(deadzoneValue, self) {
-            for(var i = 0; i < self.gamePad.axes.length; i++) {
-                if(Math.abs(self.gamePad.axes[i]) >= deadzoneValue) {
-                    return true;
-                }
-            }
-            return false;
-        }
+        var axesValues = new Array();
+        AxesValuesWithDeadzone(axesValues, 0.3, self);
+        var joyMsg = new ROSLIB.Message({
+            header : {
+            seq : seqCounter,
+            stamp : {
+                secs: parseInt(self.gamePad.timestamp),
+                nsecs: parseInt(self.gamePad.timestamp)
+            },
+            frame_id : ''
+            },
+            axes : axesValues,
+            buttons : buttonValues
+        });
+        seqCounter++;
+        self.joyTopic.publish(joyMsg);
 
         //Scales axes with deadzone as an offset
         function AxesValuesWithDeadzone(values, deadzoneValue, self) {
