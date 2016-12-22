@@ -16,17 +16,27 @@ function Gamepad(id, ros, topic, type, implementation) {
  
 Gamepad.prototype = {
     init: function() {
+        Handlebars.registerHelper('excludeInverts', function(obj) {
+            return (!(obj === 'invertAnalogLeft' || obj === 'invertAnalogRight'));
+        });
+
+        Handlebars.registerHelper('checkInverts', function(obj) {
+            return (obj == 1)? '' : 'checked';
+        });
+
         this.joyTopic = new ROSLIB.Topic({
             ros : this.ros,
             name : this.topic,
             messageType : this.type,
         });
-        
-        //use parameter like joy node
-        this.settings.deadzone = 0.05;
-        this.settings.autorepeat_rate = 0.0;
-        this.settings.coalesce_interval = 0.001;
-
+        if(jQuery.isEmptyObject(this.settings)) {
+            //use parameter like joy node to initialize the gamepad
+            this.settings.deadzone = 0.05;
+            this.settings.autorepeat_rate = 0.0;
+            this.settings.coalesce_interval = 0.001;
+            this.settings.invertAnalogLeft = 1;
+            this.settings.invertAnalogRight = 1;
+        }
         var self = this;
         var msgLoop = null;
         var seqCounter = 0;
@@ -37,7 +47,7 @@ Gamepad.prototype = {
             if(navigator.getGamepads().length == 1) {
                 $('#gamepad-'+self.id+'-info').text("");
             }
-            $('#gamepad-'+self.id+'-info').append('<div id="gamepad-btn-'+e.gamepad.index+'" class="radio"><label><input type="radio" class="optradio"> '+e.gamepad.id+'</label></div>');
+            $('#gamepad-'+self.id+'-info').append('<div id="gamepad-btn-'+e.gamepad.index+'" class="radio"><label><input type="radio" class="optradio" name="gamepad-radiobtn"> '+e.gamepad.id+'</label></div>');
             if(navigator.getGamepads().length == 1) {
                 $('#gamepad-btn-'+e.gamepad.index+' .optradio').prop('checked', true);
             }
@@ -73,7 +83,12 @@ Gamepad.prototype = {
 
         return this;
     },
-    load: function(widget) {
+    load: function(settings) {
+        this.settings.deadzone = settings.deadzone;
+        this.settings.autorepeat_rate = settings.autorepeat_rate;
+        this.settings.coalesce_interval = settings.coalesce_interval;
+        this.settings.invertAnalogLeft = settings.invertAnalogLeft;
+        this.settings.invertAnalogRight = settings.invertAnalogRight;
         this.init();
         return this;
     },
@@ -86,22 +101,11 @@ Gamepad.prototype = {
     },
 
     btnSettingsSave: function(widget) {
-        $.ajax({
-            url: "widgets/" + widget.data.type + "/" + widget.data.implementation + "/index.hbs",
-            method: "POST",
-            success: function (data) {
-                // var compiledHtml = Handlebars.compile(data);
-                // var refreshedHtml = compiledHtml(widget.data);
-                // $("#widget-"+widget.data.id+"-content").children().remove();
-                // $("#widget-"+widget.data.id+"-content").append(refreshedHtml);
-                // $("div[data-widget-id="+widget.data.id+"]").css("width",  widget.data.settings.width+"px");
-                // $("div[data-widget-id="+widget.data.id+"]").css("height",  widget.data.settings.height+"px");
-            },
-            error: function (e1, e2) {
-
-            },
-            cache: false
-        });
+        widget.data.settings.deadzone = $("#widget-"+widget.data.id+"-value-deadzone").val();   
+        widget.data.settings.autorepeat_rate = $("#widget-"+widget.data.id+"-value-autorepeat_rate").val();
+        widget.data.settings.coalesce_interval = $("#widget-"+widget.data.id+"-value-coalesce_interval").val();
+        widget.data.settings.invertAnalogLeft = $("#widget-"+widget.data.id+"-invert-analog-left").prop('checked')? -1 : 1;
+        widget.data.settings.invertAnalogRight = $("#widget-"+widget.data.id+"-invert-analog-right").prop('checked')? -1 : 1;
     },
 
     //publishes gamepad messages periodically
@@ -121,7 +125,7 @@ Gamepad.prototype = {
         }
 
         var axesValues = new Array();
-        AxesValuesWithDeadzone(axesValues, 0.3, self);
+        AxesValuesWithDeadzone(axesValues, self.settings.deadzone, self);
         var joyMsg = new ROSLIB.Message({
             header : {
             seq : seqCounter,
@@ -146,8 +150,10 @@ Gamepad.prototype = {
                     values.push(Math.sign(self.gamePad.axes[i]) * (Math.abs(self.gamePad.axes[i]) - deadzoneValue) / (1 - deadzoneValue));
                 }
             }
-            values[0] *= -1;
-            values[1] *= -1;
+            values[0] *= self.settings.invertAnalogLeft;
+            values[1] *= self.settings.invertAnalogLeft;
+            values[2] *= self.settings.invertAnalogRight;
+            values[3] *= self.settings.invertAnalogRight;
         }
     }
 };

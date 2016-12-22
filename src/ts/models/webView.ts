@@ -7,6 +7,11 @@ export class WebView {
     private _widgetHeaderOffset = 0;
     constructor() {
 
+        Handlebars.registerHelper('trim', function(obj) {
+            return new Handlebars.SafeString(
+                obj.replace(/ /g,'')
+            );
+        });
     }
 
     public insertWidget = (widget: Widget, widgetInstance?: any) => {
@@ -88,8 +93,7 @@ function insertSettings(widget: Widget) {
             $("div[data-widget-id="+widget.id+"] .jsWidgetSettingsSave").on( "click", widget.widgetInstance, widget.widgetInstance.btnSettingsSave);
             },
         error: function (e1: any, e2: any) {
-            console.log(e1);
-            console.log(e2);
+
         },
         cache: false
     });

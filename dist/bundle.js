@@ -75,6 +75,9 @@ var WebView = function WebView() {
             insertSettings(widget);
         }, 1000);
     };
+    Handlebars.registerHelper('trim', function (obj) {
+        return new Handlebars.SafeString(obj.replace(/ /g, ''));
+    });
 };
 
 exports.WebView = WebView;
@@ -90,10 +93,7 @@ function insertSettings(widget) {
             $("div[data-widget-id=" + widget.id + "]").append(settingsHtml);
             $("div[data-widget-id=" + widget.id + "] .jsWidgetSettingsSave").on("click", widget.widgetInstance, widget.widgetInstance.btnSettingsSave);
         },
-        error: function error(e1, e2) {
-            console.log(e1);
-            console.log(e2);
-        },
+        error: function error(e1, e2) {},
         cache: false
     });
 }

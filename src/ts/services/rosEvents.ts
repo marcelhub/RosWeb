@@ -90,10 +90,11 @@ export class ROSEvent {
         for (var i = 0; i < topicTypes.length; i++) {
             ROSEvent._ros.getTopicsForType(topicTypes[i],function(topicsResult) {
                 ROSEvent._ros.getTopicType(topicsResult[0], function(typeResult) {
-                    typesWithTopics.set(typeResult, topicsResult);
+                    typesWithTopics.set(typeResult, topicsResult);                 
                     --callbacksRemaining;
                     if(callbacksRemaining == 0) {
                         let result = MyApp.templates.menu({types: buildJSON(typesWithTopics, typesWithViews)});
+                        
                         $('.dropdown-menu').html(result);
                         $('.dropdown-submenu a.jsTopicImplementation').on("click", function(e){
                             $(this).next('ul').toggle();
