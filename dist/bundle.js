@@ -417,7 +417,7 @@ var ROSEvent = function () {
             var callbacksRemaining = topicTypes.length;
             var typesWithTopics = new Map();
             var typesWithViews = new Map();
-            typesWithViews.set('geometry_msgs/Twist', []);
+            typesWithViews.set('geometry_msgs/Twist', ['KeyboardTeleoperation']);
             typesWithViews.set('sensor_msgs/Image', ['Videostream']);
             typesWithViews.set('sensor_msgs/NavSatFix', []);
             typesWithViews.set('sensor_msgs/Joy', ['Gamepad']);
