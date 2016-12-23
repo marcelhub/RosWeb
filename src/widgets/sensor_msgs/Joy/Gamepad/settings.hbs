@@ -9,7 +9,7 @@
       </div>
       <div class="modal-body">
         <form class="form-horizontal">
-          {{#each settings}}
+          <!--{{#each settings}}
             {{#if (excludeInverts @key)}}
               <div class="form-group">
                 <label class="control-label col-xs-4" id="widget-{{../id}}-key-{{@key}}">{{@key}}:</label>
@@ -18,7 +18,19 @@
                 </div>
               </div>
             {{/if}}
-          {{/each}}
+          {{/each}}-->
+          <div class="form-group">
+            <label class="control-label col-xs-4" id="widget-{{id}}-key-deadzone">deadzone (0.0 - 1.0):</label>
+            <div class="col-xs-8">
+              <input type="text" class="form-control" value="{{settings.deadzone}}" id="widget-{{id}}-value-deadzone"></input>
+            </div>
+          </div>
+          <div class="form-group">
+            <label class="control-label col-xs-4" id="widget-{{id}}-key-autorepeatRate">autorepeat rate (in ms):</label>
+              <div class="col-xs-8">
+                <input type="text" class="form-control" value="{{settings.autorepeatRate}}" id="widget-{{id}}-value-autorepeatRate"></input>
+              </div>
+          </div>
           <svg version="1.1" id="Layer_1" xmlns="http://www.w3.org/2000/svg" xmlns:xlink="http://www.w3.org/1999/xlink" x="0px" y="0px"
             viewBox="0 0 224 224" style="enable-background:new 0 0 224 224;" xml:space="preserve">
             <path d="M176,68.122c6.617,0,12-5.383,12-12s-5.383-12-12-12s-12,5.383-12,12S169.383,68.122,176,68.122z M176,52.122

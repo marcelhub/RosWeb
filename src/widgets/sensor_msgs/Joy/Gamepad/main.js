@@ -31,16 +31,14 @@ Gamepad.prototype = {
         });
         if(jQuery.isEmptyObject(this.settings)) {
             //use parameter like joy node to initialize the gamepad
-            this.settings.deadzone = 0.05;
-            this.settings.autorepeat_rate = 0.0;
-            this.settings.coalesce_interval = 0.001;
+            this.settings.deadzone = 0.2;
+            this.settings.autorepeatRate = 100;
             this.settings.invertAnalogLeft = 1;
             this.settings.invertAnalogRight = 1;
         }
         var self = this;
         var msgLoop = null;
         var seqCounter = 0;
-
         //waits for connecting gamepads, event triggered when connected to host or any button pressed 1st time
         window.addEventListener("gamepadconnected", function(e) {
             //clear "no gamepad" notification if 1 controller is connected
@@ -52,7 +50,7 @@ Gamepad.prototype = {
                 $('#gamepad-btn-'+e.gamepad.index+' .optradio').prop('checked', true);
             }
             
-            msgLoop = setInterval(function () { self.teleopLoop(e, self, seqCounter++); }, 100);
+            msgLoop = setInterval(function () { self.teleopLoop(e, self, seqCounter++); }, self.settings.autorepeatRate);
         });
 
         //event triggered when gamepad gets disconnected from host
@@ -85,8 +83,7 @@ Gamepad.prototype = {
     },
     load: function(settings) {
         this.settings.deadzone = settings.deadzone;
-        this.settings.autorepeat_rate = settings.autorepeat_rate;
-        this.settings.coalesce_interval = settings.coalesce_interval;
+        this.settings.autorepeatRate = settings.autorepeatRate;
         this.settings.invertAnalogLeft = settings.invertAnalogLeft;
         this.settings.invertAnalogRight = settings.invertAnalogRight;
         this.init();
@@ -102,8 +99,7 @@ Gamepad.prototype = {
 
     btnSettingsSave: function(widget) {
         widget.data.settings.deadzone = $("#widget-"+widget.data.id+"-value-deadzone").val();   
-        widget.data.settings.autorepeat_rate = $("#widget-"+widget.data.id+"-value-autorepeat_rate").val();
-        widget.data.settings.coalesce_interval = $("#widget-"+widget.data.id+"-value-coalesce_interval").val();
+        widget.data.settings.autorepeatRate = $("#widget-"+widget.data.id+"-value-autorepeatRate").val();
         widget.data.settings.invertAnalogLeft = $("#widget-"+widget.data.id+"-invert-analog-left").prop('checked')? -1 : 1;
         widget.data.settings.invertAnalogRight = $("#widget-"+widget.data.id+"-invert-analog-right").prop('checked')? -1 : 1;
     },
@@ -152,8 +148,8 @@ Gamepad.prototype = {
             }
             values[0] *= self.settings.invertAnalogLeft;
             values[1] *= self.settings.invertAnalogLeft;
-            values[2] *= self.settings.invertAnalogRight;
             values[3] *= self.settings.invertAnalogRight;
+            values[4] *= self.settings.invertAnalogRight;
         }
     }
 };
