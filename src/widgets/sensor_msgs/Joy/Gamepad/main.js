@@ -37,7 +37,7 @@ Gamepad.prototype = {
             this.settings.invertAnalogRight = 1;
         }
         var self = this;
-        var msgLoop = null;
+        this.msgLoop = null;
         var seqCounter = 0;
         //waits for connecting gamepads, event triggered when connected to host or any button pressed 1st time
         window.addEventListener("gamepadconnected", function(e) {
@@ -50,16 +50,16 @@ Gamepad.prototype = {
                 $('#gamepad-btn-'+e.gamepad.index+' .optradio').prop('checked', true);
             }
             
-            msgLoop = setInterval(function () { self.teleopLoop(e, self, seqCounter++); }, self.settings.autorepeatRate);
+            self.msgLoop = setInterval(function () { self.teleopLoop(e, self, seqCounter++); }, self.settings.autorepeatRate);
         });
 
         //event triggered when gamepad gets disconnected from host
         window.addEventListener("gamepaddisconnected", function(e) {
-            if(!msgLoop) {
+            if(!self.msgLoop) {
                 return;
             }
 
-            clearInterval(msgLoop);
+            clearInterval(self.msgLoop);
             if(checkConnectedGamepads()) {
                 $('#gamepad-btn-'+e.gamepad.index).remove();
             } else {
@@ -95,6 +95,7 @@ Gamepad.prototype = {
     btnSettings: function(widget) {
     },
     btnRemove: function(widget) {
+        clearInterval(this.msgLoop);
     },
 
     btnSettingsSave: function(widget) {
@@ -120,8 +121,11 @@ Gamepad.prototype = {
             buttonValues.push(self.gamePad.buttons[i].value);
         }
 
+        //calculate array with deadzoneValue
+        //if the value of the axis are smaller than the deadzoneValue, then 0.0 is used instead
         var axesValues = new Array();
         AxesValuesWithDeadzone(axesValues, self.settings.deadzone, self);
+
         var joyMsg = new ROSLIB.Message({
             header : {
             seq : seqCounter,
