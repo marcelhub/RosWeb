@@ -65,7 +65,7 @@ var WebView = function WebView() {
             //use remove of widgetInstance, then clean up workspace
             $("div[data-widget-id=" + widget.id + "] .jsWidgetRemove").on("click", widget.widgetInstance, function () {
                 if (widget.widgetInstance.btnRemove == null) {} else {
-                    widget.widgetInstance.btnRemove();
+                    widget.widgetInstance.btnRemove(widget);
                 }
                 workspace_1.actualWorkspace.removeWidget(widget);
                 $("div[data-widget-id=" + widget.id + "]").remove();
@@ -167,6 +167,7 @@ function _classCallCheck(instance, Constructor) { if (!(instance instanceof Cons
 
 var webView_1 = require("./webView");
 var widget_1 = require("./widget");
+var rosEvents_1 = require("../services/rosEvents");
 
 var Workspace = function () {
     function Workspace() {
@@ -274,6 +275,7 @@ var Workspace = function () {
                     exports.actualWorkspace.rosMasterAdress = workspaceObj.rosMasterAdress;
                     exports.actualWorkspace.name = workspaceObj.name;
                     $("#rosMasterAdress").val(exports.actualWorkspace.rosMasterAdress);
+                    rosEvents_1.rosEvents.establishConnection();
                     $('#frontend-container').empty();
                     for (var i = 0; i < workspaceObj.widgets.length; i++) {
                         exports.actualWorkspace.loadWidget(workspaceObj.widgets[i]);
@@ -357,7 +359,7 @@ function fnctMenuWorkspace() {
 }
 exports.actualWorkspace = new Workspace();
 
-},{"./webView":2,"./widget":3}],5:[function(require,module,exports){
+},{"../services/rosEvents":5,"./webView":2,"./widget":3}],5:[function(require,module,exports){
 /// <reference path="../typings/tsd.d.ts" />
 "use strict";
 
@@ -385,6 +387,9 @@ var ROSEvent = function () {
                 $('.jsRosMenu').addClass('disconnected');
                 console.log(e);
             }
+        };
+        this.getConnectionStatus = function () {
+            return ROSEvent.getStatus();
         };
         this.onRosConnection = function () {
             $('.jsRosConnect').removeClass('error');
@@ -439,6 +444,7 @@ var ROSEvent = function () {
                 });
             }
         };
+        exports.rosEvents = this;
         ROSEvent._ros = ros;
         ROSEvent._ros.on("connection", this.onRosConnection);
         ROSEvent._ros.on("close", this.onRosClose);

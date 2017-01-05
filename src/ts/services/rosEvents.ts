@@ -10,8 +10,9 @@ export class ROSEvent {
 
     private static _ros: ROSLIB.Ros;
     private static _connected: boolean=false;
-    
+
     constructor(ros: ROSLIB.Ros) {
+        rosEvents = this;
         ROSEvent._ros = ros;
         ROSEvent._ros.on("connection", this.onRosConnection);
         ROSEvent._ros.on("close", this.onRosClose);  
@@ -37,6 +38,10 @@ export class ROSEvent {
             $('.jsRosMenu').addClass('disconnected');
             console.log(e);
         }
+    }
+
+    public getConnectionStatus = () => {
+        return ROSEvent.getStatus();
     }
 
     public static getInstance() {
@@ -143,3 +148,5 @@ function buildJSON(typesWithTopics: Map<string, string[]>, typesWithViews: Map<s
     }
     return topicResult;
 }
+
+export let rosEvents: ROSEvent;

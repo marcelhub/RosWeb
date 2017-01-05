@@ -6,7 +6,6 @@ declare var MyApp: any;
 export class WebView {
     private _widgetHeaderOffset = 0;
     constructor() {
-
         Handlebars.registerHelper('trim', function(obj) {
             return new Handlebars.SafeString(
                 obj.replace(/ /g,'')
@@ -56,13 +55,12 @@ export class WebView {
 
             //add default event handling to widget (if not existing, nothing happens)
             $("div[data-widget-id="+widget.id+"] .jsWidgetSettings").on( "click", widget.widgetInstance ,widget.widgetInstance.btnSettings);
-            
             //use remove of widgetInstance, then clean up workspace
             $("div[data-widget-id="+widget.id+"] .jsWidgetRemove").on( "click", widget.widgetInstance, function() {
                 if( widget.widgetInstance.btnRemove == null) {
                     //no remove method from widgetInstance
                 } else {
-                    widget.widgetInstance.btnRemove();
+                    widget.widgetInstance.btnRemove(widget);
                 }
                 actualWorkspace.removeWidget(widget);
                 $("div[data-widget-id="+widget.id+"]").remove();

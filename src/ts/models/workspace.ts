@@ -3,6 +3,7 @@
 import {WebView} from "./webView"
 import {Widget} from "./widget"
 import {ROSEvent} from "../services/rosEvents"
+import {rosEvents} from "../services/rosEvents"
 
 
 declare var MyApp: any;
@@ -121,11 +122,13 @@ export class Workspace{
                 actualWorkspace.name = workspaceObj.name;
                 
                 $("#rosMasterAdress").val(actualWorkspace.rosMasterAdress);
-                $('#frontend-container').empty();
+                rosEvents.establishConnection();
 
+                $('#frontend-container').empty();
                 for(let i = 0; i < workspaceObj.widgets.length; i++) {
                     actualWorkspace.loadWidget(workspaceObj.widgets[i]);
                 }
+
             }
         });
     }

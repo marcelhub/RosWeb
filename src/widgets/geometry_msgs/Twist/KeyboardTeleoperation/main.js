@@ -23,7 +23,12 @@ KeyboardTeleoperation.prototype = {
             topic: this.topic
         });
         var self = this;
-        console.log(self);
+
+        if(jQuery.isEmptyObject(this.settings)) {
+            //use parameter like joy node to initialize the gamepad
+            this.settings.sliderValue = 90;
+        }
+
         //load keyboardteleop.min.js library file
         $.ajax({
             url: "widgets/" + self.type + "/" +self.implementation + "/keyboardteleop.min.js",
@@ -37,7 +42,7 @@ KeyboardTeleoperation.prototype = {
                     range : 'min',
                     min : 0,
                     max : 100,
-                    value : 90,
+                    value : self.settings.sliderValue,
                     slide : function(event, ui) {
                         // Change the speed label.
                         $('#widget-'+self.id+'-speed-label').html('Speed: ' + ui.value + '%');
@@ -45,7 +50,6 @@ KeyboardTeleoperation.prototype = {
                         self.teleop.scale = (ui.value / 100.0);
                     }
                 });
-                console.log(self.teleop.scale);
                 $('#widget-'+self.id+'-speed-label').html('Speed: ' + ($('#widget-'+self.id+'-speed-slider').slider('value')) + '%');
                 self.teleop.scale = ($('#widget-'+self.id+'-speed-slider').slider('value') / 100.0);
             },
@@ -58,6 +62,8 @@ KeyboardTeleoperation.prototype = {
     },
 
     load: function(settings) {
+        this.settings.sliderValue = 90;
+        this.init();
         return this;
     },
 
@@ -66,7 +72,10 @@ KeyboardTeleoperation.prototype = {
     },
     btnSettings: function(widget) {
     },
+    
     btnRemove: function(widget) {
+        console.log(widget);
+        widget.teleop = undefined;
     },
 
     btnSettingsSave: function(widget) {
