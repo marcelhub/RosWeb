@@ -28,6 +28,9 @@ Videostream.prototype = {
         this.settings.quality = 90;
         return this;
     },
+    run: function() {
+
+    },
     load: function(settings) {
         this.settings.ip = settings.ip;
         this.settings.port = settings.port;

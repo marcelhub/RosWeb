@@ -60,7 +60,9 @@ KeyboardTeleoperation.prototype = {
         });
         return this;
     },
+    run: function() {
 
+    },
     load: function(settings) {
         this.settings.sliderValue = 90;
         this.init();

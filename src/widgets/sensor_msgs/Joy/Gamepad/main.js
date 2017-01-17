@@ -81,6 +81,9 @@ Gamepad.prototype = {
 
         return this;
     },
+    run: function() {
+
+    },
     load: function(settings) {
         this.settings.deadzone = settings.deadzone;
         this.settings.autorepeatRate = settings.autorepeatRate;
