@@ -18,13 +18,28 @@ function Map(id, ros, topic, type, implementation) {
  
 Map.prototype = {
     init: function() {
-        
         return this;
     },
     run: function() {
-        var mymap = Window.map;
-        mymap = L.map('mapid').setView([50.3644, 7.5644], 18);
-        L.tileLayer('http://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png').addTo(mymap);
+        this.mymap = Window.map;
+        this.navTopic = new ROSLIB.Topic({
+            ros : this.ros,
+            name : this.topic,
+            messageType : this.type,
+        });
+
+        this.mymap = L.map('mapid').setView([50.3644, 7.5644], 18); 
+        L.tileLayer('http://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png').addTo(this.mymap);
+        this.marker = L.marker([51.5, -0.09]).addTo(this.mymap);
+
+        var self = this;
+
+        this.navTopic.subscribe(function(msg) {
+            var latLng = new L.LatLng(msg.latitude, msg.longitude);
+            self.mymap.setView(latLng);
+            self.marker.setLatLng(latLng);
+        });
+
     },
     load: function(settings) {
         return this;
