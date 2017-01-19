@@ -28,14 +28,20 @@ Map.prototype = {
             messageType : this.type,
         });
 
-        this.mymap = L.map('mapid').setView([50.3644, 7.5644], 18); 
-        L.tileLayer('http://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png').addTo(this.mymap);
-        this.marker = L.marker([51.5, -0.09]).addTo(this.mymap);
-
+        this.mymap = null;
+        this.marker = null;
         var self = this;
 
         this.navTopic.subscribe(function(msg) {
             var latLng = new L.LatLng(msg.latitude, msg.longitude);
+            if(self.mymap === null) {
+                self.mymap = L.map('map-'+self.id).setView([msg.latitude, msg.longitude], 18); 
+                L.tileLayer('http://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png').addTo(self.mymap);
+            }
+            if(self.marker === null) {
+                self.marker = L.marker([msg.latitude, msg.longitude]).addTo(self.mymap);
+            }
+            
             self.mymap.setView(latLng);
             self.marker.setLatLng(latLng);
         });
