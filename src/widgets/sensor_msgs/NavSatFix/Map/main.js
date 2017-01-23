@@ -30,20 +30,34 @@ Map.prototype = {
 
         this.mymap = null;
         this.marker = null;
+        this.polylinePoints = [];
         var self = this;
 
+
+
         this.navTopic.subscribe(function(msg) {
-            var latLng = new L.LatLng(msg.latitude, msg.longitude);
+
             if(self.mymap === null) {
                 self.mymap = L.map('map-'+self.id).setView([msg.latitude, msg.longitude], 18); 
                 L.tileLayer('http://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png').addTo(self.mymap);
+            } else {
+                self.mymap.removeLayer(self.polyline);
             }
             if(self.marker === null) {
                 self.marker = L.marker([msg.latitude, msg.longitude]).addTo(self.mymap);
             }
             
+            var latLng = new L.LatLng(msg.latitude, msg.longitude);
+            self.polylinePoints.push(latLng);
+
+            self.polyline = new L.Polyline(self.polylinePoints, {
+                color: 'red',
+                weight: 3,
+            });
+
             self.mymap.setView(latLng);
             self.marker.setLatLng(latLng);
+            self.mymap.addLayer(self.polyline);
         });
 
     },
