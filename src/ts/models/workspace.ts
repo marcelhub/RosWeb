@@ -95,13 +95,21 @@ export class Workspace{
             $.ajax({
                 type: 'POST',
                 url: 'php/saveWorkspace.php',
-                data: {workspace: JSON.stringify(actualWorkspace)},
+                data: {workspace: JSON.stringify(actualWorkspace, function( key, value) {
+                            if(key == 'self') {
+                                console.log(key); 
+                                return null;
+                            } else {
+                                return value;
+                            };
+                        })},
+
                 success: function(msg) {
                     actualWorkspace.menuWorkspace();
                 }
             });
         } else {
-
+            //do nothing if no name was given
         }
     }
 

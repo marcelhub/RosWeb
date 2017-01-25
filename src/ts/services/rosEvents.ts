@@ -88,9 +88,9 @@ export class ROSEvent {
         let typesWithViews: Map<string, string[]> = new Map<string, string[]>();
         typesWithViews.set('geometry_msgs/Twist',['KeyboardTeleoperation']);
         typesWithViews.set('sensor_msgs/Image',['Videostream']);
-        typesWithViews.set('sensor_msgs/NavSatFix',['Map']);
+        typesWithViews.set('sensor_msgs/NavSatFix',['Maps']);
         typesWithViews.set('sensor_msgs/Joy',['Gamepad']);
-        typesWithViews.set('iosb_sensor_msgs/GpsWithVelocity',['MapMustang']);
+        // typesWithViews.set('iosb_sensor_msgs/GpsWithVelocity',['MapMustang']);
 
 
         for (var i = 0; i < topicTypes.length; i++) {
