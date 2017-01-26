@@ -66,6 +66,8 @@ export class WebView {
                 $("div[data-widget-id="+widget.id+"]").remove();
             });
             $("div[data-widget-id="+widget.id+"]").draggable();
+            $("div[data-widget-id="+widget.id+"]").resizable();
+            // $("div[data-widget-resizable="+widget.id+"]").resizable();
             widget.widgetInstance.run();
             //insert settings for this widget
             insertSettings(widget);

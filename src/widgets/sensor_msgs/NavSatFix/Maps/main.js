@@ -15,7 +15,7 @@ function Maps(id, ros, topic, type, implementation) {
 
     return this;
 }
- 
+
 Maps.prototype = {
     init: function() {
         return this;
@@ -42,7 +42,6 @@ Maps.prototype = {
         return this;
     },
     save: function(widget) {
-        this.navTopic.unsubscribe();
         return JSON.stringify(widget.data.settings);
     },
     btnSettings: function(widget) {
@@ -77,5 +76,11 @@ Maps.prototype = {
             this.mymap.setView(latLng);
             this.marker.setLatLng(latLng);
             this.mymap.addLayer(this.polyline);
+            var newHeight = $("div[data-widget-id="+this.id+"]").height()-47;
+            $('#map-'+this.id).css("height", newHeight);
+            this.mymap.invalidateSize();
+    },
+    toJSON: function() {
+        return JSON.stringify(this.settings);
     }
 };

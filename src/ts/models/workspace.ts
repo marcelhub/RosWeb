@@ -92,18 +92,11 @@ export class Workspace{
             for(let i = 0; i < actualWorkspace.widgets.length; i++) {
                 actualWorkspace.widgets[i].save();
             }
+
             $.ajax({
                 type: 'POST',
                 url: 'php/saveWorkspace.php',
-                data: {workspace: JSON.stringify(actualWorkspace, function( key, value) {
-                            if(key == 'self') {
-                                console.log(key); 
-                                return null;
-                            } else {
-                                return value;
-                            };
-                        })},
-
+                data: {workspace: JSON.stringify(actualWorkspace)},
                 success: function(msg) {
                     actualWorkspace.menuWorkspace();
                 }

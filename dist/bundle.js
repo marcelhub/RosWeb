@@ -71,6 +71,8 @@ var WebView = function WebView() {
                 $("div[data-widget-id=" + widget.id + "]").remove();
             });
             $("div[data-widget-id=" + widget.id + "]").draggable();
+            $("div[data-widget-id=" + widget.id + "]").resizable();
+            // $("div[data-widget-resizable="+widget.id+"]").resizable();
             widget.widgetInstance.run();
             //insert settings for this widget
             insertSettings(widget);
@@ -251,15 +253,7 @@ var Workspace = function () {
                 $.ajax({
                     type: 'POST',
                     url: 'php/saveWorkspace.php',
-                    data: { workspace: JSON.stringify(exports.actualWorkspace, function (key, value) {
-                            if (key == 'self') {
-                                console.log(key);
-                                return null;
-                            } else {
-                                return value;
-                            }
-                            ;
-                        }) },
+                    data: { workspace: JSON.stringify(exports.actualWorkspace) },
                     success: function success(msg) {
                         exports.actualWorkspace.menuWorkspace();
                     }
@@ -435,7 +429,7 @@ var ROSEvent = function () {
             typesWithViews.set('sensor_msgs/Image', ['Videostream']);
             typesWithViews.set('sensor_msgs/NavSatFix', ['Maps']);
             typesWithViews.set('sensor_msgs/Joy', ['Gamepad']);
-            // typesWithViews.set('iosb_sensor_msgs/GpsWithVelocity',['MapMustang']);
+            //typesWithViews.set('iosb_sensor_msgs/GpsWithVelocity',['MapMustang']);
             for (var i = 0; i < topicTypes.length; i++) {
                 ROSEvent._ros.getTopicsForType(topicTypes[i], function (topicsResult) {
                     ROSEvent._ros.getTopicType(topicsResult[0], function (typeResult) {
