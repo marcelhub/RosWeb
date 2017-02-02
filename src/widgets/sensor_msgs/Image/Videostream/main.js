@@ -70,5 +70,12 @@ Videostream.prototype = {
             },
             cache: false
         });
+    },
+    resizable: function() {
+        $("div[data-widget-id="+this.id+"]").resizable({
+            alsoResize: "#widget-"+this.id+"-videostream",
+            aspectRatio: true
+        });
+         $("div[data-widget-resizable="+this.id+"]").css("border-width","0px");     
     }
 };

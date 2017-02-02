@@ -11,7 +11,6 @@ function init() {
         workspace_1.actualWorkspace;
         //initialize workspace menu
         window['fnctMenuWorkspace']();
-        console.log(document.location);
     });
 }
 init();
@@ -72,8 +71,11 @@ var WebView = function WebView() {
                 $("div[data-widget-id=" + widget.id + "]").remove();
             });
             $("div[data-widget-id=" + widget.id + "]").draggable();
-            $("div[data-widget-id=" + widget.id + "]").resizable();
-            // $("div[data-widget-resizable="+widget.id+"]").resizable();
+            if (widget.widgetInstance.resizable) {
+                widget.widgetInstance.resizable();
+            } else {
+                $("div[data-widget-id=" + widget.id + "]").resizable();
+            }
             widget.widgetInstance.run();
             //insert settings for this widget
             insertSettings(widget);
