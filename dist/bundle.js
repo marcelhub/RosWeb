@@ -11,6 +11,7 @@ function init() {
         workspace_1.actualWorkspace;
         //initialize workspace menu
         window['fnctMenuWorkspace']();
+        console.log(document.location);
     });
 }
 init();
@@ -382,7 +383,7 @@ var ROSEvent = function () {
                 $('.jsRosConnect').removeClass('connected');
                 $('.jsRosMenu').removeClass('disconnected');
                 $('.jsRosMenu').removeClass('connected');
-                ROSEvent._ros.connect("ws://" + $("#rosMasterAdress").val());
+                ROSEvent.ros.connect("ws://" + $("#rosMasterAdress").val());
             } catch (e) {
                 $('.jsRosConnect').removeClass('connected');
                 $('.jsRosConnect').addClass('error');
@@ -401,22 +402,22 @@ var ROSEvent = function () {
             _this.buildMenu();
             $('.jsRosMenu').removeClass('disconnected');
             $('.jsRosMenu').addClass('connected');
-            ROSEvent._connected = true;
+            ROSEvent.connected = true;
         };
         this.onRosClose = function () {
             $('.jsRosConnect').removeClass('connected');
             $('.jsRosConnect').addClass('error');
             $('.jsRosMenu').removeClass('connected');
             $('.jsRosMenu').addClass('disconnected');
-            ROSEvent._connected = false;
+            ROSEvent.connected = false;
         };
         this.onRosError = function (error) {
             $('.jsRosConnect').removeClass('connected');
             $('.jsRosConnect').addClass('error');
             $('.jsRosMenu').removeClass('connected');
             $('.jsRosMenu').addClass('disconnected');
-            ROSEvent._ros.close();
-            ROSEvent._connected = false;
+            ROSEvent.ros.close();
+            ROSEvent.connected = false;
             console.log(error);
         };
         //build menu dynamically, containing supported ROS topics
@@ -431,8 +432,8 @@ var ROSEvent = function () {
             typesWithViews.set('sensor_msgs/Joy', ['Gamepad']);
             //typesWithViews.set('iosb_sensor_msgs/GpsWithVelocity',['MapMustang']);
             for (var i = 0; i < topicTypes.length; i++) {
-                ROSEvent._ros.getTopicsForType(topicTypes[i], function (topicsResult) {
-                    ROSEvent._ros.getTopicType(topicsResult[0], function (typeResult) {
+                ROSEvent.ros.getTopicsForType(topicTypes[i], function (topicsResult) {
+                    ROSEvent.ros.getTopicType(topicsResult[0], function (typeResult) {
                         typesWithTopics.set(typeResult, topicsResult);
                         --callbacksRemaining;
                         if (callbacksRemaining == 0) {
@@ -449,10 +450,10 @@ var ROSEvent = function () {
             }
         };
         exports.rosEvents = this;
-        ROSEvent._ros = ros;
-        ROSEvent._ros.on("connection", this.onRosConnection);
-        ROSEvent._ros.on("close", this.onRosClose);
-        ROSEvent._ros.on("error", this.onRosError);
+        ROSEvent.ros = ros;
+        ROSEvent.ros.on("connection", this.onRosConnection);
+        ROSEvent.ros.on("close", this.onRosClose);
+        ROSEvent.ros.on("error", this.onRosError);
         this.DelegateEvent(".jsRosConnect", "click", this.establishConnection);
     }
 
@@ -464,19 +465,19 @@ var ROSEvent = function () {
     }], [{
         key: 'getInstance',
         value: function getInstance() {
-            return ROSEvent._ros;
+            return ROSEvent.ros;
         }
     }, {
         key: 'getStatus',
         value: function getStatus() {
-            return ROSEvent._connected;
+            return ROSEvent.connected;
         }
     }]);
 
     return ROSEvent;
 }();
 
-ROSEvent._connected = false;
+ROSEvent.connected = false;
 exports.ROSEvent = ROSEvent;
 //build JSON to get rendered with handlebars
 function buildJSON(typesWithTopics, typesWithViews) {

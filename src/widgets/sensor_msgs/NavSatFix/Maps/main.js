@@ -75,7 +75,7 @@ Maps.prototype = {
 
             this.mymap.setView(latLng);
             this.marker.setLatLng(latLng);
-            this.mymap.addLayer(this.polyline);
+            // this.mymap.addLayer(this.polyline);
             var newHeight = $("div[data-widget-id="+this.id+"]").height()-47;
             $('#map-'+this.id).css("height", newHeight);
             this.mymap.invalidateSize();

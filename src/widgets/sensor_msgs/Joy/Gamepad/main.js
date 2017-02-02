@@ -117,7 +117,6 @@ Gamepad.prototype = {
         if (gamepads.length == 0) {
             return;
         }
-
         self.gamePad = gamepads[0];
         var buttonValues = new Array();
         for(var i = 0; i < self.gamePad.buttons.length; i++) {

@@ -8,15 +8,15 @@ declare var MyApp: any;
 
 export class ROSEvent {
 
-    private static _ros: ROSLIB.Ros;
-    private static _connected: boolean=false;
+    private static ros: ROSLIB.Ros;
+    private static connected: boolean=false;
 
     constructor(ros: ROSLIB.Ros) {
         rosEvents = this;
-        ROSEvent._ros = ros;
-        ROSEvent._ros.on("connection", this.onRosConnection);
-        ROSEvent._ros.on("close", this.onRosClose);  
-        ROSEvent._ros.on("error", this.onRosError);
+        ROSEvent.ros = ros;
+        ROSEvent.ros.on("connection", this.onRosConnection);
+        ROSEvent.ros.on("close", this.onRosClose);  
+        ROSEvent.ros.on("error", this.onRosError);
         this.DelegateEvent(".jsRosConnect", "click", this.establishConnection);
     }
 
@@ -30,7 +30,7 @@ export class ROSEvent {
             $('.jsRosConnect').removeClass('connected');
             $('.jsRosMenu').removeClass('disconnected');
             $('.jsRosMenu').removeClass('connected');
-            ROSEvent._ros.connect("ws://"+$("#rosMasterAdress").val());
+            ROSEvent.ros.connect("ws://"+$("#rosMasterAdress").val());
         } catch(e) {
             $('.jsRosConnect').removeClass('connected');
             $('.jsRosConnect').addClass('error');
@@ -45,11 +45,11 @@ export class ROSEvent {
     }
 
     public static getInstance() {
-        return ROSEvent._ros;
+        return ROSEvent.ros;
     }
 
     public static getStatus() {
-        return ROSEvent._connected;
+        return ROSEvent.connected;
     }
 
     private onRosConnection = () => {
@@ -59,7 +59,7 @@ export class ROSEvent {
         this.buildMenu();
         $('.jsRosMenu').removeClass('disconnected');
         $('.jsRosMenu').addClass('connected');
-        ROSEvent._connected = true;
+        ROSEvent.connected = true;
     }
 
     private onRosClose = () => {
@@ -67,7 +67,7 @@ export class ROSEvent {
         $('.jsRosConnect').addClass('error');
         $('.jsRosMenu').removeClass('connected');
         $('.jsRosMenu').addClass('disconnected');
-        ROSEvent._connected = false;
+        ROSEvent.connected = false;
     }
 
     private onRosError = (error: any) => {
@@ -75,8 +75,8 @@ export class ROSEvent {
         $('.jsRosConnect').addClass('error');
         $('.jsRosMenu').removeClass('connected');
         $('.jsRosMenu').addClass('disconnected');
-        ROSEvent._ros.close();
-        ROSEvent._connected = false;
+        ROSEvent.ros.close();
+        ROSEvent.connected = false;
         console.log(error);
     }
 
@@ -94,8 +94,8 @@ export class ROSEvent {
 
 
         for (var i = 0; i < topicTypes.length; i++) {
-            ROSEvent._ros.getTopicsForType(topicTypes[i],function(topicsResult) {
-                ROSEvent._ros.getTopicType(topicsResult[0], function(typeResult) {
+            ROSEvent.ros.getTopicsForType(topicTypes[i],function(topicsResult) {
+                ROSEvent.ros.getTopicType(topicsResult[0], function(typeResult) {
                     typesWithTopics.set(typeResult, topicsResult);                 
                     --callbacksRemaining;
                     if(callbacksRemaining == 0) {
