@@ -64,13 +64,14 @@ var WebView = function WebView() {
             $("div[data-widget-id=" + widget.id + "] .jsWidgetSettings").on("click", widget.widgetInstance, widget.widgetInstance.btnSettings);
             //use remove of widgetInstance, then clean up workspace
             $("div[data-widget-id=" + widget.id + "] .jsWidgetRemove").on("click", widget.widgetInstance, function () {
-                if (widget.widgetInstance.btnRemove == null) {} else {
+                if (widget.widgetInstance.btnRemove) {
                     widget.widgetInstance.btnRemove(widget);
                 }
                 workspace_1.actualWorkspace.removeWidget(widget);
                 $("div[data-widget-id=" + widget.id + "]").remove();
             });
-            $("div[data-widget-id=" + widget.id + "]").draggable();
+            // $("div[data-widget-id="+widget.id+"]").draggable();
+            $('.undraggable').draggable({ handle: '.draggable' });
             if (widget.widgetInstance.resizable) {
                 widget.widgetInstance.resizable();
             } else {
@@ -428,7 +429,7 @@ var ROSEvent = function () {
             var callbacksRemaining = topicTypes.length;
             var typesWithTopics = new Map();
             var typesWithViews = new Map();
-            typesWithViews.set('geometry_msgs/Twist', ['KeyboardTeleoperation']);
+            typesWithViews.set('geometry_msgs/Twist', ['KeyboardTeleoperation', 'Joystick']);
             typesWithViews.set('sensor_msgs/Image', ['Videostream']);
             typesWithViews.set('sensor_msgs/NavSatFix', ['Maps']);
             typesWithViews.set('sensor_msgs/Joy', ['Gamepad']);

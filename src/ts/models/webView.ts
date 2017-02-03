@@ -57,15 +57,14 @@ export class WebView {
             $("div[data-widget-id="+widget.id+"] .jsWidgetSettings").on( "click", widget.widgetInstance ,widget.widgetInstance.btnSettings);
             //use remove of widgetInstance, then clean up workspace
             $("div[data-widget-id="+widget.id+"] .jsWidgetRemove").on( "click", widget.widgetInstance, function() {
-                if( widget.widgetInstance.btnRemove == null) {
-                    //no remove method from widgetInstance
-                } else {
+                if(widget.widgetInstance.btnRemove) {
                     widget.widgetInstance.btnRemove(widget);
                 }
                 actualWorkspace.removeWidget(widget);
                 $("div[data-widget-id="+widget.id+"]").remove();
             });
-            $("div[data-widget-id="+widget.id+"]").draggable();
+            // $("div[data-widget-id="+widget.id+"]").draggable();
+            $('.undraggable').draggable({handle: '.draggable'});
 
             if(widget.widgetInstance.resizable) {
                 widget.widgetInstance.resizable();

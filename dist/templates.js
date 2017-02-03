@@ -63,7 +63,7 @@ this["MyApp"]["templates"]["widgetWrapper"] = Handlebars.template({"1":function(
 },"compiler":[7,">= 4.0.0"],"main":function(container,depth0,helpers,partials,data) {
     var stack1, helper, alias1=depth0 != null ? depth0 : {}, alias2=helpers.helperMissing, alias3="function", alias4=container.escapeExpression;
 
-  return "<div class=\"jsWidgetWrapper cssWidgetWrapper\" data-widget-id=\""
+  return "<div class=\"jsWidgetWrapper cssWidgetWrapper undraggable\" data-widget-id=\""
     + alias4(((helper = (helper = helpers.id || (depth0 != null ? depth0.id : depth0)) != null ? helper : alias2),(typeof helper === alias3 ? helper.call(alias1,{"name":"id","hash":{},"data":data}) : helper)))
     + "\" style=\"left:"
     + alias4(((helper = (helper = helpers.posX || (depth0 != null ? depth0.posX : depth0)) != null ? helper : alias2),(typeof helper === alias3 ? helper.call(alias1,{"name":"posX","hash":{},"data":data}) : helper)))
@@ -75,7 +75,9 @@ this["MyApp"]["templates"]["widgetWrapper"] = Handlebars.template({"1":function(
     + alias4(((helper = (helper = helpers.height || (depth0 != null ? depth0.height : depth0)) != null ? helper : alias2),(typeof helper === alias3 ? helper.call(alias1,{"name":"height","hash":{},"data":data}) : helper)))
     + "px;position:absolute;\">\n    <div class=\"panel panel-primary cssWidgetPanelPrimary\" data-widget-resizable=\""
     + alias4(((helper = (helper = helpers.id || (depth0 != null ? depth0.id : depth0)) != null ? helper : alias2),(typeof helper === alias3 ? helper.call(alias1,{"name":"id","hash":{},"data":data}) : helper)))
-    + "\">\n        <div class=\"panel-heading clearfix cssWidgetPanelHeader\">\n            <div class=\"panel-title pull-left\">\n                <h4>"
+    + "\">\n        <div class=\"panel-heading clearfix cssWidgetPanelHeader draggable\" data-widget-draggable=\""
+    + alias4(((helper = (helper = helpers.id || (depth0 != null ? depth0.id : depth0)) != null ? helper : alias2),(typeof helper === alias3 ? helper.call(alias1,{"name":"id","hash":{},"data":data}) : helper)))
+    + "\">\n            <div class=\"panel-title pull-left\">\n                <h4>"
     + alias4(((helper = (helper = helpers.topicImplementation || (depth0 != null ? depth0.topicImplementation : depth0)) != null ? helper : alias2),(typeof helper === alias3 ? helper.call(alias1,{"name":"topicImplementation","hash":{},"data":data}) : helper)))
     + ": "
     + alias4(((helper = (helper = helpers.topic || (depth0 != null ? depth0.topic : depth0)) != null ? helper : alias2),(typeof helper === alias3 ? helper.call(alias1,{"name":"topic","hash":{},"data":data}) : helper)))
