@@ -72,12 +72,12 @@ Joystick.prototype = {
             angular : {
                 x : 0,
                 y : 0,
-                z : myY
+                z : myY * (-1)
             },
             linear : {
-                x : myX,
+                x : myX/2*(-1),
                 y : 0,
-                z : myY
+                z : myY *(-1)
             }
         });
         this.publishedTopic.publish(twist);
