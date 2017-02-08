@@ -62,6 +62,7 @@ Joystick.prototype = {
             });
             self.publishedTopic.publish(twist);
             clearInterval(self.msgLoop);
+            self.publishedTopic.publish(twist);
         });
 
         
