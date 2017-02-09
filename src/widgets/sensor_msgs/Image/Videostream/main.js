@@ -29,6 +29,11 @@ Videostream.prototype = {
         return this;
     },
     run: function() {
+        let wrapper = $("div[data-widget-id="+this.id+"]");
+        this.settings.scaledWidth =  parseInt(wrapper.css('width').slice(0,-2));
+        this.settings.scaledHeight = parseInt(wrapper.css('height').slice(0,-2));
+        $("#widget-"+this.id+"-videostream").width(this.settings.scaledWidth);
+        $("#widget-"+this.id+"-videostream").height(this.settings.scaledHeight);
 
     },
     load: function(settings) {
@@ -36,11 +41,11 @@ Videostream.prototype = {
         this.settings.port = settings.port;
         this.settings.width = settings.width;
         this.settings.height = settings.height;
-        this.settings.quality = settings.quality;
+        this.settings.quality = settings.quality;        
         return this;
     },
     save: function(widget) {
-        return JSON.stringify(widget.data.settings);
+
     },
     btnSettings: function(widget) {
     },
