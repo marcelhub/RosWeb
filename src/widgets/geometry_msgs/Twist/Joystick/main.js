@@ -29,22 +29,23 @@ Joystick.prototype = {
     run: function() {
         var options = {
             zone: document.getElementById('widget-'+this.id+'-joystick'),
-            mode: 'static',
+            mode: 'dynamic',
             size: 250,
-            color: 'red',
-            position: {
-                left: '50%',
-                bottom: '50%'
-            }
+            color: 'red'
         };
         this.manager = nipplejs.create(options);
         this.sendMessages = false;
         this.msgLoop = null;
         var self = this;
-        this.maxValue = this.manager.get(0).options.size/2;
+        // this.maxValue = this.manager.get(0).options.size/2;
 
         this.manager.on('start', function (evt, data) {
             self.msgLoop = setInterval(function () { self.teleopLoop(); }, 100);
+        });
+
+        this.manager.on('move', function(evt, data) {
+            self.y = (data.position.x - data.instance.position.x) / data.instance.options.size*2;
+            self.x = (data.position.y - data.instance.position.y) / data.instance.options.size*2;
         });
 
         this.manager.on('end', function (evt, data) {
@@ -64,7 +65,7 @@ Joystick.prototype = {
             clearInterval(self.msgLoop);
             self.publishedTopic.publish(twist);
         });
-
+        
         
 
     },
@@ -87,19 +88,16 @@ Joystick.prototype = {
 
     },
     teleopLoop: function() {
-        var nipple = this.manager.get(0);
-        var myX = nipple.frontPosition.y / this.maxValue;
-        var myY = nipple.frontPosition.x / this.maxValue;
         var twist = new ROSLIB.Message({
             angular : {
                 x : 0,
                 y : 0,
-                z : myY * (-1)
+                z : this.y * (-1)
             },
             linear : {
-                x : myX/2*(-1),
+                x : this.x/2*(-1),
                 y : 0,
-                z : myY *(-1)
+                z : this.y *(-1)
             }
         });
         this.publishedTopic.publish(twist);
