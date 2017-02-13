@@ -53,11 +53,14 @@ Videostream.prototype = {
     },
 
     btnSettingsSave: function(widget) {
-        widget.data.settings.ip = $("#widget-"+widget.data.id+"-value-ip").val();   
-        widget.data.settings.port = $("#widget-"+widget.data.id+"-value-port").val();
-        widget.data.settings.width = $("#widget-"+widget.data.id+"-value-width").val();
-        widget.data.settings.height = $("#widget-"+widget.data.id+"-value-height").val();
-        widget.data.settings.quality = $("#widget-"+widget.data.id+"-value-quality").val();
+        var self = this;
+        this.settings.ip = $("#widget-"+widget.data.id+"-value-ip").val();   
+        this.settings.port = $("#widget-"+widget.data.id+"-value-port").val();
+        this.settings.width = $("#widget-"+widget.data.id+"-value-width").val();
+        this.settings.height = $("#widget-"+widget.data.id+"-value-height").val();
+        this.settings.quality = $("#widget-"+widget.data.id+"-value-quality").val();
+        this.settings.scaledWidth = $("#widget-"+widget.data.id+"-value-scaledWidth").val();
+        this.settings.scaledHeight = $("#widget-"+widget.data.id+"-value-scaledHeight").val();
         //refresh videostream to apply new settings
         $.ajax({
             url: "widgets/" + widget.data.type + "/" + widget.data.implementation + "/index.hbs",
@@ -67,8 +70,9 @@ Videostream.prototype = {
                 var refreshedHtml = compiledHtml(widget.data);
                 $("#widget-"+widget.data.id+"-content").children().remove();
                 $("#widget-"+widget.data.id+"-content").append(refreshedHtml);
-                $("div[data-widget-id="+widget.data.id+"]").css("width",  widget.data.settings.width+"px");
-                $("div[data-widget-id="+widget.data.id+"]").css("height",  widget.data.settings.height+"px");
+                $("div[data-widget-id="+widget.data.id+"]").css("width",  widget.data.settings.scaledWidth+"px");
+                $("div[data-widget-id="+widget.data.id+"]").css("height",  widget.data.settings.scaledHeight+"px");
+                self.run();
             },
             error: function (e1, e2) {
 

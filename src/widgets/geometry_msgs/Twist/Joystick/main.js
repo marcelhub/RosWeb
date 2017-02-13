@@ -37,7 +37,6 @@ Joystick.prototype = {
         this.sendMessages = false;
         this.msgLoop = null;
         var self = this;
-        // this.maxValue = this.manager.get(0).options.size/2;
 
         this.manager.on('start', function (evt, data) {
             self.msgLoop = setInterval(function () { self.teleopLoop(); }, 100);

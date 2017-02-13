@@ -85,6 +85,13 @@ var WebView = function WebView() {
     Handlebars.registerHelper('trim', function (obj) {
         return new Handlebars.SafeString(obj.replace(/ /g, ''));
     });
+    Handlebars.registerHelper('skip', function (obj) {
+        //skipping videostream configs which should not be shown
+        if (obj === 'scaledWidth' || obj === 'scaledHeight') {
+            return false;
+        }
+        return true;
+    });
 };
 
 exports.WebView = WebView;

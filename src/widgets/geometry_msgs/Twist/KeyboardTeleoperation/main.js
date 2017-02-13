@@ -76,7 +76,6 @@ KeyboardTeleoperation.prototype = {
     },
     
     btnRemove: function(widget) {
-        console.log(widget);
         widget.teleop = undefined;
     },
 

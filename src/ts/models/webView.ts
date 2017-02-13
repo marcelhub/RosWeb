@@ -11,6 +11,13 @@ export class WebView {
                 obj.replace(/ /g,'')
             );
         });
+        Handlebars.registerHelper('skip', function(obj) {
+            //skipping videostream configs which should not be shown
+            if(obj === 'scaledWidth' || obj === 'scaledHeight') {
+                return false;
+            }
+            return true;
+        });
     }
 
     public insertWidget = (widget: Widget, widgetInstance?: any) => {
