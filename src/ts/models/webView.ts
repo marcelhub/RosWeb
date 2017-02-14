@@ -70,7 +70,6 @@ export class WebView {
                 actualWorkspace.removeWidget(widget);
                 $("div[data-widget-id="+widget.id+"]").remove();
             });
-            // $("div[data-widget-id="+widget.id+"]").draggable();
             $('.undraggable').draggable({handle: '.draggable'});
 
             if(widget.widgetInstance.resizable) {

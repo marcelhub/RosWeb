@@ -70,7 +70,6 @@ var WebView = function WebView() {
                 workspace_1.actualWorkspace.removeWidget(widget);
                 $("div[data-widget-id=" + widget.id + "]").remove();
             });
-            // $("div[data-widget-id="+widget.id+"]").draggable();
             $('.undraggable').draggable({ handle: '.draggable' });
             if (widget.widgetInstance.resizable) {
                 widget.widgetInstance.resizable();
