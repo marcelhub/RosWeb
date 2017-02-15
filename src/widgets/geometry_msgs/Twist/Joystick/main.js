@@ -39,7 +39,7 @@ Joystick.prototype = {
         var self = this;
 
         this.manager.on('start', function (evt, data) {
-            self.msgLoop = setInterval(function () { self.teleopLoop(); }, 100);
+            self.msgLoop = setInterval(function () { self.teleopLoop(); }, 50);
         });
 
         this.manager.on('move', function(evt, data) {
@@ -87,6 +87,7 @@ Joystick.prototype = {
 
     },
     teleopLoop: function() {
+        //need at least 5% speed backwards to drive the curve
         var twist = new ROSLIB.Message({
             angular : {
                 x : 0,

@@ -25,7 +25,6 @@ KeyboardTeleoperation.prototype = {
         var self = this;
 
         if(jQuery.isEmptyObject(this.settings)) {
-            //use parameter like joy node to initialize the gamepad
             this.settings.sliderValue = 90;
         }
 
@@ -48,10 +47,12 @@ KeyboardTeleoperation.prototype = {
                         $('#widget-'+self.id+'-speed-label').html('Speed: ' + ui.value + '%');
                         // Scale the speed.
                         self.teleop.scale = (ui.value / 100.0);
+                        self.settings.sliderValue = ui.value;
                     }
                 });
                 $('#widget-'+self.id+'-speed-label').html('Speed: ' + ($('#widget-'+self.id+'-speed-slider').slider('value')) + '%');
                 self.teleop.scale = ($('#widget-'+self.id+'-speed-slider').slider('value') / 100.0);
+                self.settings.sliderValue = self.teleop.scale*100;
             },
             error: function (e) {
 
@@ -64,7 +65,7 @@ KeyboardTeleoperation.prototype = {
 
     },
     load: function(settings) {
-        this.settings.sliderValue = 90;
+        this.settings.sliderValue = settings.sliderValue;
         this.init();
         return this;
     },
