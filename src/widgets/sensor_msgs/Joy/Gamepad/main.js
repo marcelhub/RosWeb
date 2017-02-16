@@ -45,7 +45,8 @@ Gamepad.prototype = {
         //waits for connecting gamepads, event triggered when connected to host or any button pressed 1st time
         window.addEventListener("gamepadconnected", function(e) {
             //clear "no gamepad" notification if 1 controller is connected
-            if(navigator.getGamepads().length == 1) {
+            if(navigator.getGamepads().length == 1 && self.joyTopic != null) {
+                console.log(navigator.getGamepads());
                 $('#gamepad-'+self.id+'-info').text("");
                 $('#gamepad-'+self.id+'-info').append('<div id="gamepad-btn-'+e.gamepad.index+'"><span class="label label-success" style="display: block; margin: auto; width: 90%;">'+e.gamepad.id+'</span ></div>');
                 self.msgLoop = setInterval(function () { self.teleopLoop(e, self, seqCounter++); }, self.settings.autorepeatRate);
@@ -82,6 +83,7 @@ Gamepad.prototype = {
     btnSettings: function(widget) {
     },
     btnRemove: function(widget) {
+        this.joyTopic = null;
         clearInterval(this.msgLoop);
     },
 
