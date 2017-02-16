@@ -85,7 +85,7 @@ var WebView = function WebView() {
         return new Handlebars.SafeString(obj.replace(/ /g, ''));
     });
     Handlebars.registerHelper('skip', function (obj) {
-        //skipping videostream configs which should not be shown
+        //skipping configs which should not be shown
         if (obj === 'scaledWidth' || obj === 'scaledHeight') {
             return false;
         }
@@ -398,7 +398,6 @@ var ROSEvent = function () {
                 $('.jsRosConnect').addClass('error');
                 $('.jsRosMenu').removeClass('connected');
                 $('.jsRosMenu').addClass('disconnected');
-                console.log(e);
             }
         };
         this.getConnectionStatus = function () {

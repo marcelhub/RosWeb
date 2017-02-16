@@ -12,7 +12,7 @@ export class WebView {
             );
         });
         Handlebars.registerHelper('skip', function(obj) {
-            //skipping videostream configs which should not be shown
+            //skipping configs which should not be shown
             if(obj === 'scaledWidth' || obj === 'scaledHeight') {
                 return false;
             }

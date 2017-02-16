@@ -20,6 +20,7 @@ Gamepad.prototype = {
             return (!(obj === 'invertAnalogLeft' || obj === 'invertAnalogRight'));
         });
 
+        //this helper is used by the settings for the joystick invert checkboxes
         Handlebars.registerHelper('checkInverts', function(obj) {
             return (obj == 1)? '' : 'checked';
         });
@@ -29,13 +30,15 @@ Gamepad.prototype = {
             name : this.topic,
             messageType : this.type,
         });
+
         if(jQuery.isEmptyObject(this.settings)) {
-            //use parameter like joy node to initialize the gamepad
+            //initialize the gamepad with default values if not loaded
             this.settings.deadzone = 0.2;
             this.settings.autorepeatRate = 100;
             this.settings.invertAnalogLeft = 1;
             this.settings.invertAnalogRight = 1;
         }
+
         var self = this;
         this.msgLoop = null;
         var seqCounter = 0;
@@ -44,13 +47,10 @@ Gamepad.prototype = {
             //clear "no gamepad" notification if 1 controller is connected
             if(navigator.getGamepads().length == 1) {
                 $('#gamepad-'+self.id+'-info').text("");
-            }
-            $('#gamepad-'+self.id+'-info').append('<div id="gamepad-btn-'+e.gamepad.index+'" class="radio"><label><input type="radio" class="optradio" name="gamepad-radiobtn"> '+e.gamepad.id+'</label></div>');
-            if(navigator.getGamepads().length == 1) {
-                $('#gamepad-btn-'+e.gamepad.index+' .optradio').prop('checked', true);
+                $('#gamepad-'+self.id+'-info').append('<div id="gamepad-btn-'+e.gamepad.index+'"><span class="label label-success" style="display: block; margin: auto; width: 90%;">'+e.gamepad.id+'</span ></div>');
+                self.msgLoop = setInterval(function () { self.teleopLoop(e, self, seqCounter++); }, self.settings.autorepeatRate);
             }
             
-            self.msgLoop = setInterval(function () { self.teleopLoop(e, self, seqCounter++); }, self.settings.autorepeatRate);
         });
 
         //event triggered when gamepad gets disconnected from host
@@ -58,25 +58,9 @@ Gamepad.prototype = {
             if(!self.msgLoop) {
                 return;
             }
-
             clearInterval(self.msgLoop);
-            if(checkConnectedGamepads()) {
-                $('#gamepad-btn-'+e.gamepad.index).remove();
-            } else {
-                $('#gamepad-'+self.id+'-info').text("no gamepad connected.");
-            }
-
-            function checkConnectedGamepads() {
-                var pads = navigator.getGamepads();
-                for(var i = 0; i < pads.length; i++) {
-                    if(pads[i]) {
-                        if(pads[i].connected) {
-                            return true;
-                        }
-                    }
-                }
-                return false;
-            }
+            $('#gamepad-btn-'+e.gamepad.index).remove();
+            $('#gamepad-'+self.id+'-info').text("no gamepad connected.");
         });
 
         return this;

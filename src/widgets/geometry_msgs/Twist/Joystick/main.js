@@ -87,7 +87,7 @@ Joystick.prototype = {
 
     },
     teleopLoop: function() {
-        //need at least 5% speed backwards to drive the curve
+        //need at least 5% speed backwards to drive an inverted curve
         var twist = new ROSLIB.Message({
             angular : {
                 x : 0,

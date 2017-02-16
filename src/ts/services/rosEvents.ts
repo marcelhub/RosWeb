@@ -36,7 +36,6 @@ export class ROSEvent {
             $('.jsRosConnect').addClass('error');
             $('.jsRosMenu').removeClass('connected');
             $('.jsRosMenu').addClass('disconnected');
-            console.log(e);
         }
     }
 
