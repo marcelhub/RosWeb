@@ -88,7 +88,7 @@ export class ROSEvent {
         typesWithViews.set('geometry_msgs/Twist',['KeyboardTeleoperation','Joystick']);
         typesWithViews.set('sensor_msgs/Image',['Videostream']);
         typesWithViews.set('sensor_msgs/NavSatFix',['Maps']);
-        typesWithViews.set('sensor_msgs/Joy',['Gamepad']);
+        typesWithViews.set('sensor_msgs/Joy',['Gamepad','Gamestick']);
         //typesWithViews.set('iosb_sensor_msgs/GpsWithVelocity',['MapMustang']);
 
 
