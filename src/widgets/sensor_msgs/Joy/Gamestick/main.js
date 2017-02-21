@@ -46,15 +46,16 @@ Gamestick.prototype = {
         });
 
         this.manager.on('move', function(evt, data) {
-            self.y = (data.position.x - data.instance.position.x) / data.instance.options.size*2;
-            self.x = (data.position.y - data.instance.position.y) / data.instance.options.size*2;
+            self.y = (data.position.x - data.instance.position.x) / data.instance.options.size * 2;
+            self.x = (data.position.y - data.instance.position.y) / data.instance.options.size * 2;
         });
 
 
         this.manager.on('end', function (evt, data) {
+            clearInterval(self.msgLoop);
             var joyMsg = new ROSLIB.Message({
                 header : {
-                seq : self.seqCounter,
+                seq : ++self.seqCounter,
                 stamp : {
                     secs: parseInt(Date.now()/1000),
                     nsecs: parseInt(Date.now()/1000)
@@ -62,12 +63,8 @@ Gamestick.prototype = {
                 frame_id : ''
                 },
                 axes : [0,0,-1,0,0,-1,0,0],
-                buttons : [0,0,0,0,0,0,0,0,0,0,0]
+                buttons : [1,0,0,0,0,0,0,0,0,0,0]
             });
-            self.seqCounter++;
-            self.publishedTopic.publish(joyMsg);
-            clearInterval(self.msgLoop);
-            joyMsg.header.seq = self.seqCounter;
             self.publishedTopic.publish(joyMsg);
         });
         
@@ -80,7 +77,6 @@ Gamestick.prototype = {
     },
 
     save: function(widget) {
-        return JSON.stringify(widget.data.settings);
     },
     btnSettings: function(widget) {
     },
@@ -93,6 +89,7 @@ Gamestick.prototype = {
 
     },
     teleopLoop: function() {
+        //need at least 5% speed backwards to drive an inverted curve
         var self = this;
         var joyMsg = new ROSLIB.Message({
             header : {
@@ -108,5 +105,8 @@ Gamestick.prototype = {
         });
         this.publishedTopic.publish(joyMsg);
         this.seqCounter++;
+    },
+    resizable: function() {
+        
     }
 };

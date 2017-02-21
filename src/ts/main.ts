@@ -13,6 +13,7 @@ function init() {
     actualWorkspace;
     //initialize workspace menu
     window['fnctMenuWorkspace']();
+
   });
 }
 
