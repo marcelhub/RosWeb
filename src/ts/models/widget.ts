@@ -3,29 +3,29 @@ import {ROSEvent} from "../services/rosEvents"
 export class Widget{
     public ros: ROSLIB.Ros;
     public id: number;
-    public topicUrl: string;
-    public topicType: string;
+    public url: string;
+    public type: string;
     public width: number;
     public height: number;
     public posX: number;
     public posY: number;
     public html: string;
-    public topicImplementation: string;
+    public implementation: string;
     public widgetInstance: any;
 
 
-    constructor(id: number, topicUrl: string, topicType: string, width: number, height: number,
-                posX: number, posY: number, html: string, topicImplementation: string) {
+    constructor(id: number, url: string, type: string, width: number, height: number,
+                posX: number, posY: number, html: string, implementation: string) {
         this.ros = ROSEvent.getInstance();
         this.id = id;
-        this.topicUrl = topicUrl;
-        this.topicType = topicType;
+        this.url = url;
+        this.type = type;
         this.width = width;
         this.height = height;
         this.posX = posX;
         this.posY = posY;
         this.html = html;
-        this.topicImplementation = topicImplementation;
+        this.implementation = implementation;
     }
 
     public save() {

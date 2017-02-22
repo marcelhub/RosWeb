@@ -28,8 +28,8 @@ export class WebView {
             posY: widget.posY,
             width: widget.width,
             height: widget.height + this._widgetHeaderOffset,
-            topic: widget.topicUrl,
-            topicImplementation: widget.topicImplementation,
+            topic: widget.url,
+            topicImplementation: widget.implementation,
             btnSettings: $(widget.html).attr("data-btn-widget-settings")!="1"? false : true,
             btnRemove: $(widget.html).attr("data-btn-widget-remove")!="1"? false : true
         };
@@ -45,12 +45,12 @@ export class WebView {
         setTimeout(function() {
             if(widgetInstance == null) {
                 //create object of widgetinstance and initialize it with default values
-                widget.widgetInstance = new this[widget.topicImplementation](widget.id, widget.ros, widget.topicUrl, widget.topicType,
-                                                                            widget.topicImplementation).init();
+                widget.widgetInstance = new this[widget.implementation](widget.id, widget.ros, widget.url, widget.type,
+                                                                            widget.implementation).init();
             } else {
                 //create object with loaded settings
-                widget.widgetInstance = new this[widget.topicImplementation](widget.id, widget.ros, widget.topicUrl, widget.topicType,
-                                                                            widget.topicImplementation).load(widgetInstance.settings);
+                widget.widgetInstance = new this[widget.implementation](widget.id, widget.ros, widget.url, widget.type,
+                                                                            widget.implementation).load(widgetInstance.settings);
             }
 
             //compile javascript with the data from the widgetinstance to html
@@ -90,8 +90,14 @@ export class WebView {
 
 //load settings file
 function insertSettings(widget: Widget) {
+    let myUrl: string = "";
+    if(widget.type != null) {
+        myUrl = "widgets/" + widget.type + "/" + widget.implementation + "/settings.hbs"
+    } else {
+        myUrl = "widgets/" + widget.implementation + "/settings.hbs";
+    }
     $.ajax({
-        url: "widgets/" + widget.topicType + "/" + widget.topicImplementation + "/settings.hbs",
+        url: myUrl,
         method: "POST",
         beforeSend: function () {
 
@@ -111,15 +117,20 @@ function insertSettings(widget: Widget) {
 
 //load script file
 function loadScript(widget: Widget) {
-    let alreadyLoaded = $('script[src=\"widgets/' + widget.topicType + '/' + widget.topicImplementation + '/main.js\"]');
+    let alreadyLoaded = $('script[src=\"widgets/' + widget.type + '/' + widget.implementation + '/main.js\"]');
     if(alreadyLoaded.length > 0) {
     } else {
-        let jsString = "widgets/" + widget.topicType + "/" + widget.topicImplementation + "/main.js";
+        let myUrl: string = "";
+        if(widget.type != null) {
+            myUrl = "widgets/" + widget.type + "/" + widget.implementation + "/main.js"
+        } else {
+            myUrl = "widgets/" + widget.implementation + "/main.js";
+        }
         $.ajax({
+            url: myUrl,
             type: "GET",
-            url: jsString,
             success: function(data) {
-                $(document.body).append('<script type="text/javascript" src='+jsString+'></script>');
+                $(document.body).append('<script type="text/javascript" src='+myUrl+'></script>');
             },
             dataType: "script",
             cache: false

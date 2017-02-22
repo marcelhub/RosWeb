@@ -36,8 +36,8 @@ var WebView = function WebView() {
             posY: widget.posY,
             width: widget.width,
             height: widget.height + _this._widgetHeaderOffset,
-            topic: widget.topicUrl,
-            topicImplementation: widget.topicImplementation,
+            topic: widget.url,
+            topicImplementation: widget.implementation,
             btnSettings: $(widget.html).attr("data-btn-widget-settings") != "1" ? false : true,
             btnRemove: $(widget.html).attr("data-btn-widget-remove") != "1" ? false : true
         };
@@ -50,10 +50,10 @@ var WebView = function WebView() {
         setTimeout(function () {
             if (widgetInstance == null) {
                 //create object of widgetinstance and initialize it with default values
-                widget.widgetInstance = new this[widget.topicImplementation](widget.id, widget.ros, widget.topicUrl, widget.topicType, widget.topicImplementation).init();
+                widget.widgetInstance = new this[widget.implementation](widget.id, widget.ros, widget.url, widget.type, widget.implementation).init();
             } else {
                 //create object with loaded settings
-                widget.widgetInstance = new this[widget.topicImplementation](widget.id, widget.ros, widget.topicUrl, widget.topicType, widget.topicImplementation).load(widgetInstance.settings);
+                widget.widgetInstance = new this[widget.implementation](widget.id, widget.ros, widget.url, widget.type, widget.implementation).load(widgetInstance.settings);
             }
             //compile javascript with the data from the widgetinstance to html
             var widgetHtml = widgetTemplateCompiled(widget.widgetInstance);
@@ -96,8 +96,14 @@ var WebView = function WebView() {
 exports.WebView = WebView;
 //load settings file
 function insertSettings(widget) {
+    var myUrl = "";
+    if (widget.type != null) {
+        myUrl = "widgets/" + widget.type + "/" + widget.implementation + "/settings.hbs";
+    } else {
+        myUrl = "widgets/" + widget.implementation + "/settings.hbs";
+    }
     $.ajax({
-        url: "widgets/" + widget.topicType + "/" + widget.topicImplementation + "/settings.hbs",
+        url: myUrl,
         method: "POST",
         beforeSend: function beforeSend() {},
         success: function success(data) {
@@ -112,15 +118,20 @@ function insertSettings(widget) {
 }
 //load script file
 function loadScript(widget) {
-    var alreadyLoaded = $('script[src=\"widgets/' + widget.topicType + '/' + widget.topicImplementation + '/main.js\"]');
+    var alreadyLoaded = $('script[src=\"widgets/' + widget.type + '/' + widget.implementation + '/main.js\"]');
     if (alreadyLoaded.length > 0) {} else {
         (function () {
-            var jsString = "widgets/" + widget.topicType + "/" + widget.topicImplementation + "/main.js";
+            var myUrl = "";
+            if (widget.type != null) {
+                myUrl = "widgets/" + widget.type + "/" + widget.implementation + "/main.js";
+            } else {
+                myUrl = "widgets/" + widget.implementation + "/main.js";
+            }
             $.ajax({
+                url: myUrl,
                 type: "GET",
-                url: jsString,
                 success: function success(data) {
-                    $(document.body).append('<script type="text/javascript" src=' + jsString + '></script>');
+                    $(document.body).append('<script type="text/javascript" src=' + myUrl + '></script>');
                 },
                 dataType: "script",
                 cache: false
@@ -139,19 +150,19 @@ function _classCallCheck(instance, Constructor) { if (!(instance instanceof Cons
 var rosEvents_1 = require("../services/rosEvents");
 
 var Widget = function () {
-    function Widget(id, topicUrl, topicType, width, height, posX, posY, html, topicImplementation) {
+    function Widget(id, url, type, width, height, posX, posY, html, implementation) {
         _classCallCheck(this, Widget);
 
         this.ros = rosEvents_1.ROSEvent.getInstance();
         this.id = id;
-        this.topicUrl = topicUrl;
-        this.topicType = topicType;
+        this.url = url;
+        this.type = type;
         this.width = width;
         this.height = height;
         this.posX = posX;
         this.posY = posY;
         this.html = html;
-        this.topicImplementation = topicImplementation;
+        this.implementation = implementation;
     }
 
     _createClass(Widget, [{
@@ -196,18 +207,23 @@ var Workspace = function () {
 
     _createClass(Workspace, [{
         key: "createWidget",
-        value: function createWidget(topicUrl, topicType, topicImplementation) {
+        value: function createWidget(url, type, implementation) {
             //load index file
+            var myUrl = "";
+            if (type != null) {
+                myUrl = "widgets/" + type + "/" + implementation + "/index.hbs";
+            } else {
+                myUrl = "widgets/" + implementation + "/index.hbs";
+            }
             $.ajax({
-                url: "widgets/" + topicType + "/" + topicImplementation + "/index.hbs",
+                url: myUrl,
                 method: "POST",
-                beforeSend: function beforeSend() {},
                 success: function success(data) {
                     var posX = parseInt($(data).attr("data-pos-x"));
                     var posY = parseInt($(data).attr("data-pos-y"));
                     var width = parseInt($(data).attr("data-min-width"));
                     var height = parseInt($(data).attr("data-min-height"));
-                    var crtWidget = new widget_1.Widget(exports.actualWorkspace.idCounter, topicUrl, topicType, width, height, posX, posY, data, topicImplementation);
+                    var crtWidget = new widget_1.Widget(exports.actualWorkspace.idCounter, url, type, width, height, posX, posY, data, implementation);
                     exports.actualWorkspace.webView.insertWidget(crtWidget);
                     exports.actualWorkspace.widgets.push(crtWidget);
                     exports.actualWorkspace.idCounter++;
@@ -221,13 +237,17 @@ var Workspace = function () {
     }, {
         key: "loadWidget",
         value: function loadWidget(widget) {
-            //load index file
+            var myUrl = "";
+            if (widget.type != null) {
+                myUrl = "widgets/" + widget.type + "/" + widget.implementation + "/index.hbs";
+            } else {
+                myUrl = "widgets/" + widget.implementation + "/index.hbs";
+            }
             $.ajax({
-                url: "widgets/" + widget.topicType + "/" + widget.topicImplementation + "/index.hbs",
+                url: myUrl,
                 method: "POST",
-                beforeSend: function beforeSend() {},
                 success: function success(data) {
-                    var crtWidget = new widget_1.Widget(exports.actualWorkspace.idCounter, widget.topicUrl, widget.topicType, widget.width, widget.height, widget.posX, widget.posY, data, widget.topicImplementation);
+                    var crtWidget = new widget_1.Widget(exports.actualWorkspace.idCounter, widget.url, widget.type, widget.width, widget.height, widget.posX, widget.posY, data, widget.implementation);
                     exports.actualWorkspace.webView.insertWidget(crtWidget, widget.widgetInstance);
                     exports.actualWorkspace.widgets.push(crtWidget);
                     exports.actualWorkspace.idCounter++;
@@ -347,8 +367,13 @@ var Workspace = function () {
 
 exports.Workspace = Workspace;
 window["fnctCreateWidget"] = fnctCreateWidget;
-function fnctCreateWidget(topicUrl, topicType, topicImplementation) {
-    exports.actualWorkspace.createWidget(topicUrl, topicType, topicImplementation);
+function fnctCreateWidget(url, type, implementation) {
+    if (url == "" || type == "") {
+        console.log("no topic create");
+        exports.actualWorkspace.createWidget(null, null, implementation);
+    } else {
+        exports.actualWorkspace.createWidget(url, type, implementation);
+    }
 }
 window["fnctSaveWorkspace"] = fnctSaveWorkspace;
 function fnctSaveWorkspace(name) {

@@ -24,21 +24,24 @@ export class Workspace{
     }
 
     //create new widget
-    public createWidget(topicUrl:string, topicType: string, topicImplementation: string) {
+    public createWidget(url:string, type: string, implementation: string) {
         //load index file
+        let myUrl: string = "";
+        if(type != null) {
+            myUrl = "widgets/" + type + "/" + implementation + "/index.hbs"
+        } else {
+            myUrl = "widgets/" + implementation + "/index.hbs";
+        }
         $.ajax({
-            url: "widgets/" + topicType + "/" + topicImplementation + "/index.hbs",
+            url: myUrl,
             method: "POST",
-            beforeSend: function () {
-
-            },
             success: function (data: string) {
                 let posX = parseInt($(data).attr("data-pos-x"));
                 let posY = parseInt($(data).attr("data-pos-y"));
                 let width = parseInt($(data).attr("data-min-width"));
                 let height = parseInt($(data).attr("data-min-height"));
-                let crtWidget = new Widget(actualWorkspace.idCounter, topicUrl, topicType,
-                                            width, height, posX, posY, data, topicImplementation);
+                let crtWidget = new Widget(actualWorkspace.idCounter, url, type,
+                                            width, height, posX, posY, data, implementation);
                 actualWorkspace.webView.insertWidget(crtWidget);
                 actualWorkspace.widgets.push(crtWidget);
                 actualWorkspace.idCounter++;
@@ -52,16 +55,18 @@ export class Workspace{
 
     //load a widget from loaded workspace
     public loadWidget(widget: Widget){
-        //load index file
+        let myUrl: string = "";
+        if(widget.type != null) {
+            myUrl = "widgets/" + widget.type + "/" + widget.implementation + "/index.hbs"
+        } else {
+            myUrl = "widgets/" + widget.implementation + "/index.hbs";
+        }
         $.ajax({
-            url: "widgets/" + widget.topicType + "/" + widget.topicImplementation + "/index.hbs",
+            url: myUrl,
             method: "POST",
-            beforeSend: function () {
-
-            },
             success: function (data: string) {
-                let crtWidget = new Widget(actualWorkspace.idCounter, widget.topicUrl, widget.topicType,
-                                            widget.width, widget.height, widget.posX, widget.posY, data, widget.topicImplementation);
+                let crtWidget = new Widget(actualWorkspace.idCounter, widget.url, widget.type,
+                                            widget.width, widget.height, widget.posX, widget.posY, data, widget.implementation);
                 actualWorkspace.webView.insertWidget(crtWidget, widget.widgetInstance);
                 actualWorkspace.widgets.push(crtWidget);
                 actualWorkspace.idCounter++;
@@ -179,8 +184,13 @@ export class Workspace{
 }
 
 window["fnctCreateWidget"] = fnctCreateWidget;
-function fnctCreateWidget(topicUrl: string, topicType: string, topicImplementation: string) {
-    actualWorkspace.createWidget(topicUrl, topicType, topicImplementation);
+function fnctCreateWidget(url: string, type: string, implementation: string) {
+    if(url == "" || type == "") {
+        console.log("no topic create");
+        actualWorkspace.createWidget(null, null, implementation);
+    } else {
+        actualWorkspace.createWidget(url, type, implementation);
+    }
 }
 
 window["fnctSaveWorkspace"] = fnctSaveWorkspace;
