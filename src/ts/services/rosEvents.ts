@@ -1,4 +1,5 @@
 /// <reference path="../typings/tsd.d.ts" />
+import {actualWorkspace} from "../models/workspace"
 
 /*Handling connection and events that are ROS related,
 like connecting, disconnecting or building the topic menu dynamically.
@@ -58,6 +59,7 @@ export class ROSEvent {
         this.buildMenu();
         $('.jsRosMenu').removeClass('disconnected');
         $('.jsRosMenu').addClass('connected');
+        actualWorkspace.rosMasterAdress = $("#rosMasterAdress").val();
         ROSEvent.connected = true;
     }
 
@@ -87,9 +89,8 @@ export class ROSEvent {
         let typesWithViews: Map<string, string[]> = new Map<string, string[]>();
         typesWithViews.set('geometry_msgs/Twist',['KeyboardTeleoperation','Joystick']);
         typesWithViews.set('sensor_msgs/Image',['Videostream']);
-        // typesWithViews.set('sensor_msgs/CompressedImage',['CompressedStream']);
         typesWithViews.set('sensor_msgs/NavSatFix',['Maps']);
-        typesWithViews.set('sensor_msgs/Joy',['Gamepad','Gamestick']);
+        typesWithViews.set('sensor_msgs/Joy',['Gamepad','Gamestick','Keyboard']);
         //typesWithViews.set('iosb_sensor_msgs/GpsWithVelocity',['MapMustang']);
 
 

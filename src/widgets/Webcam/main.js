@@ -26,8 +26,8 @@ Webcam.prototype = {
         this.settings.scaledHeight = parseInt(wrapper.css('height').slice(0,-2));
         $("#widget-"+this.id+"-webcam").width(this.settings.scaledWidth);
         $("#widget-"+this.id+"-webcam").height(this.settings.scaledHeight);
-
     },
+    
     load: function(settings) {
         this.settings.ip = settings.ip;    
         return this;
@@ -68,6 +68,6 @@ Webcam.prototype = {
             alsoResize: "#widget-"+this.id+"-webcam",
             aspectRatio: true
         });
-         $("div[data-widget-resizable="+this.id+"]").css("border-width","0px");     
+        $("div[data-widget-resizable="+this.id+"]").css("border-width","0px");     
     }
 };

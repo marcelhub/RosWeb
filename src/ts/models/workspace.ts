@@ -186,7 +186,6 @@ export class Workspace{
 window["fnctCreateWidget"] = fnctCreateWidget;
 function fnctCreateWidget(url: string, type: string, implementation: string) {
     if(url == "" || type == "") {
-        console.log("no topic create");
         actualWorkspace.createWidget(null, null, implementation);
     } else {
         actualWorkspace.createWidget(url, type, implementation);

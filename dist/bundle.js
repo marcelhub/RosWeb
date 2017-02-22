@@ -369,7 +369,6 @@ exports.Workspace = Workspace;
 window["fnctCreateWidget"] = fnctCreateWidget;
 function fnctCreateWidget(url, type, implementation) {
     if (url == "" || type == "") {
-        console.log("no topic create");
         exports.actualWorkspace.createWidget(null, null, implementation);
     } else {
         exports.actualWorkspace.createWidget(url, type, implementation);
@@ -398,12 +397,14 @@ function fnctMenuWorkspace() {
 exports.actualWorkspace = new Workspace();
 
 },{"../services/rosEvents":5,"./webView":2,"./widget":3}],5:[function(require,module,exports){
-/// <reference path="../typings/tsd.d.ts" />
 "use strict";
+/// <reference path="../typings/tsd.d.ts" />
 
 var _createClass = function () { function defineProperties(target, props) { for (var i = 0; i < props.length; i++) { var descriptor = props[i]; descriptor.enumerable = descriptor.enumerable || false; descriptor.configurable = true; if ("value" in descriptor) descriptor.writable = true; Object.defineProperty(target, descriptor.key, descriptor); } } return function (Constructor, protoProps, staticProps) { if (protoProps) defineProperties(Constructor.prototype, protoProps); if (staticProps) defineProperties(Constructor, staticProps); return Constructor; }; }();
 
 function _classCallCheck(instance, Constructor) { if (!(instance instanceof Constructor)) { throw new TypeError("Cannot call a class as a function"); } }
+
+var workspace_1 = require("../models/workspace");
 
 var ROSEvent = function () {
     function ROSEvent(ros) {
@@ -435,6 +436,7 @@ var ROSEvent = function () {
             _this.buildMenu();
             $('.jsRosMenu').removeClass('disconnected');
             $('.jsRosMenu').addClass('connected');
+            workspace_1.actualWorkspace.rosMasterAdress = $("#rosMasterAdress").val();
             ROSEvent.connected = true;
         };
         this.onRosClose = function () {
@@ -461,9 +463,8 @@ var ROSEvent = function () {
             var typesWithViews = new Map();
             typesWithViews.set('geometry_msgs/Twist', ['KeyboardTeleoperation', 'Joystick']);
             typesWithViews.set('sensor_msgs/Image', ['Videostream']);
-            // typesWithViews.set('sensor_msgs/CompressedImage',['CompressedStream']);
             typesWithViews.set('sensor_msgs/NavSatFix', ['Maps']);
-            typesWithViews.set('sensor_msgs/Joy', ['Gamepad', 'Gamestick']);
+            typesWithViews.set('sensor_msgs/Joy', ['Gamepad', 'Gamestick', 'Keyboard']);
             //typesWithViews.set('iosb_sensor_msgs/GpsWithVelocity',['MapMustang']);
             for (var i = 0; i < topicTypes.length; i++) {
                 ROSEvent.ros.getTopicsForType(topicTypes[i], function (topicsResult) {
@@ -492,17 +493,17 @@ var ROSEvent = function () {
     }
 
     _createClass(ROSEvent, [{
-        key: 'DelegateEvent',
+        key: "DelegateEvent",
         value: function DelegateEvent(selector, event, method) {
             $(document).delegate(selector, event, method);
         }
     }], [{
-        key: 'getInstance',
+        key: "getInstance",
         value: function getInstance() {
             return ROSEvent.ros;
         }
     }, {
-        key: 'getStatus',
+        key: "getStatus",
         value: function getStatus() {
             return ROSEvent.connected;
         }
@@ -612,7 +613,7 @@ function buildJSON(typesWithTopics, typesWithViews) {
     return topicResult;
 }
 
-},{}]},{},[1])
+},{"../models/workspace":4}]},{},[1])
 
 
 //# sourceMappingURL=bundle.js.map
