@@ -26,6 +26,7 @@ Webcam.prototype = {
         this.settings.scaledHeight = parseInt(wrapper.css('height').slice(0,-2));
         $("#widget-"+this.id+"-webcam").width(this.settings.scaledWidth);
         $("#widget-"+this.id+"-webcam").height(this.settings.scaledHeight);
+        $("h4[data-widget-title="+this.id+"]").text(this.implementation+": "+this.settings.ip);
     },
     
     load: function(settings) {

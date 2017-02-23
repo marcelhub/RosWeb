@@ -91,7 +91,6 @@ export class ROSEvent {
         typesWithViews.set('sensor_msgs/Image',['Videostream']);
         typesWithViews.set('sensor_msgs/NavSatFix',['Maps']);
         typesWithViews.set('sensor_msgs/Joy',['Gamepad','Gamestick','Keyboard']);
-        //typesWithViews.set('iosb_sensor_msgs/GpsWithVelocity',['MapMustang']);
 
 
         for (var i = 0; i < topicTypes.length; i++) {

@@ -77,7 +77,9 @@ this["MyApp"]["templates"]["widgetWrapper"] = Handlebars.template({"1":function(
     + alias4(((helper = (helper = helpers.id || (depth0 != null ? depth0.id : depth0)) != null ? helper : alias2),(typeof helper === alias3 ? helper.call(alias1,{"name":"id","hash":{},"data":data}) : helper)))
     + "\">\n        <div class=\"panel-heading clearfix cssWidgetPanelHeader draggable\" data-widget-draggable=\""
     + alias4(((helper = (helper = helpers.id || (depth0 != null ? depth0.id : depth0)) != null ? helper : alias2),(typeof helper === alias3 ? helper.call(alias1,{"name":"id","hash":{},"data":data}) : helper)))
-    + "\">\n            <div class=\"panel-title pull-left\">\n                <h4>"
+    + "\">\n            <div class=\"panel-title pull-left\">\n                <h4 data-widget-title=\""
+    + alias4(((helper = (helper = helpers.id || (depth0 != null ? depth0.id : depth0)) != null ? helper : alias2),(typeof helper === alias3 ? helper.call(alias1,{"name":"id","hash":{},"data":data}) : helper)))
+    + "\">"
     + alias4(((helper = (helper = helpers.topicImplementation || (depth0 != null ? depth0.topicImplementation : depth0)) != null ? helper : alias2),(typeof helper === alias3 ? helper.call(alias1,{"name":"topicImplementation","hash":{},"data":data}) : helper)))
     + ": "
     + alias4(((helper = (helper = helpers.topic || (depth0 != null ? depth0.topic : depth0)) != null ? helper : alias2),(typeof helper === alias3 ? helper.call(alias1,{"name":"topic","hash":{},"data":data}) : helper)))

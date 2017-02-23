@@ -70,15 +70,21 @@ export class WebView {
                 actualWorkspace.removeWidget(widget);
                 $("div[data-widget-id="+widget.id+"]").remove();
             });
+
+            //make widget draggable
             $('.undraggable').draggable({handle: '.draggable'});
 
+            //use resizable from widgetinstance, if there is no method use jquery resizable as default
             if(widget.widgetInstance.resizable) {
                 widget.widgetInstance.resizable();
             } else {
                 $("div[data-widget-id="+widget.id+"]").resizable();
             }
 
-            widget.widgetInstance.run();
+            if(widget.widgetInstance.run != undefined) {
+                widget.widgetInstance.run();
+            } 
+            
             //insert settings for this widget
             insertSettings(widget);
         }
