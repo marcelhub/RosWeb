@@ -45,7 +45,7 @@ KEYBOARDTEL.Teleop = function(options) {
     switch (keyCode) {
       case 65:
         // turn left
-        z = 2 * speed;
+        z = 1 * speed;
         break;
       case 87:
         // up
@@ -53,7 +53,7 @@ KEYBOARDTEL.Teleop = function(options) {
         break;
       case 68:
         // turn right
-        z = -2 * speed;
+        z = -1 * speed;
         break;
       case 83:
         // down
@@ -86,7 +86,6 @@ KEYBOARDTEL.Teleop = function(options) {
         buttons : [1,0,0,0,0,0,0,0,0,0,0]
       });
       cmdVel.publish(twist);
-
       // check for changes
       if (oldX !== x || oldY !== y || oldZ !== z) {
         that.emit('change', twist);

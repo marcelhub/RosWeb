@@ -32,9 +32,6 @@ Keyboard.prototype = {
         $.ajax({
             url: "widgets/" + self.type + "/" +self.implementation + "/keyboardtel.js",
             method: "POST",
-            beforeSend: function () {
-
-            },
             success: function (data) {
                 //create slider with jquery-ui
                 $('#widget-'+self.id+'-speed-slider').slider({
