@@ -1,22 +1,18 @@
 
 
-function Map(id, ros, topic, type, implementation) {
-    //default properties
+function Navigation(id, ros, topic, type, implementation) {
     this.id = id;
     this.ros = ros;
     this.topic = topic;
     this.type = type;
     this.implementation = implementation;
 
-    //settings object, this will be saved and stored.
-    //contains parameters, values etc. that the implementation needs.
-    //all required values should be stored in the settings object!
     this.settings = {};
 
     return this;
 }
  
-Map.prototype = {
+Navigation.prototype = {
     init: function() {
         return this;
     },
@@ -550,8 +546,6 @@ function onReverse(e) {
     }
 }
 
-
-//initialize
 function initialize() {
     var show_control = getUrlParameter('control');
     if (show_control != "yes") {
@@ -562,13 +556,13 @@ function initialize() {
     }
 
     robot_icon = L.icon({
-        iconUrl: 'robot_icon.png',
+        iconUrl: 'map/robot_icon.png',
         iconSize: [48, 48],
         iconAnchor: [24, 24]
     });
 
     racing_flag_icon = L.icon({
-        iconUrl: 'racing_flag.png',
+        iconUrl: 'map/racing_flag.png',
         iconSize: [48, 48],
         iconAnchor: [24, 24]
     });
@@ -659,7 +653,6 @@ function initialize() {
     });
     routeListener.subscribe(route_callback);
 
-    //velocity
     velocityListener = new ROSLIB.Topic({
         ros: ros,
         name: '/wheel_encoder/wheel_rotation',
@@ -685,9 +678,11 @@ function initialize() {
         }
     });
 
-    $('#map').css("height", (430));
-    $('#map').css("width", (640-263));
-    $('#map').css("margin-top", 1);
+    $('#map').css("height", (800));
+    $('#map').css("width", (640*0.75));
+    $('#map').css("margin", 1);
+    $('#map').css("padding", 1);
+    $('#bs-map-menu-container').css("margin", 1);
     map.invalidateSize();
 }
 
@@ -696,8 +691,10 @@ function resizing(obj) {
     var width = $("div[data-widget-id="+obj.id+"]").width();
     $('#bs-map-container').height(height);
     $('#bs-map-container').width(width);
+    $('#bs-map-menu-container').css("height", height-50);
+    $('#bs-map-menu-container').css("width", width*0.25-30);
     $('#map').css("height", height-50);
-    $('#map').css("width", width-250);
+    $('#map').css("width", width*0.75);
     map.invalidateSize();
 }
     
