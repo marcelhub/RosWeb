@@ -547,13 +547,13 @@ function onReverse(e) {
 }
 
 function initialize() {
-    var show_control = getUrlParameter('control');
-    if (show_control != "yes") {
-        // $("#btnExecuteMission").prop("disabled",true);
-        $("#btnExecuteMission").hide();
-        $("#btnResendRoute").hide();
-        $("#btnStopMission").hide();
-    }
+    // var show_control = getUrlParameter('control');
+    // if (show_control != "yes") {
+    //     // $("#btnExecuteMission").prop("disabled",true);
+    //     $("#btnExecuteMission").hide();
+    //     $("#btnResendRoute").hide();
+    //     $("#btnStopMission").hide();
+    // }
 
     robot_icon = L.icon({
         iconUrl: 'map/robot_icon.png',
@@ -692,7 +692,7 @@ function resizing(obj) {
     $('#bs-map-container').height(height);
     $('#bs-map-container').width(width);
     $('#bs-map-menu-container').css("height", height-50);
-    $('#bs-map-menu-container').css("width", width*0.25-30);
+    $('#bs-map-menu-container').css("width", width*0.25-25);
     $('#map').css("height", height-50);
     $('#map').css("width", width*0.75);
     map.invalidateSize();
