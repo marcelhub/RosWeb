@@ -49,7 +49,7 @@ KEYBOARDTEL.Teleop = function(options) {
         break;
       case 87:
         // up
-        x = 0.5 * speed;
+        x = 1 * speed;
         break;
       case 68:
         // turn right
@@ -57,7 +57,7 @@ KEYBOARDTEL.Teleop = function(options) {
         break;
       case 83:
         // down
-        x = -0.5 * speed;
+        x = -1 * speed;
         break;
       case 69:
         // strafe right

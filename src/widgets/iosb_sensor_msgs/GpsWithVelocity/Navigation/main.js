@@ -240,8 +240,8 @@ function buildRouteArray(idx, points) {
 function executeMission() {
     var query_service = new ROSLIB.Service({
         ros: ros,
-        name: '/route_manager/set_route', // topic name
-        serviceType: 'route_manager/SetRoute', // service type
+        name: '/route_manager/set_route',
+        serviceType: 'route_manager/SetRoute',
     });
     buildRoute(ros_route, currentRouteLayer.getLatLngs());
     var request = new ROSLIB.ServiceRequest({
@@ -255,8 +255,8 @@ function executeMission() {
 function resendRoute() {
     var query_service = new ROSLIB.Service({
         ros: ros,
-        name: '/route_manager/resend_route', // topic name
-        serviceType: 'std_srvs/Empty', // service type
+        name: '/route_manager/resend_route',
+        serviceType: 'std_srvs/Empty',
     });
     var request = new ROSLIB.ServiceRequest({});
     query_service.callService(request, function(result) {
@@ -267,8 +267,8 @@ function resendRoute() {
 function stopMission() {
     var query_service = new ROSLIB.Service({
         ros: ros,
-        name: '/route_manager/set_route', // topic name
-        serviceType: 'route_manager/SetRoute', // service type
+        name: '/route_manager/set_route',
+        serviceType: 'route_manager/SetRoute',
     });
     buildRoute(ros_route, []);
     var request = new ROSLIB.ServiceRequest({
@@ -434,7 +434,7 @@ function saveRouteService() {
 
     var save_service = new ROSLIB.Service({
         ros: ros,
-        name: '/route_manager/save_route', // topic name
+        name: '/route_manager/save_route',
         serviceType: 'route_manager/SaveRoute'
     });
     buildRoute(ros_route, currentRouteLayer.getLatLngs());
