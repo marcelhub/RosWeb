@@ -83,12 +83,13 @@ export class ROSEvent {
 
     //build menu dynamically, containing supported ROS topics
     private buildMenu = ()  => {   
-        let topicTypes: string[] = ['geometry_msgs/Twist', 'sensor_msgs/Image','sensor_msgs/NavSatFix','sensor_msgs/Joy','iosb_sensor_msgs/GpsWithVelocity'];
+        let topicTypes: string[] = ['geometry_msgs/Twist', 'sensor_msgs/Image','sensor_msgs/CompressedImage','sensor_msgs/NavSatFix','sensor_msgs/Joy','iosb_sensor_msgs/GpsWithVelocity'];
         let callbacksRemaining: number = topicTypes.length;
         let typesWithTopics: Map<string, string[]> = new Map<string, string[]>();
         let typesWithViews: Map<string, string[]> = new Map<string, string[]>();
         typesWithViews.set('geometry_msgs/Twist',['KeyboardTeleoperation','Joystick']);
         typesWithViews.set('sensor_msgs/Image',['Videostream']);
+        typesWithViews.set('sensor_msgs/CompressedImage',['VideostreamCompressed']);
         typesWithViews.set('sensor_msgs/NavSatFix',['Maps']);
         typesWithViews.set('sensor_msgs/Joy',['Gamepad','Gamestick','Keyboard']);
         typesWithViews.set('iosb_sensor_msgs/GpsWithVelocity',['Navigation']);
