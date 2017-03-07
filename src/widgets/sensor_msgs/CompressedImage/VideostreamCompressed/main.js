@@ -23,9 +23,6 @@ VideostreamCompressed.prototype = {
         this.settings.ip = $("#rosMasterAdress").val().split(":")[0];   
         //default port 8080 of Ros web_video_server
         this.settings.port = 8080;
-        this.settings.width = 640;
-        this.settings.height = 480;
-        this.settings.quality = 90;
         this.settings.topicForUrl = this.topic.slice(0, this.topic.length - 11);
         return this;
     },
@@ -40,9 +37,6 @@ VideostreamCompressed.prototype = {
     load: function(settings) {
         this.settings.ip = settings.ip;
         this.settings.port = settings.port;
-        this.settings.width = settings.width;
-        this.settings.height = settings.height;
-        this.settings.quality = settings.quality;
         this.settings.topicForUrl = this.topic.slice(0, this.topic.length - 11);        
         return this;
     },
@@ -57,9 +51,6 @@ VideostreamCompressed.prototype = {
     btnSettingsSave: function(widget) {
         widget.data.settings.ip = $("#widget-"+widget.data.id+"-value-ip").val();   
         widget.data.settings.port = $("#widget-"+widget.data.id+"-value-port").val();
-        widget.data.settings.width = $("#widget-"+widget.data.id+"-value-width").val();
-        widget.data.settings.height = $("#widget-"+widget.data.id+"-value-height").val();
-        widget.data.settings.quality = $("#widget-"+widget.data.id+"-value-quality").val();
         widget.data.settings.scaledWidth = widget.data.settings.width;
         widget.data.settings.scaledHeight = widget.data.settings.height;
         //refresh videostream to apply new settings
@@ -71,8 +62,7 @@ VideostreamCompressed.prototype = {
                 var refreshedHtml = compiledHtml(widget.data);
                 $("#widget-"+widget.data.id+"-content").children().remove();
                 $("#widget-"+widget.data.id+"-content").append(refreshedHtml);
-                $("div[data-widget-id="+widget.data.id+"]").css("width",  widget.data.settings.scaledWidth+"px");
-                $("div[data-widget-id="+widget.data.id+"]").css("height",  widget.data.settings.scaledHeight+"px");
+                widget.data.run();
             },
             error: function (e1, e2) {
 
