@@ -39,6 +39,7 @@ Webcam.prototype = {
     btnSettings: function(widget) {
     },
     btnRemove: function(widget) {
+        $('#widget-'+this.id+'-webcam').attr('src', '');
     },
 
     btnSettingsSave: function(widget) {

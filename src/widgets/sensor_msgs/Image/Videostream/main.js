@@ -50,6 +50,7 @@ Videostream.prototype = {
     btnSettings: function(widget) {
     },
     btnRemove: function(widget) {
+        $('#widget-'+this.id+'-videostream').attr('src', '');
     },
 
     btnSettingsSave: function(widget) {

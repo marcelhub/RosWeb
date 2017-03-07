@@ -28,12 +28,11 @@ VideostreamCompressed.prototype = {
         this.settings.scaledHeight = parseInt(wrapper.css('height').slice(0,-2));
         $("#widget-"+this.id+"-videostream-compressed").width(this.settings.scaledWidth);
         $("#widget-"+this.id+"-videostream-compressed").height(this.settings.scaledHeight);
-
     },
     load: function(settings) {
         this.settings.ip = settings.ip;
         this.settings.port = settings.port;
-        this.settings.topicForUrl = this.topic.slice(0, this.topic.length - 11);        
+        this.settings.topicForUrl = this.topic.slice(0, this.topic.length - 11);
         return this;
     },
     save: function(widget) {
@@ -42,6 +41,7 @@ VideostreamCompressed.prototype = {
     btnSettings: function(widget) {
     },
     btnRemove: function(widget) {
+        $('#widget-'+this.id+'-videostream-compressed').attr('src', '');
     },
 
     btnSettingsSave: function(widget) {
