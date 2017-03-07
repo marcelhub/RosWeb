@@ -1,16 +1,12 @@
 
 
 function VideostreamCompressed(id, ros, topic, type, implementation) {
-    //default properties
     this.id = id;
     this.ros = ros;
     this.topic = topic;
     this.type = type;
     this.implementation = implementation;
 
-    //settings object, this will be saved and stored.
-    //contains parameters, values etc. that the implementation needs.
-    //all required values should be stored in the settings object!
     this.settings = {};
 
     return this;

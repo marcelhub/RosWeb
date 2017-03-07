@@ -1,95 +1,96 @@
-<meta data-min-height="800" data-min-width="1320" data-pos-x="100" data-pos-y="100" data-btn-widget-settings="1" data-btn-widget-remove="1">
-<div id="widget-{{id}}-content">
-    <div class="container-fluid" id="bs-map-container">
-        <div class="row">
-            <div class="col-xs-12 col-sm-9 col-md-9 col-lg-9" align="left">
-                <div id="map">
-                    map
+<div data-min-height="800" data-min-width="1320" data-pos-x="100" data-pos-y="100" data-btn-widget-settings="1" data-btn-widget-remove="1">
+    <div id="widget-{{id}}-content">
+        <div class="container-fluid" id="bs-map-container">
+            <div class="row">
+                <div class="col-xs-12 col-sm-9 col-md-9 col-lg-9" align="left">
+                    <div id="map">
+                        map
+                    </div>
                 </div>
-            </div>
 
-            <div  id="bs-map-menu-container" class="col-xs-12 col-sm-3 col-md-3 col-lg-3" align="left">
-                <div class="panel-heading">
-                    <h3 class="panel-title">Position</h3>
-                </div>
-                <div class="table-responsive">
-                    <table class="table table-striped" >
+                <div id="bs-map-menu-container" class="col-xs-12 col-sm-3 col-md-3 col-lg-3" align="left">
+                    <div class="panel-heading">
+                        <h3 class="panel-title">Position</h3>
+                    </div>
+                    <div class="table-responsive">
+                        <table class="table table-striped">
+                            <tbody>
+                                <tr>
+                                    <td class="align-right" style="display:block">Lat: <span id="lat">?</span>° </td>
+                                    <td class="align-right" style="display:block">Lon: <span id="lon">?</span>° </td>
+                                    <td class="align-right" style="display:block">Heading: <span id="heading">?</span>°</td>
+                                </tr>
+                            </tbody>
+                        </table>
+                    </div>
+                    <div class="panel-heading">
+                        <h3 class="panel-title">Route</h3>
+                    </div>
+                    <table class="table table-striped">
                         <tbody>
                             <tr>
-                                <td class="align-right" style="display:block">Lat: <span id="lat">?</span>° </td>
-                                <td class="align-right" style="display:block">Lon: <span id="lon">?</span>° </td>
-                                <td class="align-right"style="display:block">Heading: <span id="heading">?</span>°</td>
+                                <td align="center"><span id="routeName">&lt;None&gt;</span> <span id="routeSaved"></span></td>
                             </tr>
                         </tbody>
                     </table>
-                </div>
-                <div class="panel-heading">
-                    <h3 class="panel-title">Route</h3>
-                </div>
-                <table class="table table-striped">
-                    <tbody>
-                        <tr>
-                            <td align="center"><span id="routeName">&lt;None&gt;</span> <span id="routeSaved"></span></td>
-                        </tr>
-                    </tbody>
-                </table>
-                <div class="btn-group-vertical btn-group-noround" style="width:100%;">
-                    <button type="button" class="btn btn-lg btn-default" onclick="saveRoute()"><span class="glyphicon glyphicon-floppy-save" style="float:left;"></span>Save Route</button>
-                    <button type="button" class="btn btn-lg btn-default" onclick="loadRoute()"><span class="glyphicon glyphicon-floppy-open" style="float:left;"></span>Load Route</button>
-                    <button type="button" id="btnResendRoute" class="btn btn-lg btn-default" onclick="resendRoute()"><span class="glyphicon glyphicon-repeat" style="float:left;"></span>Resend Route</button-->
+                    <div class="btn-group-vertical btn-group-noround" style="width:100%;">
+                        <button type="button" class="btn btn-lg btn-default" onclick="saveRoute()"><span class="glyphicon glyphicon-floppy-save" style="float:left;"></span>Save Route</button>
+                        <button type="button" class="btn btn-lg btn-default" onclick="loadRoute()"><span class="glyphicon glyphicon-floppy-open" style="float:left;"></span>Load Route</button>
+                        <button type="button" id="btnResendRoute" class="btn btn-lg btn-default" onclick="resendRoute()"><span class="glyphicon glyphicon-repeat" style="float:left;"></span>Resend Route</button>
                     <button type="button" id="btnExecuteMission" class="btn btn-lg btn-primary" onclick="executeMission()"><span class="glyphicon glyphicon-play" style="float:left;"></span>Execute Mission</button>
-                    <button type="button" id="btnStopMission" class="btn btn-lg btn-danger" onclick="stopMission()"><span class="glyphicon glyphicon-stop" style="float:left;"></span>Stop Mission</button>
-                </div>
-                <div class="modal fade" id="saveModal">
-                    <div class="modal-dialog">
-                        <div class="modal-content">
-                            <div class="modal-header">
-                                <button type="button" class="close" data-dismiss="modal" aria-hidden="true">&times;</button>
-                                <h4 class="modal-title">Save Route</h4>
-                            </div>
-                            <div class="modal-body">
-                                <p>Enter a route name&hellip;</p>
-                                <input type="text" class="form-control" id="saveRouteName" defaultValue="route" placeholder="route">
-                            </div>
-                            <div class="modal-footer">
-                                <button type="button" class="btn btn-default" data-dismiss="modal">Close</button>
-                                <button type="button" class="btn btn-primary" onclick="saveRouteService()">Save</button>
+                        <button type="button" id="btnStopMission" class="btn btn-lg btn-danger" onclick="stopMission()"><span class="glyphicon glyphicon-stop" style="float:left;"></span>Stop Mission</button>
+                    </div>
+                    <div class="modal fade" id="saveModal">
+                        <div class="modal-dialog">
+                            <div class="modal-content">
+                                <div class="modal-header">
+                                    <button type="button" class="close" data-dismiss="modal" aria-hidden="true">&times;</button>
+                                    <h4 class="modal-title">Save Route</h4>
+                                </div>
+                                <div class="modal-body">
+                                    <p>Enter a route name&hellip;</p>
+                                    <input type="text" class="form-control" id="saveRouteName" defaultValue="route" placeholder="route">
+                                </div>
+                                <div class="modal-footer">
+                                    <button type="button" class="btn btn-default" data-dismiss="modal">Close</button>
+                                    <button type="button" class="btn btn-primary" onclick="saveRouteService()">Save</button>
+                                </div>
                             </div>
                         </div>
                     </div>
-                </div>
 
-                <div class="modal fade" id="loadModal">
-                    <div class="modal-dialog">
-                        <div class="modal-content">
-                            <div class="modal-header">
-                                <button type="button" class="close" data-dismiss="modal" aria-hidden="true">&times;</button>
-                                <h4 class="modal-title">Load Route</h4>
-                            </div>
-                            <div class="modal-body">
-                                <div class="list-group" id="loadRouteMenu" style="margin-bottom: 0px;">
+                    <div class="modal fade" id="loadModal">
+                        <div class="modal-dialog">
+                            <div class="modal-content">
+                                <div class="modal-header">
+                                    <button type="button" class="close" data-dismiss="modal" aria-hidden="true">&times;</button>
+                                    <h4 class="modal-title">Load Route</h4>
                                 </div>
-                            </div>
-                            <div class="modal-footer" style="margin-top: 0px;">
-                                <button type="button" class="btn btn-default" data-dismiss="modal">Close</button>
+                                <div class="modal-body">
+                                    <div class="list-group" id="loadRouteMenu" style="margin-bottom: 0px;">
+                                    </div>
+                                </div>
+                                <div class="modal-footer" style="margin-top: 0px;">
+                                    <button type="button" class="btn btn-default" data-dismiss="modal">Close</button>
+                                </div>
                             </div>
                         </div>
                     </div>
-                </div>
 
-                <div class="modal fade" id="deleteModal">
-                    <div class="modal-dialog">
-                        <div class="modal-content">
-                            <div class="modal-header">
-                                <button type="button" class="close" data-dismiss="modal" aria-hidden="true">&times;</button>
-                                <h4 class="modal-title">Delete Route</h4>
-                            </div>
-                            <div class="modal-body">
-                                <div class="list-group" id="deleteRouteMenu" style="margin-bottom: 0px;">
+                    <div class="modal fade" id="deleteModal">
+                        <div class="modal-dialog">
+                            <div class="modal-content">
+                                <div class="modal-header">
+                                    <button type="button" class="close" data-dismiss="modal" aria-hidden="true">&times;</button>
+                                    <h4 class="modal-title">Delete Route</h4>
                                 </div>
-                            </div>
-                            <div class="modal-footer" style="margin-top: 0px;">
-                                <button type="button" class="btn btn-default" data-dismiss="modal">Close</button>
+                                <div class="modal-body">
+                                    <div class="list-group" id="deleteRouteMenu" style="margin-bottom: 0px;">
+                                    </div>
+                                </div>
+                                <div class="modal-footer" style="margin-top: 0px;">
+                                    <button type="button" class="btn btn-default" data-dismiss="modal">Close</button>
+                                </div>
                             </div>
                         </div>
                     </div>

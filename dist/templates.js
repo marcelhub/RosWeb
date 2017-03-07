@@ -91,19 +91,21 @@ this["MyApp"]["templates"]["widgetWrapper"] = Handlebars.template({"1":function(
 this["MyApp"]["templates"]["workspaceMenu"] = Handlebars.template({"1":function(container,depth0,helpers,partials,data) {
     var alias1=container.escapeExpression, alias2=container.lambda;
 
-  return "  <div id=\"workspace-form-"
+  return "    <div id=\"workspace-form-"
     + alias1((helpers.trim || (depth0 && depth0.trim) || helpers.helperMissing).call(depth0 != null ? depth0 : {},depth0,{"name":"trim","hash":{},"data":data}))
-    + "\" class=\"form-group\">\n      <label class=\"control-label col-xs-4 col-sm-4\">"
+    + "\" class=\"form-group\">\n        <label class=\"control-label col-xs-4 col-sm-4\">"
     + alias1(alias2(depth0, depth0))
-    + ":</label>\n      <div class=\"col-xs-8 col-sm-8\">\n          <button type=\"button\" class=\"btn btn-default\" onclick=\"fnctSaveWorkspace('"
+    + ":</label>\n        <div class=\"col-xs-8 col-sm-8\">\n            <button type=\"button\" class=\"btn btn-default\" onclick=\"fnctSaveWorkspace('"
     + alias1(alias2(depth0, depth0))
-    + "');\" data-dismiss=\"modal\"><i class=\"fa fa-floppy-o fa-lg\" ></i> Save</button>\n          <button type=\"button\" class=\"btn btn-default\" onclick=\"fnctLoadWorkspace('"
+    + "');\" data-dismiss=\"modal\"><i class=\"fa fa-floppy-o fa-lg\" ></i> Save</button>\n            <button type=\"button\" class=\"btn btn-default\" onclick=\"fnctLoadWorkspace('"
     + alias1(alias2(depth0, depth0))
-    + "');\" data-dismiss=\"modal\" ><i class=\"fa fa-upload fa-lg\" ></i> Load</button>\n          <button type=\"button\" class=\"btn btn-danger\" onclick=\"fnctDeleteWorkspace('"
+    + "');\" data-dismiss=\"modal\"><i class=\"fa fa-upload fa-lg\" ></i> Load</button>\n            <button type=\"button\" class=\"btn btn-danger\" onclick=\"fnctDeleteWorkspace('"
     + alias1(alias2(depth0, depth0))
-    + "');\"><i class=\"fa fa-trash fa-lg\" ></i> Delete</button>\n      </div>\n  </div>\n";
+    + "');\"><i class=\"fa fa-trash fa-lg\" ></i> Delete</button>\n        </div>\n    </div>\n";
 },"compiler":[7,">= 4.0.0"],"main":function(container,depth0,helpers,partials,data) {
     var stack1;
 
-  return ((stack1 = helpers.each.call(depth0 != null ? depth0 : {},(depth0 != null ? depth0.workspaces : depth0),{"name":"each","hash":{},"fn":container.program(1, data, 0),"inverse":container.noop,"data":data})) != null ? stack1 : "");
+  return "<div>\n"
+    + ((stack1 = helpers.each.call(depth0 != null ? depth0 : {},(depth0 != null ? depth0.workspaces : depth0),{"name":"each","hash":{},"fn":container.program(1, data, 0),"inverse":container.noop,"data":data})) != null ? stack1 : "")
+    + "</div>";
 },"useData":true});

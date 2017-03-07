@@ -1,10 +1,12 @@
-{{#each workspaces}}
-  <div id="workspace-form-{{trim this}}" class="form-group">
-      <label class="control-label col-xs-4 col-sm-4">{{this}}:</label>
-      <div class="col-xs-8 col-sm-8">
-          <button type="button" class="btn btn-default" onclick="fnctSaveWorkspace('{{this}}');" data-dismiss="modal"><i class="fa fa-floppy-o fa-lg" ></i> Save</button>
-          <button type="button" class="btn btn-default" onclick="fnctLoadWorkspace('{{this}}');" data-dismiss="modal" ><i class="fa fa-upload fa-lg" ></i> Load</button>
-          <button type="button" class="btn btn-danger" onclick="fnctDeleteWorkspace('{{this}}');"><i class="fa fa-trash fa-lg" ></i> Delete</button>
-      </div>
-  </div>
-{{/each }}
+<div>
+    {{#each workspaces}}
+    <div id="workspace-form-{{trim this}}" class="form-group">
+        <label class="control-label col-xs-4 col-sm-4">{{this}}:</label>
+        <div class="col-xs-8 col-sm-8">
+            <button type="button" class="btn btn-default" onclick="fnctSaveWorkspace('{{this}}');" data-dismiss="modal"><i class="fa fa-floppy-o fa-lg" ></i> Save</button>
+            <button type="button" class="btn btn-default" onclick="fnctLoadWorkspace('{{this}}');" data-dismiss="modal"><i class="fa fa-upload fa-lg" ></i> Load</button>
+            <button type="button" class="btn btn-danger" onclick="fnctDeleteWorkspace('{{this}}');"><i class="fa fa-trash fa-lg" ></i> Delete</button>
+        </div>
+    </div>
+    {{/each }}
+</div>
