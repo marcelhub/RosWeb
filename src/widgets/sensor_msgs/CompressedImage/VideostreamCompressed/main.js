@@ -16,7 +16,7 @@ VideostreamCompressed.prototype = {
     init: function() {
         //custom properties initialized with default, assuming
         //that web_video_server runs on the same host as the Ros system
-        this.settings.ip = $("#rosMasterAdress").val().split(":")[0];   
+        this.settings.ip = $("#rosMasterAdress").val().split(":")[0];
         //default port 8080 of Ros web_video_server
         this.settings.port = 8080;
         this.settings.topicForUrl = this.topic.slice(0, this.topic.length - 11);

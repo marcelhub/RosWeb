@@ -26,7 +26,19 @@ Webcam.prototype = {
         this.settings.scaledHeight = parseInt(wrapper.css('height').slice(0,-2));
         $("#widget-"+this.id+"-webcam").width(this.settings.scaledWidth);
         $("#widget-"+this.id+"-webcam").height(this.settings.scaledHeight);
-        $("h4[data-widget-title="+this.id+"]").text(this.implementation+": "+this.settings.ip);
+        var ipParam = new ROSLIB.Param({
+            ros: this.ros,
+            name: '/axis/axis_driver/hostname'
+        });
+        var self = this;
+        ipParam.get(function(value) {
+            if(value) {
+                self.settings.ip = value;
+                $('#widget-'+self.id+'-webcam').attr('src', 'http://'+self.settings.ip+'/axis-cgi/mjpg/video.cgi?');
+            }
+            $("h4[data-widget-title="+self.id+"]").text(self.implementation+": "+self.settings.ip);
+
+        });
     },
     
     load: function(settings) {
