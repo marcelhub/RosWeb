@@ -23,7 +23,10 @@ Joystick.prototype = {
             name : this.topic,
             messageType : this.type,
         });
-
+        if(jQuery.isEmptyObject(this.settings)) {
+            //initialize with default values if not loaded
+            this.settings.autorepeatRate = 50;
+        }
         return this;
     },
     run: function() {
@@ -39,7 +42,7 @@ Joystick.prototype = {
         var self = this;
 
         this.manager.on('start', function (evt, data) {
-            self.msgLoop = setInterval(function () { self.teleopLoop(); }, 50);
+            self.msgLoop = setInterval(function () { self.teleopLoop(); }, self.settings.autorepeatRate);
         });
 
         this.manager.on('move', function(evt, data) {
@@ -69,6 +72,7 @@ Joystick.prototype = {
 
     },
     load: function(settings) {
+        this.settings.autorepeatRate = settings.autorepeatRate;
         this.init();
         return this;
     },
@@ -84,6 +88,7 @@ Joystick.prototype = {
     },
 
     btnSettingsSave: function(widget) {
+        widget.data.settings.autorepeatRate = $("#widget-"+widget.data.id+"-value-autorepeatRate").val();
 
     },
     teleopLoop: function() {

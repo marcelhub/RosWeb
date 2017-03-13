@@ -27,7 +27,6 @@ Gamestick.prototype = {
             //initialize with default values if not loaded
             this.settings.autorepeatRate = 100;
         }
-        console.log(this.settings.autorepeatRate);
         return this;
     },
     run: function() {
