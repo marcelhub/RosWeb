@@ -8,7 +8,7 @@ this["MyApp"]["templates"]["menu"] = Handlebars.template({"1":function(container
   stack1 = ((helper = (helper = helpers.topics || (depth0 != null ? depth0.topics : depth0)) != null ? helper : alias2),(options={"name":"topics","hash":{},"fn":container.program(2, data, 0, blockParams, depths),"inverse":container.noop,"data":data}),(typeof helper === alias3 ? helper.call(alias1,options) : helper));
   if (!helpers.topics) { stack1 = helpers.blockHelperMissing.call(depth0,stack1,options)}
   if (stack1 != null) { buffer += stack1; }
-  return buffer + ((stack1 = helpers["if"].call(alias1,(data && data.last),{"name":"if","hash":{},"fn":container.program(8, data, 0, blockParams, depths),"inverse":container.program(10, data, 0, blockParams, depths),"data":data})) != null ? stack1 : "");
+  return buffer + "    <li role=\"separator\" class=\"divider\"></li>\n";
 },"2":function(container,depth0,helpers,partials,data,blockParams,depths) {
     var stack1;
 
@@ -40,17 +40,13 @@ this["MyApp"]["templates"]["menu"] = Handlebars.template({"1":function(container
   return "            <li><a class=\"jsTopicImplementation\" tabindex=\"-1\" href=\"#\">"
     + container.escapeExpression(((helper = (helper = helpers.topic || (depth0 != null ? depth0.topic : depth0)) != null ? helper : helpers.helperMissing),(typeof helper === "function" ? helper.call(depth0 != null ? depth0 : {},{"name":"topic","hash":{},"data":data}) : helper)))
     + "</a></li>\n";
-},"8":function(container,depth0,helpers,partials,data) {
-    return "";
-},"10":function(container,depth0,helpers,partials,data) {
-    return "        <li role=\"separator\" class=\"divider\"></li>\n";
 },"compiler":[7,">= 4.0.0"],"main":function(container,depth0,helpers,partials,data,blockParams,depths) {
     var stack1, helper, options, buffer = "";
 
   stack1 = ((helper = (helper = helpers.types || (depth0 != null ? depth0.types : depth0)) != null ? helper : helpers.helperMissing),(options={"name":"types","hash":{},"fn":container.program(1, data, 0, blockParams, depths),"inverse":container.noop,"data":data}),(typeof helper === "function" ? helper.call(depth0 != null ? depth0 : {},options) : helper));
   if (!helpers.types) { stack1 = helpers.blockHelperMissing.call(depth0,stack1,options)}
   if (stack1 != null) { buffer += stack1; }
-  return buffer + "<li role=\"separator\" class=\"divider\"></li>\n<li>\n    <a href=\"javascript:void(0);\" class=\"jsTopicToWidget\" onclick=\"fnctCreateWidget('','','Webcam')\">Webcam</a>\n</li>\n";
+  return buffer + "<li>\n    <a href=\"javascript:void(0);\" class=\"jsTopicToWidget\" onclick=\"fnctCreateWidget('','','Webcam')\">Webcam</a>\n</li>\n";
 },"useData":true,"useDepths":true});
 this["MyApp"]["templates"]["widgetWrapper"] = Handlebars.template({"1":function(container,depth0,helpers,partials,data) {
     return "                <a type=\"button\" class=\"btn btn-default pull-right jsWidgetRemove cssWidgetRemove\" href=\"#\">\n                    <i class=\"fa fa-window-close fa-lg\" aria-hidden=\"true\"></i>\n                </a>\n";

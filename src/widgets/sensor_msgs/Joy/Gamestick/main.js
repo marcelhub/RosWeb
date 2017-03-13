@@ -23,7 +23,11 @@ Gamestick.prototype = {
             name : this.topic,
             messageType : this.type,
         });
-
+        if(jQuery.isEmptyObject(this.settings)) {
+            //initialize with default values if not loaded
+            this.settings.autorepeatRate = 100;
+        }
+        console.log(this.settings.autorepeatRate);
         return this;
     },
     run: function() {
@@ -42,7 +46,7 @@ Gamestick.prototype = {
         this.seqCounter = 0;
 
         this.manager.on('start', function (evt, data) {
-            self.msgLoop = setInterval(function () { self.teleopLoop(); }, 100);
+            self.msgLoop = setInterval(function () { self.teleopLoop(); }, self.settings.autorepeatRate);
         });
 
         this.manager.on('move', function(evt, data) {
@@ -72,6 +76,7 @@ Gamestick.prototype = {
 
     },
     load: function(settings) {
+        this.settings.autorepeatRate = settings.autorepeatRate;
         this.init();
         return this;
     },
@@ -86,6 +91,7 @@ Gamestick.prototype = {
     },
 
     btnSettingsSave: function(widget) {
+        widget.data.settings.autorepeatRate = $("#widget-"+widget.data.id+"-value-autorepeatRate").val();
 
     },
     teleopLoop: function() {
