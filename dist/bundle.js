@@ -21,6 +21,7 @@ init();
 function _classCallCheck(instance, Constructor) { if (!(instance instanceof Constructor)) { throw new TypeError("Cannot call a class as a function"); } }
 
 var workspace_1 = require("./workspace");
+var rosEvents_1 = require("../services/rosEvents");
 
 var WebView = function WebView() {
     var _this = this;
@@ -50,10 +51,10 @@ var WebView = function WebView() {
         setTimeout(function () {
             if (widgetInstance == null) {
                 //create object of widgetinstance and initialize it with default values
-                widget.widgetInstance = new this[widget.implementation](widget.id, widget.ros, widget.url, widget.type, widget.implementation).init();
+                widget.widgetInstance = new this[widget.implementation](widget.id, rosEvents_1.ROSEvent.getInstance(), widget.url, widget.type, widget.implementation).init();
             } else {
                 //create object with loaded settings
-                widget.widgetInstance = new this[widget.implementation](widget.id, widget.ros, widget.url, widget.type, widget.implementation).load(widgetInstance.settings);
+                widget.widgetInstance = new this[widget.implementation](widget.id, rosEvents_1.ROSEvent.getInstance(), widget.url, widget.type, widget.implementation).load(widgetInstance.settings);
             }
             //compile javascript with the data from the widgetinstance to html
             var widgetHtml = widgetTemplateCompiled(widget.widgetInstance);
@@ -144,20 +145,17 @@ function loadScript(widget) {
     }
 }
 
-},{"./workspace":4}],3:[function(require,module,exports){
+},{"../services/rosEvents":5,"./workspace":4}],3:[function(require,module,exports){
 "use strict";
 
 var _createClass = function () { function defineProperties(target, props) { for (var i = 0; i < props.length; i++) { var descriptor = props[i]; descriptor.enumerable = descriptor.enumerable || false; descriptor.configurable = true; if ("value" in descriptor) descriptor.writable = true; Object.defineProperty(target, descriptor.key, descriptor); } } return function (Constructor, protoProps, staticProps) { if (protoProps) defineProperties(Constructor.prototype, protoProps); if (staticProps) defineProperties(Constructor, staticProps); return Constructor; }; }();
 
 function _classCallCheck(instance, Constructor) { if (!(instance instanceof Constructor)) { throw new TypeError("Cannot call a class as a function"); } }
 
-var rosEvents_1 = require("../services/rosEvents");
-
 var Widget = function () {
     function Widget(id, url, type, width, height, posX, posY, html, implementation) {
         _classCallCheck(this, Widget);
 
-        this.ros = rosEvents_1.ROSEvent.getInstance();
         this.id = id;
         this.url = url;
         this.type = type;
@@ -185,7 +183,7 @@ var Widget = function () {
 
 exports.Widget = Widget;
 
-},{"../services/rosEvents":5}],4:[function(require,module,exports){
+},{}],4:[function(require,module,exports){
 /// <reference path="../typings/tsd.d.ts" />
 "use strict";
 

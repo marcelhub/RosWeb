@@ -61,24 +61,23 @@ Maps.prototype = {
         } else {
             this.mymap.removeLayer(this.polyline);
         }
-            if(this.marker === null) {
-                this.marker = L.marker([msg.latitude, msg.longitude]).addTo(this.mymap);
-            }
-            
-            var latLng = new L.LatLng(msg.latitude, msg.longitude);
-            this.polylinePoints.push(latLng);
+        if(this.marker === null) {
+            this.marker = L.marker([msg.latitude, msg.longitude]).addTo(this.mymap);
+        }
+        
+        var latLng = new L.LatLng(msg.latitude, msg.longitude);
+        this.polylinePoints.push(latLng);
 
-            this.polyline = new L.Polyline(this.polylinePoints, {
-                color: 'red',
-                weight: 3,
-            });
-
-            this.mymap.setView(latLng);
-            this.marker.setLatLng(latLng);
-            // this.mymap.addLayer(this.polyline);
-            var newHeight = $("div[data-widget-id="+this.id+"]").height()-47;
-            $('#map-'+this.id).css("height", newHeight);
-            this.mymap.invalidateSize();
+        this.polyline = new L.Polyline(this.polylinePoints, {
+            color: 'red',
+            weight: 3,
+        });
+        this.mymap.setView(latLng);
+        this.marker.setLatLng(latLng);
+        // this.mymap.addLayer(this.polyline);
+        var newHeight = $("div[data-widget-id="+this.id+"]").height()-47;
+        $('#map-'+this.id).css("height", newHeight);
+        this.mymap.invalidateSize();
     },
     toJSON: function() {
         return JSON.stringify(this.settings);

@@ -1,5 +1,6 @@
 import {actualWorkspace} from "./workspace"
 import {Widget} from "./widget"
+import {ROSEvent} from "../services/rosEvents"
 
 declare var MyApp: any;
 
@@ -45,11 +46,11 @@ export class WebView {
         setTimeout(function() {
             if(widgetInstance == null) {
                 //create object of widgetinstance and initialize it with default values
-                widget.widgetInstance = new this[widget.implementation](widget.id, widget.ros, widget.url, widget.type,
+                widget.widgetInstance = new this[widget.implementation](widget.id, ROSEvent.getInstance(), widget.url, widget.type,
                                                                             widget.implementation).init();
             } else {
                 //create object with loaded settings
-                widget.widgetInstance = new this[widget.implementation](widget.id, widget.ros, widget.url, widget.type,
+                widget.widgetInstance = new this[widget.implementation](widget.id, ROSEvent.getInstance(), widget.url, widget.type,
                                                                             widget.implementation).load(widgetInstance.settings);
             }
 

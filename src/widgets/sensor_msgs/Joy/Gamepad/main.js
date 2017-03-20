@@ -118,7 +118,7 @@ Gamepad.prototype = {
             seq : seqCounter,
             stamp : {
                 secs: parseInt(self.gamePad.timestamp),
-                nsecs: parseInt(self.gamePad.timestamp)
+                nsecs: parseInt(seqCounter)
             },
             frame_id : ''
             },

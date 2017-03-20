@@ -1,7 +1,6 @@
 import {ROSEvent} from "../services/rosEvents"
 
 export class Widget{
-    public ros: ROSLIB.Ros;
     public id: number;
     public url: string;
     public type: string;
@@ -16,7 +15,6 @@ export class Widget{
 
     constructor(id: number, url: string, type: string, width: number, height: number,
                 posX: number, posY: number, html: string, implementation: string) {
-        this.ros = ROSEvent.getInstance();
         this.id = id;
         this.url = url;
         this.type = type;
