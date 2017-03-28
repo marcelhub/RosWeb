@@ -2,7 +2,6 @@
 ### Repository klonen
 - Kommando innerhalb des gewünschten Projektpfades auf dem Terminal ausführen  
 `git clone git@gitlab.bwrobotik.selfhost.de:bwrobotik/ocu_generic_webgui.git`  
-`git clone https://github.com/marcelhub/ros_generic_web.git`
 
 ### Webserver inkl. PHP installieren (Apache2 als Beispiel)
 - Installation Apache2:  
